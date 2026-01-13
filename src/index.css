@@ -10,6 +10,8 @@
   --color-burgundy-dark: #5c0017;
   --color-cream: #faf8f5;
   --color-gold: #c9a961;
+  --color-gold-warm: #c19a5b;
+  --color-taupe: #897a59;
 
   --font-cursive: 'Dancing Script', cursive;
   --font-serif: 'Playfair Display', serif;
@@ -60,8 +62,14 @@ body {
 .text-burgundy { color: #800020; }
 .text-burgundy-light { color: #a30029; }
 .text-gold { color: #c9a961; }
+.text-gold-warm { color: #c19a5b; }
+.text-taupe { color: #897a59; }
+
+.bg-gold-warm { background-color: #c19a5b; }
+.bg-taupe { background-color: #897a59; }
 
 .border-olive { border-color: #8d9e78; }
+.border-gold-warm { border-color: #c19a5b; }
 .border-burgundy { border-color: #800020; }
 
 /* Ring colors for focus states */
@@ -153,3 +161,51 @@ html.lenis, html.lenis body {
 /* Gallery image aspect ratios */
 .gallery-grid > *:nth-child(6n+1) { grid-row: span 2; }
 .gallery-grid > *:nth-child(6n+4) { grid-row: span 2; }
+
+/* Swiper slideshow styles */
+.swiper-slideshow {
+  width: 100%;
+  height: 60vh;
+}
+
+@media (min-width: 768px) {
+  .swiper-slideshow {
+    height: 70vh;
+  }
+}
+
+.swiper-slideshow .swiper-slide {
+  overflow: hidden;
+}
+
+.swiper-slideshow .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Custom pagination dots */
+.swiper-slideshow .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.swiper-slideshow .swiper-pagination-bullet-active {
+  background: #c19a5b;
+  transform: scale(1.2);
+}
+
+/* Card hover effects */
+.card-elegant {
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 2px solid transparent;
+}
+
+.card-elegant:hover {
+  border-color: #c19a5b;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}

@@ -41,9 +41,10 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
 
       const viewportHeight = window.innerHeight
 
-      // Find which section is most visible (closest to viewport center)
+      // Find which section contains the detection point (1/3 from top of viewport)
+      // Using top portion instead of center better matches user expectations when scrolling
+      const detectionPoint = viewportHeight / 3
       let bestIndex = 0
-      let bestVisibility = -Infinity
 
       for (let i = 0; i < sectionIds.length; i++) {
         const element = document.getElementById(sectionIds[i])
@@ -51,14 +52,14 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
 
         const rect = element.getBoundingClientRect()
 
-        // Calculate how close the section center is to viewport center
-        const viewportCenter = viewportHeight / 2
-        const sectionCenter = rect.top + rect.height / 2
-        const distanceFromCenter = Math.abs(sectionCenter - viewportCenter)
-        const visibility = -distanceFromCenter // Higher (less negative) = more centered
+        // Check if the detection point is within this section
+        if (rect.top <= detectionPoint && rect.bottom > detectionPoint) {
+          bestIndex = i
+          break
+        }
 
-        if (visibility > bestVisibility) {
-          bestVisibility = visibility
+        // Fallback: if we're past the last section, use the last one
+        if (i === sectionIds.length - 1 && rect.top < detectionPoint) {
           bestIndex = i
         }
       }

@@ -17,7 +17,7 @@ export function WelcomeSection() {
           initial={{ opacity: 0, scale: 1.1 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
             src="/images/gallery/Foto8.jpg"
@@ -42,32 +42,35 @@ export function WelcomeSection() {
           <Flourish variant="corner" className="w-16 h-16 text-olive transform scale-x-[-1]" />
         </div>
 
+        {/* "¡NOS CASAMOS!" - BIGGER */}
         <motion.p
-          className="text-olive font-serif italic text-lg md:text-xl mb-4"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-gold-warm font-serif text-2xl md:text-3xl lg:text-4xl tracking-widest uppercase mb-6"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          ¡NOS CASAMOS!
+          ¡Nos Casamos!
         </motion.p>
 
+        {/* Couple names - BIGGER */}
         <motion.h1
-          className="font-cursive text-4xl md:text-5xl lg:text-6xl text-olive mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="font-cursive text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-olive mb-6 leading-tight"
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
           {couple.bride} & {couple.groom}
         </motion.h1>
 
+        {/* Invitation text - BIGGER */}
         <motion.p
-          className="text-gray-600 font-serif text-base md:text-lg max-w-md"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-gray-600 font-serif text-lg md:text-xl lg:text-2xl max-w-md leading-relaxed"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           Tenemos el honor de invitarte a nuestra boda
         </motion.p>

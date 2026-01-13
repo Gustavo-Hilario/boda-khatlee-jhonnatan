@@ -11,7 +11,6 @@ import { ItinerarySection } from './components/sections/ItinerarySection'
 import { GallerySection } from './components/sections/GallerySection'
 import { InfoSection } from './components/sections/InfoSection'
 import { ClosingSection } from './components/sections/ClosingSection'
-import { Footer } from './components/sections/Footer'
 import { MusicPlayer } from './components/ui/MusicPlayer'
 
 const SECTION_IDS = [
@@ -46,7 +45,6 @@ function App() {
           <GallerySection />
           <InfoSection />
           <ClosingSection />
-          <Footer />
         </main>
       </SmoothScroller>
 

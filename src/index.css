@@ -8,6 +8,8 @@
   --color-burgundy: #800020;
   --color-burgundy-light: #a30029;
   --color-burgundy-dark: #5c0017;
+  --color-cream: #faf8f5;
+  --color-gold: #c9a961;
 
   --font-cursive: 'Dancing Script', cursive;
   --font-serif: 'Playfair Display', serif;
@@ -20,7 +22,7 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: 'Montserrat', sans-serif;
   background-color: white;
   color: #1f2937;
   -webkit-font-smoothing: antialiased;
@@ -31,6 +33,48 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Font utilities */
+.font-cursive {
+  font-family: 'Dancing Script', cursive;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-sans {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Custom color utilities */
+.bg-olive { background-color: #8d9e78; }
+.bg-olive-light { background-color: #a8b894; }
+.bg-olive-dark { background-color: #6b7a5c; }
+.bg-burgundy { background-color: #800020; }
+.bg-burgundy-light { background-color: #a30029; }
+.bg-cream { background-color: #faf8f5; }
+
+.text-olive { color: #8d9e78; }
+.text-olive-dark { color: #6b7a5c; }
+.text-burgundy { color: #800020; }
+.text-burgundy-light { color: #a30029; }
+.text-gold { color: #c9a961; }
+
+.border-olive { border-color: #8d9e78; }
+.border-burgundy { border-color: #800020; }
+
+/* Ring colors for focus states */
+.ring-olive { --tw-ring-color: #8d9e78; }
+.ring-burgundy { --tw-ring-color: #800020; }
+
+/* Hover states */
+.hover\:bg-burgundy-light:hover { background-color: #a30029; }
+.hover\:bg-olive-light:hover { background-color: #a8b894; }
+
+/* Focus states */
+.focus\:ring-burgundy:focus { --tw-ring-color: #800020; }
+.focus\:ring-olive:focus { --tw-ring-color: #8d9e78; }
 
 /* Smooth scroll behavior for Lenis */
 html.lenis, html.lenis body {
@@ -61,3 +105,51 @@ html.lenis, html.lenis body {
 .text-shadow-lg {
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
+
+/* Decorative background pattern */
+.bg-pattern-floral {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238d9e78' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Section divider styles */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #8d9e78, transparent);
+}
+
+/* Elegant section padding for non-full-height sections */
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+/* Gallery grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Gallery image aspect ratios */
+.gallery-grid > *:nth-child(6n+1) { grid-row: span 2; }
+.gallery-grid > *:nth-child(6n+4) { grid-row: span 2; }

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 
 interface ButtonProps {
   children: ReactNode
-  variant?: 'primary' | 'secondary' | 'outline'
+  variant?: 'primary' | 'secondary' | 'outline' | 'outline-light'
   size?: 'sm' | 'md' | 'lg'
   href?: string
   external?: boolean
@@ -28,12 +28,12 @@ export function Button({
   const baseStyles = cn(
     'inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-wider',
     'transition-all duration-300 ease-out',
-    'shadow-lg hover:shadow-xl hover:-translate-y-0.5',
     'focus:outline-none focus:ring-2 focus:ring-offset-2',
     {
-      'bg-burgundy text-white hover:bg-burgundy-light focus:ring-burgundy': variant === 'primary',
-      'bg-olive text-white hover:bg-olive-light focus:ring-olive': variant === 'secondary',
+      'bg-burgundy text-white hover:bg-burgundy-light focus:ring-burgundy shadow-lg hover:shadow-xl hover:-translate-y-0.5': variant === 'primary',
+      'bg-olive text-white hover:bg-olive-light focus:ring-olive shadow-lg hover:shadow-xl hover:-translate-y-0.5': variant === 'secondary',
       'bg-transparent border-2 border-burgundy text-burgundy hover:bg-burgundy hover:text-white focus:ring-burgundy': variant === 'outline',
+      'bg-transparent border-2 border-white/80 text-white hover:bg-white hover:text-burgundy focus:ring-white': variant === 'outline-light',
       'px-4 py-2 text-xs': size === 'sm',
       'px-6 py-3 text-sm': size === 'md',
       'px-8 py-4 text-base': size === 'lg',

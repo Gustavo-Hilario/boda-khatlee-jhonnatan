@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
+import { Flourish } from '../ui/Flourish'
 
 export function WelcomeSection() {
   const { couple } = weddingConfig
@@ -16,7 +17,7 @@ export function WelcomeSection() {
           initial={{ opacity: 0, scale: 1.1 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
         >
           <img
             src="/images/gallery/Foto8.jpg"
@@ -24,10 +25,23 @@ export function WelcomeSection() {
             className="w-full h-full object-cover"
           />
         </motion.div>
+
+        {/* Decorative corner flourishes on image */}
+        <div className="absolute top-4 left-4 opacity-40">
+          <Flourish variant="corner" className="w-16 h-16 md:w-20 md:h-20 text-white" />
+        </div>
+        <div className="absolute bottom-4 right-4 opacity-40 transform rotate-180">
+          <Flourish variant="corner" className="w-16 h-16 md:w-20 md:h-20 text-white" />
+        </div>
       </div>
 
       {/* Text side */}
-      <div className="flex-1 bg-white flex flex-col justify-center items-center px-6 py-12 md:py-0 text-center">
+      <div className="flex-1 bg-cream flex flex-col justify-center items-center px-6 py-12 md:py-0 text-center relative">
+        {/* Decorative corner */}
+        <div className="absolute top-4 right-4 opacity-30 hidden md:block">
+          <Flourish variant="corner" className="w-16 h-16 text-olive transform scale-x-[-1]" />
+        </div>
+
         <motion.p
           className="text-olive font-serif italic text-lg md:text-xl mb-4"
           initial={{ opacity: 0, y: 20 }}
@@ -60,15 +74,13 @@ export function WelcomeSection() {
 
         {/* Decorative flourish */}
         <motion.div
-          className="mt-8 flex items-center gap-4"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="mt-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <span className="h-px w-12 bg-olive/30" />
-          <span className="text-olive text-xl">❤</span>
-          <span className="h-px w-12 bg-olive/30" />
+          <Flourish variant="header" />
         </motion.div>
       </div>
     </section>

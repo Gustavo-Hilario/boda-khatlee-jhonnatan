@@ -187,7 +187,7 @@ export function CountdownSection() {
       >
         {/* "Queremos que nos acompañes" with text reveal */}
         <motion.p
-          className="text-gray-600 font-serif text-xl md:text-2xl lg:text-3xl font-light mb-6 leading-relaxed"
+          className="text-gray-600 font-elegant text-2xl md:text-3xl lg:text-4xl mb-6 leading-relaxed italic"
           variants={textRevealVariants}
           initial="hidden"
           whileInView="visible"

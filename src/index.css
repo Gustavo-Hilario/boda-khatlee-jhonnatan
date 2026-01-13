@@ -15,6 +15,7 @@
 
   --font-cursive: 'Dancing Script', cursive;
   --font-serif: 'Playfair Display', serif;
+  --font-elegant: 'Cormorant Garamond', serif;
   --font-sans: 'Montserrat', sans-serif;
 }
 
@@ -43,6 +44,10 @@ body {
 
 .font-serif {
   font-family: 'Playfair Display', serif;
+}
+
+.font-elegant {
+  font-family: 'Cormorant Garamond', serif;
 }
 
 .font-sans {

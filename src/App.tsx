@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MotionConfig } from 'framer-motion'
 import { MusicProvider } from './context/MusicContext'
 import { SmoothScroller } from './components/layout/SmoothScroller'
 import { CoverSection } from './components/sections/CoverSection'
@@ -30,28 +31,30 @@ function App() {
   const [coverOpen, setCoverOpen] = useState(false)
 
   return (
-    <MusicProvider>
-      {/* Cover section (overlay) */}
-      <CoverSection onOpen={() => setCoverOpen(true)} />
+    <MotionConfig reducedMotion="user">
+      <MusicProvider>
+        {/* Cover section (overlay) */}
+        <CoverSection onOpen={() => setCoverOpen(true)} />
 
-      {/* Main content */}
-      <SmoothScroller sectionIds={SECTION_IDS}>
-        <main className="relative">
-          <WelcomeSection />
-          <QuoteSection />
-          <FamilySection />
-          <CountdownSection />
-          <VenueSection />
-          <ItinerarySection />
-          <GallerySection />
-          <InfoSection />
-          <ClosingSection />
-        </main>
-      </SmoothScroller>
+        {/* Main content */}
+        <SmoothScroller sectionIds={SECTION_IDS}>
+          <main className="relative">
+            <WelcomeSection />
+            <QuoteSection />
+            <FamilySection />
+            <CountdownSection />
+            <VenueSection />
+            <ItinerarySection />
+            <GallerySection />
+            <InfoSection />
+            <ClosingSection />
+          </main>
+        </SmoothScroller>
 
-      {/* Floating music player - only show after cover opens */}
-      {coverOpen && <MusicPlayer />}
-    </MusicProvider>
+        {/* Floating music player - only show after cover opens */}
+        {coverOpen && <MusicPlayer />}
+      </MusicProvider>
+    </MotionConfig>
   )
 }
 

@@ -240,15 +240,15 @@ function VenueCard({
             >
               {headerIcon || icon}
             </motion.span>
-            <h3 className="text-xl font-semibold">{title}</h3>
+            <h3 className="text-xl font-semibold font-elegant">{title}</h3>
           </motion.div>
 
           {/* Venue name */}
-          <p className="text-white/90 font-medium text-lg mb-2">
+          <p className="text-white/90 font-elegant text-xl mb-2">
             {name}
           </p>
 
-          <p className="text-white/80 text-sm mb-4 flex-1">{location}</p>
+          <p className="text-white/80 font-elegant text-base mb-4 flex-1">{location}</p>
 
           {/* Children (for dress code extras) */}
           {children}
@@ -439,11 +439,11 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
             >
               ✨
             </motion.span>
-            <h3 className="text-xl font-semibold">Dress Code</h3>
+            <h3 className="text-xl font-semibold font-elegant">Dress Code</h3>
           </motion.div>
 
           {/* Style name */}
-          <p className="text-white font-bold text-2xl mb-3">
+          <p className="text-white font-elegant text-2xl mb-3">
             {dressCode.style}
           </p>
 

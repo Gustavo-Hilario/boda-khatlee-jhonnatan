@@ -235,13 +235,13 @@ function InfoCard({ icon, title, description, bgColor, action, footer }: InfoCar
         </div>
 
         {/* Title */}
-        <h3 className="text-xl font-semibold mb-3 text-white">
+        <h3 className="text-xl font-semibold mb-3 text-white font-elegant">
           {title}
         </h3>
 
         {/* Description */}
         <motion.div
-          className="text-white/90 flex-1 flex items-center"
+          className="text-white/90 flex-1 flex items-center font-elegant text-lg"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

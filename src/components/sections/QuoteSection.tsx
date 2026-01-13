@@ -240,7 +240,7 @@ export function QuoteSection() {
 
         {/* Quote text with typewriter effect */}
         <motion.p
-          className="text-white font-serif text-lg md:text-xl lg:text-2xl leading-relaxed italic px-4"
+          className="text-white font-elegant text-xl md:text-2xl lg:text-3xl leading-relaxed italic px-4"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

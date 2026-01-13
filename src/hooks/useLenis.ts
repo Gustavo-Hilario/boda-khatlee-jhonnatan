@@ -12,6 +12,7 @@ interface UseLenisOptions {
 export function useLenis(options: UseLenisOptions = {}) {
   const lenisRef = useRef<Lenis | null>(null)
   const [isReady, setIsReady] = useState(false)
+  const rafIdRef = useRef<number | null>(null)
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -26,14 +27,18 @@ export function useLenis(options: UseLenisOptions = {}) {
 
     function raf(time: number) {
       lenis.raf(time)
-      requestAnimationFrame(raf)
+      rafIdRef.current = requestAnimationFrame(raf)
     }
 
     if (options.autoRaf !== false) {
-      requestAnimationFrame(raf)
+      rafIdRef.current = requestAnimationFrame(raf)
     }
 
     return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = null
+      }
       lenis.destroy()
       lenisRef.current = null
       setIsReady(false)

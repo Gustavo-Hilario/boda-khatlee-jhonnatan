@@ -282,7 +282,7 @@ function TimelineItem({
 
       {/* Title with gradient reveal */}
       <motion.p
-        className="text-gray-700 text-sm md:text-base font-medium leading-tight"
+        className="text-gray-700 font-elegant text-base md:text-lg leading-tight"
         initial={{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }}
         whileInView={{ opacity: 1, clipPath: 'inset(0 0% 0 0)' }}
         viewport={{ once: true }}

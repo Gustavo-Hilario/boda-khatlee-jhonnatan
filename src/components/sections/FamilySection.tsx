@@ -272,7 +272,7 @@ function FamilyCard({ title, icon, names, delay }: FamilyCardProps) {
         >
           {names.map((person, index) => (
             <motion.div key={index} variants={nameVariants} className="relative">
-              <p className="font-serif text-gray-700 text-lg">
+              <p className="font-elegant text-gray-700 text-xl">
                 {person.name}
               </p>
               {/* Typewriter cursor that appears briefly */}
@@ -422,7 +422,7 @@ export function FamilySection() {
           </motion.h2>
 
           <motion.p
-            className="text-gray-600 font-serif text-xl md:text-2xl mb-2"
+            className="text-gray-600 font-elegant text-2xl md:text-3xl mb-2 italic"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

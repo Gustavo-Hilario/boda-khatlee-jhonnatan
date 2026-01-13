@@ -4,8 +4,9 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules'
 import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
-// @ts-ignore - Swiper CSS imports
-import 'swiper/swiper-bundle.css'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-fade'
 import 'yet-another-react-lightbox/styles.css'
 import { galleryImages } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
@@ -110,10 +111,12 @@ function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'i
   }
 
   return (
-    <motion.div
+    <motion.button
       ref={ref}
       variants={itemVariants}
-      className={`relative overflow-hidden rounded-xl cursor-pointer ${isLarge ? 'row-span-2' : ''}`}
+      type="button"
+      aria-label={`Ver ${alt}`}
+      className={`relative overflow-hidden rounded-xl cursor-pointer bg-transparent border-0 p-0 text-left focus:outline-none ${isLarge ? 'row-span-2' : ''}`}
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
@@ -214,7 +217,7 @@ function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'i
         }}
         transition={{ duration: 0.3 }}
       />
-    </motion.div>
+    </motion.button>
   )
 }
 
@@ -231,8 +234,10 @@ function SlideshowImage({ src, alt, index, onClick, isActive }: SlideshowImagePr
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <div
-      className="relative w-full h-full cursor-pointer group"
+    <button
+      type="button"
+      aria-label={`Ver ${alt}`}
+      className="relative w-full h-full cursor-pointer group bg-transparent border-0 p-0 text-left focus:outline-none"
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -306,7 +311,7 @@ function SlideshowImage({ src, alt, index, onClick, isActive }: SlideshowImagePr
           </svg>
         </motion.div>
       </motion.div>
-    </div>
+    </button>
   )
 }
 
@@ -463,7 +468,7 @@ export function GallerySection() {
           Galería
         </motion.h3>
         <motion.p
-          className="text-gray-600 font-serif text-lg"
+          className="text-gray-600 font-elegant text-xl italic"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

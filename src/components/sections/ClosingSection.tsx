@@ -164,6 +164,8 @@ export function ClosingSection() {
             src="/images/gallery/Foto7.jpg"
             alt={`${couple.bride} y ${couple.groom}`}
             className="w-full h-[120%] object-cover"
+            loading="lazy"
+            decoding="async"
             variants={kenBurnsVariants}
             animate="animate"
           />
@@ -263,7 +265,7 @@ export function ClosingSection() {
 
         {/* Closing quote */}
         <motion.p
-          className="text-gray-600 font-serif text-lg md:text-xl leading-relaxed mb-6"
+          className="text-gray-600 font-elegant text-xl md:text-2xl leading-relaxed mb-6 italic"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -274,7 +276,7 @@ export function ClosingSection() {
 
         {/* Full closing text */}
         <motion.p
-          className="text-gray-500 font-serif text-base md:text-lg leading-relaxed mb-8"
+          className="text-gray-500 font-elegant text-lg md:text-xl leading-relaxed mb-8"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

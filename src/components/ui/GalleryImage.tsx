@@ -15,14 +15,16 @@ export function GalleryImage({ src, alt, onClick, className, priority = false }:
   const [hasError, setHasError] = useState(false)
 
   return (
-    <motion.div
+    <motion.button
       className={cn(
-        'relative overflow-hidden rounded-xl bg-gray-100 cursor-pointer',
+        'relative overflow-hidden rounded-xl bg-gray-100 cursor-pointer border-0 p-0 text-left focus:outline-none',
         className
       )}
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
       onClick={onClick}
+      type="button"
+      aria-label={`Ver ${alt}`}
     >
       {/* Loading placeholder */}
       {!isLoaded && !hasError && (
@@ -53,6 +55,6 @@ export function GalleryImage({ src, alt, onClick, className, priority = false }:
         className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors duration-300"
         whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.1)' }}
       />
-    </motion.div>
+    </motion.button>
   )
 }

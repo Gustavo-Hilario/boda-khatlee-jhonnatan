@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Petal {
@@ -10,6 +10,7 @@ interface Petal {
   rotation: number
   swayAmount: number
   opacity: number
+  color: string
 }
 
 interface FloatingPetalsProps {
@@ -39,9 +40,10 @@ export function FloatingPetals({
       rotation: Math.random() * 360,
       swayAmount: 20 + Math.random() * 40,
       opacity: 0.6 + Math.random() * 0.4,
+      color: colors[Math.floor(Math.random() * colors.length)],
     }))
     setPetals(newPetals)
-  }, [count])
+  }, [count, colors])
 
   useEffect(() => {
     if (active) {
@@ -93,10 +95,7 @@ export function FloatingPetals({
               },
             }}
           >
-            <PetalShape
-              size={petal.size}
-              color={colors[Math.floor(Math.random() * colors.length)]}
-            />
+            <PetalShape size={petal.size} color={petal.color} />
           </motion.div>
         ))}
       </AnimatePresence>
@@ -183,6 +182,7 @@ export function PetalBurst({
     color: string
     rotation: number
   }>>([])
+  const clearTimeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (trigger) {
@@ -197,7 +197,16 @@ export function PetalBurst({
       }))
       setPetals(newPetals)
 
-      setTimeout(() => setPetals([]), 2000)
+      if (clearTimeoutRef.current) {
+        window.clearTimeout(clearTimeoutRef.current)
+      }
+      clearTimeoutRef.current = window.setTimeout(() => setPetals([]), 2000)
+    }
+    return () => {
+      if (clearTimeoutRef.current) {
+        window.clearTimeout(clearTimeoutRef.current)
+        clearTimeoutRef.current = null
+      }
     }
   }, [trigger, count])
 

@@ -5,7 +5,7 @@ export const weddingConfig: WeddingConfig = {
         bride: 'Khatlee',
         groom: 'Jhonnatan',
     },
-    date: new Date('2026-03-07T16:00:00'),
+    date: new Date('2026-03-07T16:00:00-05:00'),
     displayDate: 'SABADO 07 DE MARZO DE 2026',
     parents: {
         bride: [

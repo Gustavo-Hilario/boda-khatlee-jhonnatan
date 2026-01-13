@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Particle {
@@ -35,6 +35,7 @@ export function Confetti({
 }: ConfettiProps) {
   const [particles, setParticles] = useState<Particle[]>([])
   const [key, setKey] = useState(0)
+  const clearTimeoutRef = useRef<number | null>(null)
 
   const generateParticles = useCallback(() => {
     const newParticles: Particle[] = Array.from({ length: count }).map((_, i) => {
@@ -58,8 +59,11 @@ export function Confetti({
     setParticles(newParticles)
     setKey((k) => k + 1)
 
+    if (clearTimeoutRef.current) {
+      window.clearTimeout(clearTimeoutRef.current)
+    }
     // Clear particles after duration
-    setTimeout(() => {
+    clearTimeoutRef.current = window.setTimeout(() => {
       setParticles([])
     }, duration)
   }, [count, colors, duration, spread, origin, shapes])
@@ -67,6 +71,12 @@ export function Confetti({
   useEffect(() => {
     if (trigger) {
       generateParticles()
+    }
+    return () => {
+      if (clearTimeoutRef.current) {
+        window.clearTimeout(clearTimeoutRef.current)
+        clearTimeoutRef.current = null
+      }
     }
   }, [trigger, generateParticles])
 

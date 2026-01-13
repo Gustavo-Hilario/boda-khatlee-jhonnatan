@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useRef, useState, useCallback, useEffect, type ReactNode } from 'react'
 
 interface MusicContextType {
   isPlaying: boolean
@@ -18,33 +18,56 @@ interface MusicProviderProps {
 
 export function MusicProvider({ children, audioSrc = '/audio/background-music.mp3' }: MusicProviderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const listenersAttachedRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolumeState] = useState(0.5)
   const [hasInteracted, setHasInteracted] = useState(false)
 
-  const togglePlay = useCallback(() => {
+  const ensureAudio = useCallback(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio(audioSrc)
       audioRef.current.loop = true
       audioRef.current.volume = volume
     }
-
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
-      audioRef.current.play().catch(() => {
-        // Autoplay blocked - user needs to interact first
-        console.log('Audio playback requires user interaction')
-      })
+    if (!listenersAttachedRef.current && audioRef.current) {
+      listenersAttachedRef.current = true
+      audioRef.current.addEventListener('play', () => setIsPlaying(true))
+      audioRef.current.addEventListener('pause', () => setIsPlaying(false))
+      audioRef.current.addEventListener('ended', () => setIsPlaying(false))
     }
-    setIsPlaying(!isPlaying)
-    setHasInteracted(true)
-  }, [isPlaying, volume, audioSrc])
+    return audioRef.current
+  }, [audioSrc, volume])
+
+  const togglePlay = useCallback(() => {
+    const audio = ensureAudio()
+    if (!audio) return
+
+    if (!audio.paused) {
+      audio.pause()
+      setHasInteracted(true)
+      return
+    }
+
+    audio.play().then(() => {
+      setHasInteracted(true)
+    }).catch(() => {
+      // Autoplay blocked - user needs to interact first
+      setHasInteracted(true)
+    })
+  }, [ensureAudio])
 
   const setVolume = useCallback((v: number) => {
     setVolumeState(v)
     if (audioRef.current) {
       audioRef.current.volume = v
+    }
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
     }
   }, [])
 

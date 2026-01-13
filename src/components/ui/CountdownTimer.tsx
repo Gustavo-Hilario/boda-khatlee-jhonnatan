@@ -73,6 +73,8 @@ export function CountdownTimer({
   const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds
 
   // Check for milestones
+  const milestoneTimeoutRef = useRef<number | null>(null)
+
   useEffect(() => {
     if (!showMilestones) return
 
@@ -96,11 +98,22 @@ export function CountdownTimer({
       setMilestoneTriggered(milestone)
 
       // Reset after celebration
-      setTimeout(() => {
+      if (milestoneTimeoutRef.current) {
+        window.clearTimeout(milestoneTimeoutRef.current)
+      }
+      milestoneTimeoutRef.current = window.setTimeout(() => {
         setMilestoneTriggered(null)
       }, 4000)
     }
   }, [totalSeconds, isExpired, showMilestones])
+
+  useEffect(() => {
+    return () => {
+      if (milestoneTimeoutRef.current) {
+        window.clearTimeout(milestoneTimeoutRef.current)
+      }
+    }
+  }, [])
 
   // Expired state with celebration
   if (isExpired) {
@@ -250,19 +263,27 @@ interface CountdownProgressProps {
 
 export function CountdownProgress({
   targetDate,
-  startDate = new Date(),
+  startDate,
   size = 120,
   strokeWidth = 8,
 }: CountdownProgressProps) {
   const { isExpired } = useCountdown(targetDate)
   const [progress, setProgress] = useState(0)
+  const startRef = useRef<Date | null>(startDate ?? null)
 
   useEffect(() => {
-    const total = targetDate.getTime() - startDate.getTime()
+    if (!startRef.current) {
+      startRef.current = new Date()
+    }
+    const total = targetDate.getTime() - startRef.current.getTime()
+    if (total <= 0) {
+      setProgress(1)
+      return
+    }
     const remaining = targetDate.getTime() - Date.now()
     const currentProgress = Math.max(0, Math.min(1, 1 - remaining / total))
     setProgress(currentProgress)
-  }, [targetDate, startDate])
+  }, [targetDate])
 
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI

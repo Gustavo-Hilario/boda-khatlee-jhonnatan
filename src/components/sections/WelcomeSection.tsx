@@ -196,6 +196,8 @@ export function WelcomeSection() {
             src="/images/gallery/Foto8.jpg"
             alt={`${couple.bride} y ${couple.groom}`}
             className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
           />
         </motion.div>
 
@@ -312,7 +314,7 @@ export function WelcomeSection() {
 
         {/* Invitation text - Word by word */}
         <motion.p
-          className="text-gray-600 font-serif text-base md:text-xl lg:text-2xl max-w-md leading-relaxed flex flex-wrap justify-center gap-x-[0.3em]"
+          className="text-gray-600 font-elegant text-lg md:text-2xl lg:text-3xl max-w-md leading-relaxed flex flex-wrap justify-center gap-x-[0.3em] italic"
           variants={wordContainerVariants}
           initial="hidden"
           whileInView="visible"

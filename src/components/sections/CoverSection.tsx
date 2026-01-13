@@ -140,10 +140,12 @@ export function CoverSection({ onOpen }: CoverSectionProps) {
 
       <AnimatePresence>
         {!isOpen && (
-          <motion.div
+          <motion.button
             id="cover"
-            className="fixed inset-0 z-50 cursor-pointer overflow-hidden"
+            type="button"
+            className="fixed inset-0 z-50 cursor-pointer overflow-hidden border-0 p-0 bg-transparent text-left focus:outline-none"
             onClick={handleOpen}
+            aria-label="Abrir invitación"
             initial={{ y: 0 }}
             exit={{
               y: '-100%',
@@ -299,7 +301,7 @@ export function CoverSection({ onOpen }: CoverSectionProps) {
               />
             </div>
 
-          </motion.div>
+          </motion.button>
         )}
       </AnimatePresence>
     </>

@@ -152,7 +152,7 @@ export function ClosingSection() {
     <section
       ref={ref}
       id="closing"
-      className="bg-cream overflow-hidden relative"
+      className="bg-cream overflow-x-hidden relative"
     >
       {/* Image with Ken Burns and parallax */}
       <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">

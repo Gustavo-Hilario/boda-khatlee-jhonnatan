@@ -4,9 +4,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules'
 import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
-import 'swiper/css'
-import 'swiper/css/pagination'
-import 'swiper/css/effect-fade'
+// @ts-ignore - Swiper CSS imports
+import 'swiper/swiper-bundle.css'
 import 'yet-another-react-lightbox/styles.css'
 import { galleryImages } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
@@ -77,7 +76,7 @@ interface GalleryImageProps {
 }
 
 function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'index'>) {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLButtonElement>(null)
   const [isHovered, setIsHovered] = useState(false)
 
   // Mouse position for 3D tilt
@@ -95,7 +94,7 @@ function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'i
   })
 
   // Handle mouse move for 3D tilt
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!ref.current) return
     const rect = ref.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5

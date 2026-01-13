@@ -284,7 +284,7 @@ export function CountdownSection() {
           transition={{ delay: 0.8, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <motion.div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0 rounded-full pointer-events-none"
             variants={buttonPulseVariants}
             animate="animate"
           />

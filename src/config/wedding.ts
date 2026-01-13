@@ -6,7 +6,7 @@ export const weddingConfig: WeddingConfig = {
         groom: 'Jhonnatan',
     },
     date: new Date('2026-03-07T16:00:00-05:00'),
-    displayDate: 'SABADO 07 DE MARZO DE 2026',
+    displayDate: 'SÁBADO 07 DE MARZO DE 2026',
     parents: {
         bride: [
             { name: 'Victor Romero Santa Rosa' },
@@ -35,7 +35,7 @@ export const weddingConfig: WeddingConfig = {
             mapUrl: 'https://maps.app.goo.gl/Nun6z5gpkLXgA5c87?g_st=iw',
         },
         reception: {
-            name: 'Recepcion Social',
+            name: 'Recepción Social',
             location: '----------',
             mapUrl: 'https://maps.app.goo.gl/Nun6z5gpkLXgA5c87?g_st=iw',
         },
@@ -43,7 +43,7 @@ export const weddingConfig: WeddingConfig = {
     dressCode: {
         style: 'ELEGANTE',
         reserved: ['blanco', 'ivory', 'perla'],
-        bridal: ['Verde Oliva', 'Borgona'],
+        bridal: ['Verde Oliva', 'Borgoña'],
         pinterestWomen: '#',
         pinterestMen: '#',
     },
@@ -68,13 +68,13 @@ export const timelineEvents: TimelineEvent[] = [
     {
         id: '2',
         time: '17:30',
-        title: 'Coctel',
+        title: 'Cóctel',
         icon: '/images/icons/image-removebg-preview (19).png',
     },
     {
         id: '3',
         time: '18:30',
-        title: 'Recepcion',
+        title: 'Recepción',
         icon: '/images/icons/image-removebg-preview (19).png',
     },
     {
@@ -111,9 +111,9 @@ export const galleryImages: GalleryImage[] = [
 ];
 
 export const quotes = {
-    main: 'Nuestro gran dia se aproxima y nos encantaria que formaras parte de el. Nos hace mucha ilusion invitarlos a nuestra boda.',
+    main: 'Nuestro gran día se aproxima y nos encantaría que formaras parte de él. Nos hace mucha ilusión invitarlos a nuestra boda.',
     closing:
-        'Creemos que mereces una noche llena de alegria y de buenos momentos. Por eso esperamos contar con tu compania para hacer aun mas especial este momento.',
+        'Creemos que mereces una noche llena de alegría y de buenos momentos. Por eso esperamos contar con tu compañía para hacer aún más especial este momento.',
     closingFull:
-        'Gracias por acompanarnos el dia mas especial de nuestra historia. Su compania en este dia es el mayor regalo que podemos recibir. Gracias a sus oraciones y su carino, por esta parte de nuestro camino estamos agradecidos con Dios y con la vida por permitirnos celebrar este momento con ustedes, nuestra familia y amigos queridos.',
+        'Gracias por acompañarnos el día más especial de nuestra historia. Su compañía en este día es el mayor regalo que podemos recibir. Gracias a sus oraciones y su cariño, por esta parte de nuestro camino estamos agradecidos con Dios y con la vida por permitirnos celebrar este momento con ustedes, nuestra familia y amigos queridos.',
 };

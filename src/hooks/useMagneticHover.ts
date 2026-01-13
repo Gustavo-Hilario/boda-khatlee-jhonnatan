@@ -1,11 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { useSpring, useMotionValue } from 'framer-motion'
 
-interface MagneticState {
-  x: number
-  y: number
-}
-
 export function useMagneticHover(intensity = 8) {
   const ref = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)

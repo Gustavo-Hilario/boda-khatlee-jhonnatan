@@ -1,0 +1,147 @@
+import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence, type Variants } from 'framer-motion'
+
+interface FlipDigitProps {
+  digit: number
+  size?: 'sm' | 'md' | 'lg'
+}
+
+// Glow pulse on change
+const glowVariants: Variants = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: [0, 0.6, 0],
+    transition: {
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  },
+}
+
+// Digit flip animation
+const digitVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: -20,
+    scale: 0.8,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 20,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 20,
+    scale: 0.8,
+    transition: {
+      duration: 0.2,
+    },
+  },
+}
+
+const sizeClasses = {
+  sm: {
+    container: 'w-10 h-14 md:w-12 md:h-16',
+    digit: 'text-2xl md:text-3xl',
+  },
+  md: {
+    container: 'w-12 h-16 md:w-16 md:h-20',
+    digit: 'text-3xl md:text-4xl',
+  },
+  lg: {
+    container: 'w-16 h-20 md:w-20 md:h-24',
+    digit: 'text-4xl md:text-5xl',
+  },
+}
+
+export function FlipDigit({ digit, size = 'md' }: FlipDigitProps) {
+  const [showGlow, setShowGlow] = useState(false)
+  const isFirstRender = useRef(true)
+  const prevDigit = useRef(digit)
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+
+    if (digit !== prevDigit.current) {
+      setShowGlow(true)
+      prevDigit.current = digit
+
+      const timer = setTimeout(() => {
+        setShowGlow(false)
+      }, 500)
+
+      return () => clearTimeout(timer)
+    }
+  }, [digit])
+
+  const classes = sizeClasses[size]
+
+  return (
+    <div
+      className={`${classes.container} relative`}
+      style={{ perspective: '400px' }}
+    >
+      {/* Glow effect on change */}
+      <AnimatePresence>
+        {showGlow && (
+          <motion.div
+            className="absolute inset-0 rounded-lg bg-gold-warm/30 blur-md z-0"
+            variants={glowVariants}
+            initial="initial"
+            animate="animate"
+            exit={{ opacity: 0 }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Card */}
+      <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg bg-olive">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/10 pointer-events-none" />
+
+        {/* Center line decoration */}
+        <div className="absolute inset-x-0 top-1/2 h-px bg-black/20 z-10" />
+
+        {/* Digit */}
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={digit}
+            className={`absolute inset-0 flex items-center justify-center ${classes.digit} font-bold text-white tabular-nums`}
+            variants={digitVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            {digit}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Reflection highlight */}
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+      </div>
+    </div>
+  )
+}
+
+// Colon separator with pulse
+export function ClockSeparator() {
+  return (
+    <motion.div
+      className="flex flex-col justify-center gap-2 px-1 md:px-2"
+      animate={{ opacity: [1, 0.3, 1] }}
+      transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
+      <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
+    </motion.div>
+  )
+}

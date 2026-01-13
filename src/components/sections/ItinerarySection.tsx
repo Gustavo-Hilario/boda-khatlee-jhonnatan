@@ -4,7 +4,7 @@ import { timelineEvents } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { TimelinePath } from '../ui/TimelinePath'
 import { Sparkles } from '../ui/Sparkles'
-import { useMobile, useAnimationConfig } from '../../hooks/useMobile'
+import { useMobile } from '../../hooks/useMobile'
 import { useMagneticHover } from '../../hooks/useMagneticHover'
 
 // Container with staggered children

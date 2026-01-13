@@ -1,0 +1,72 @@
+import { motion } from 'framer-motion'
+import { cn } from '../../utils/cn'
+import type { ReactNode } from 'react'
+
+interface ButtonProps {
+  children: ReactNode
+  variant?: 'primary' | 'secondary' | 'outline'
+  size?: 'sm' | 'md' | 'lg'
+  href?: string
+  external?: boolean
+  className?: string
+  onClick?: () => void
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
+}
+
+export function Button({
+  children,
+  variant = 'primary',
+  size = 'md',
+  href,
+  external,
+  className,
+  onClick,
+  disabled,
+  type = 'button',
+}: ButtonProps) {
+  const baseStyles = cn(
+    'inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-wider',
+    'transition-all duration-300 ease-out',
+    'shadow-lg hover:shadow-xl hover:-translate-y-0.5',
+    'focus:outline-none focus:ring-2 focus:ring-offset-2',
+    {
+      'bg-burgundy text-white hover:bg-burgundy-light focus:ring-burgundy': variant === 'primary',
+      'bg-olive text-white hover:bg-olive-light focus:ring-olive': variant === 'secondary',
+      'bg-transparent border-2 border-burgundy text-burgundy hover:bg-burgundy hover:text-white focus:ring-burgundy': variant === 'outline',
+      'px-4 py-2 text-xs': size === 'sm',
+      'px-6 py-3 text-sm': size === 'md',
+      'px-8 py-4 text-base': size === 'lg',
+      'opacity-50 cursor-not-allowed': disabled,
+    },
+    className
+  )
+
+  if (href) {
+    return (
+      <motion.a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        className={baseStyles}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {children}
+      </motion.a>
+    )
+  }
+
+  return (
+    <motion.button
+      type={type}
+      className={baseStyles}
+      whileHover={disabled ? undefined : { scale: 1.02 }}
+      whileTap={disabled ? undefined : { scale: 0.98 }}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </motion.button>
+  )
+}

@@ -16,7 +16,7 @@ export function useLenis(options: UseLenisOptions = {}) {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: options.duration ?? 1.2,
+      duration: options.duration ?? 0.8,
       easing: options.easing ?? ((t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))),
       smoothWheel: options.smoothWheel ?? true,
       wheelMultiplier: options.wheelMultiplier ?? 1,

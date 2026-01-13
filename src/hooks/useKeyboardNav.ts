@@ -22,13 +22,10 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
       setCurrentIndex(index)
 
       lenis.scrollTo(element, {
-        duration: 1.2,
+        duration: 0.8,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         onComplete: () => {
-          // Small delay before allowing new scroll to prevent race conditions
-          setTimeout(() => {
-            isScrollingRef.current = false
-          }, 100)
+          isScrollingRef.current = false
         },
       })
     }
@@ -114,6 +111,15 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
         e.preventDefault()
         if (currentIndex < sectionIds.length - 1) {
           scrollToSection(currentIndex + 1)
+        } else {
+          // At last section - scroll to absolute bottom
+          isScrollingRef.current = true
+          lenis.scrollTo('bottom', {
+            duration: 0.8,
+            onComplete: () => {
+              isScrollingRef.current = false
+            },
+          })
         }
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault()

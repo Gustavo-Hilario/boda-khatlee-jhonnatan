@@ -8,12 +8,12 @@ export function WelcomeSection() {
   return (
     <section
       id="welcome"
-      className="min-h-screen flex flex-col md:flex-row"
+      className="h-screen flex flex-col md:flex-row overflow-hidden"
     >
-      {/* Photo side */}
-      <div className="flex-1 md:flex-[1.2] relative overflow-hidden">
+      {/* Photo side - takes 45% on mobile, more on desktop */}
+      <div className="h-[45vh] md:h-full md:flex-[1.2] relative overflow-hidden flex-shrink-0">
         <motion.div
-          className="w-full h-[50vh] md:h-full"
+          className="w-full h-full"
           initial={{ opacity: 0, scale: 1.1 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -35,8 +35,8 @@ export function WelcomeSection() {
         </div>
       </div>
 
-      {/* Text side */}
-      <div className="flex-1 bg-cream flex flex-col justify-center items-center px-6 py-12 md:py-0 text-center relative">
+      {/* Text side - takes remaining 55% on mobile */}
+      <div className="flex-1 md:flex-1 bg-cream flex flex-col justify-center items-center px-6 py-6 md:py-0 text-center relative overflow-hidden">
         {/* Decorative corner */}
         <div className="absolute top-4 right-4 opacity-30 hidden md:block">
           <Flourish variant="corner" className="w-16 h-16 text-olive transform scale-x-[-1]" />
@@ -44,7 +44,7 @@ export function WelcomeSection() {
 
         {/* "¡NOS CASAMOS!" - BIGGER */}
         <motion.p
-          className="text-gold-warm font-serif text-2xl md:text-3xl lg:text-4xl tracking-widest uppercase mb-6"
+          className="text-gold-warm font-serif text-xl md:text-3xl lg:text-4xl tracking-widest uppercase mb-4 md:mb-6"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -55,7 +55,7 @@ export function WelcomeSection() {
 
         {/* Couple names - BIGGER */}
         <motion.h1
-          className="font-cursive text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-olive mb-6 leading-tight"
+          className="font-cursive text-4xl md:text-6xl lg:text-7xl xl:text-8xl text-olive mb-4 md:mb-6 leading-tight"
           initial={{ opacity: 0, y: 30, scale: 0.95 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
@@ -66,7 +66,7 @@ export function WelcomeSection() {
 
         {/* Invitation text - BIGGER */}
         <motion.p
-          className="text-gray-600 font-serif text-lg md:text-xl lg:text-2xl max-w-md leading-relaxed"
+          className="text-gray-600 font-serif text-base md:text-xl lg:text-2xl max-w-md leading-relaxed"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -77,7 +77,7 @@ export function WelcomeSection() {
 
         {/* Decorative flourish */}
         <motion.div
-          className="mt-8"
+          className="mt-6 md:mt-8"
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}

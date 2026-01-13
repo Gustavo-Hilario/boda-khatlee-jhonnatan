@@ -25,7 +25,10 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         onComplete: () => {
-          isScrollingRef.current = false
+          // Small delay before allowing new scroll to prevent race conditions
+          setTimeout(() => {
+            isScrollingRef.current = false
+          }, 100)
         },
       })
     }
@@ -40,11 +43,22 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
       if (isScrollingRef.current) return
 
       const viewportHeight = window.innerHeight
+      const scrollTop = window.scrollY
+      const documentHeight = document.documentElement.scrollHeight
+
+      // Check if we're near the bottom of the page (within 100px)
+      const isNearBottom = scrollTop + viewportHeight >= documentHeight - 100
+
+      // If near the bottom, set to last section
+      if (isNearBottom) {
+        setCurrentIndex(sectionIds.length - 1)
+        return
+      }
 
       // Find which section contains the detection point (1/3 from top of viewport)
-      // Using top portion instead of center better matches user expectations when scrolling
       const detectionPoint = viewportHeight / 3
       let bestIndex = 0
+      let closestDistance = Infinity
 
       for (let i = 0; i < sectionIds.length; i++) {
         const element = document.getElementById(sectionIds[i])
@@ -58,9 +72,13 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
           break
         }
 
-        // Fallback: if we're past the last section, use the last one
-        if (i === sectionIds.length - 1 && rect.top < detectionPoint) {
-          bestIndex = i
+        // Track closest section above the detection point for fallback
+        if (rect.top <= detectionPoint) {
+          const distance = Math.abs(rect.top - detectionPoint)
+          if (distance < closestDistance) {
+            closestDistance = distance
+            bestIndex = i
+          }
         }
       }
 

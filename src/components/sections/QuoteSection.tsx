@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, type Variants, AnimatePresence } from 'framer-motion'
 import { quotes } from '../../config/wedding'
+import { Flourish } from '../ui/Flourish'
 
 // Container animation
 const containerVariants: Variants = {
@@ -75,17 +76,6 @@ const cursorVariants: Variants = {
   },
 }
 
-// Background shimmer
-const shimmerVariants: Variants = {
-  animate: {
-    backgroundPosition: ['200% center', '-200% center'],
-    transition: {
-      duration: 8,
-      repeat: Infinity,
-      ease: 'linear',
-    },
-  },
-}
 
 // TypewriterQuote component
 function TypewriterQuote({
@@ -143,43 +133,11 @@ export function QuoteSection() {
       id="quote"
       className="bg-olive flex items-center justify-center px-6 py-20 md:py-28 relative overflow-hidden"
     >
-      {/* Animated background pattern */}
-      <motion.div
-        className="absolute inset-0 opacity-10"
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%'],
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          repeatType: 'reverse',
-          ease: 'linear',
-        }}
-      >
-        <svg className="w-full h-full" preserveAspectRatio="none">
-          <pattern
-            id="quote-pattern"
-            x="0"
-            y="0"
-            width="40"
-            height="40"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="20" cy="20" r="1.5" fill="white" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#quote-pattern)" />
-        </svg>
-      </motion.div>
-
-      {/* Gradient sweep overlay */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        variants={shimmerVariants}
-        animate="animate"
+      {/* Soft radial gradient background */}
+      <div
+        className="absolute inset-0"
         style={{
-          background:
-            'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
-          backgroundSize: '200% 100%',
+          background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 60%)',
         }}
       />
 
@@ -294,31 +252,15 @@ export function QuoteSection() {
           />
         </motion.div>
 
-        {/* Decorative line */}
+        {/* Decorative flourish */}
         <motion.div
-          className="mt-8 mx-auto w-24 h-px overflow-hidden"
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
+          className="mt-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
         >
-          <div className="w-full h-full bg-gradient-to-r from-transparent via-gold-warm to-transparent" />
-          <motion.div
-            className="absolute inset-0"
-            animate={{
-              x: ['-100%', '200%'],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              repeatDelay: 2,
-              ease: 'linear',
-            }}
-            style={{
-              background:
-                'linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)',
-            }}
-          />
+          <Flourish variant="header" className="text-white/30" />
         </motion.div>
       </motion.div>
 

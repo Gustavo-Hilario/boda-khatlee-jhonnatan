@@ -132,11 +132,11 @@ export function FlipDigit({ digit, size = 'md' }: FlipDigitProps) {
   )
 }
 
-// Colon separator with pulse
+// Colon separator with pulse - height matches digit cards (h-16 / h-20)
 export function ClockSeparator() {
   return (
     <motion.div
-      className="flex flex-col justify-center gap-2 px-1 md:px-2"
+      className="flex flex-col justify-center gap-2 px-1 md:px-2 h-16 md:h-20"
       animate={{ opacity: [1, 0.3, 1] }}
       transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
     >

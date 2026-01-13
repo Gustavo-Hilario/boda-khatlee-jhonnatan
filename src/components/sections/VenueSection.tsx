@@ -1,8 +1,17 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, type ReactNode } from 'react'
 import { motion, type Variants, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
+import {
+  ChurchIcon,
+  ChampagneIcon,
+  MapPinIcon,
+  DressCodeIcon,
+  ScrollIcon,
+  PartyIcon,
+  Sparkle,
+} from '../ui/svg'
 
 // Container stagger
 const containerVariants: Variants = {
@@ -87,13 +96,13 @@ const headerVariants: Variants = {
 // 3D Venue Card component
 interface VenueCardProps {
   title: string
-  icon: string
+  icon: ReactNode
   name: string
   location: string
   mapUrl: string
   image?: string
   bgColor: 'olive' | 'burgundy'
-  headerIcon?: string
+  headerIcon?: ReactNode
   children?: React.ReactNode
 }
 
@@ -200,15 +209,14 @@ function VenueCard({
               animate={{ scale: isHovered ? 1.1 : 1 }}
               transition={{ duration: 0.3 }}
             >
-              <motion.span
-                className="text-5xl"
+              <motion.div
                 variants={iconVariants}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
               >
                 {icon}
-              </motion.span>
+              </motion.div>
             </motion.div>
           )}
 
@@ -220,7 +228,7 @@ function VenueCard({
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <span className="text-2xl drop-shadow-lg">📍</span>
+            <MapPinIcon size={28} color="white" />
           </motion.div>
         </div>
 
@@ -233,13 +241,12 @@ function VenueCard({
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <motion.span
-              className="text-2xl"
+            <motion.div
               animate={isHovered ? { rotate: [0, -10, 10, 0], scale: [1, 1.2, 1] } : {}}
               transition={{ duration: 0.5 }}
             >
               {headerIcon || icon}
-            </motion.span>
+            </motion.div>
             <h3 className="text-xl font-semibold font-elegant">{title}</h3>
           </motion.div>
 
@@ -370,57 +377,19 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
         {/* Fashion icon placeholder */}
         <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
           <motion.div
-            className="flex gap-4"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
             animate={{ scale: isHovered ? 1.1 : 1 }}
           >
-            <motion.span
-              className="text-4xl"
-              animate={{
-                y: [0, -5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            >
-              👗
-            </motion.span>
-            <motion.span
-              className="text-4xl"
-              animate={{
-                y: [0, -5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 0.3,
-              }}
-            >
-              🤵
-            </motion.span>
+            <DressCodeIcon size={48} color="white" variant="both" />
           </motion.div>
 
           {/* Sparkle */}
-          <motion.div
-            className="absolute top-2 right-2"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <span className="text-2xl">✨</span>
-          </motion.div>
+          <div className="absolute top-2 right-2">
+            <Sparkle size={24} />
+          </div>
         </div>
 
         <div className="flex-1 flex flex-col relative z-10">
@@ -432,13 +401,12 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <motion.span
-              className="text-2xl"
+            <motion.div
               animate={isHovered ? { rotate: [0, -10, 10, 0], scale: [1, 1.2, 1] } : {}}
               transition={{ duration: 0.5 }}
             >
-              ✨
-            </motion.span>
+              <Sparkle size={28} />
+            </motion.div>
             <h3 className="text-xl font-semibold font-elegant">Dress Code</h3>
           </motion.div>
 
@@ -541,15 +509,15 @@ export function VenueSection() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <motion.span
-            className="text-gold-warm text-2xl inline-block mb-4"
+          <motion.div
+            className="inline-block mb-4"
             initial={{ opacity: 0, scale: 0, rotate: -180 }}
             whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
           >
-            ✦
-          </motion.span>
+            <Sparkle size={32} />
+          </motion.div>
 
           <motion.h2
             className="font-cursive text-4xl md:text-5xl lg:text-6xl text-olive mb-4"
@@ -581,8 +549,8 @@ export function VenueSection() {
           {/* Religious Ceremony */}
           <VenueCard
             title="Ceremonia Religiosa"
-            icon="💒"
-            headerIcon="⛪"
+            icon={<ChurchIcon size={64} color="white" />}
+            headerIcon={<ChurchIcon size={28} color="white" />}
             name={venues.religious.name}
             location={venues.religious.location}
             mapUrl={venues.religious.mapUrl}
@@ -593,8 +561,8 @@ export function VenueSection() {
           {/* Civil Ceremony */}
           <VenueCard
             title="Ceremonia Civil"
-            icon="💒"
-            headerIcon="📜"
+            icon={<ScrollIcon size={64} color="white" />}
+            headerIcon={<ScrollIcon size={28} color="white" />}
             name={venues.civil.name}
             location={venues.civil.location}
             mapUrl={venues.civil.mapUrl}
@@ -604,8 +572,8 @@ export function VenueSection() {
           {/* Reception */}
           <VenueCard
             title="Recepción"
-            icon="🎊"
-            headerIcon="🥂"
+            icon={<PartyIcon size={64} color="white" />}
+            headerIcon={<ChampagneIcon size={32} color="white" />}
             name={venues.reception.name}
             location={venues.reception.location}
             mapUrl={venues.reception.mapUrl}

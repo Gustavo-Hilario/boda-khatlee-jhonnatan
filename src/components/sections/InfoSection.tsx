@@ -1,8 +1,15 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, type ReactNode } from 'react'
 import { motion, type Variants, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
+import {
+  GiftBoxIcon,
+  ChampagneIcon,
+  CameraIcon,
+  EnvelopeIcon,
+  Sparkle,
+} from '../ui/svg'
 
 // Container stagger
 const containerVariants: Variants = {
@@ -85,7 +92,7 @@ const headerVariants: Variants = {
 
 // Info Card component with 3D tilt
 interface InfoCardProps {
-  icon: string
+  icon: ReactNode
   title: string
   description: React.ReactNode
   bgColor: 'olive' | 'burgundy'
@@ -224,13 +231,12 @@ function InfoCard({ icon, title, description, bgColor, action, footer }: InfoCar
               transition: { duration: 0.4 },
             }}
           >
-            <motion.span
-              className="text-4xl"
+            <motion.div
               animate={isHovered ? { scale: [1, 1.2, 1] } : {}}
               transition={{ duration: 0.3 }}
             >
               {icon}
-            </motion.span>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -327,15 +333,15 @@ export function InfoSection() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <motion.span
-            className="text-gold-warm text-2xl inline-block mb-4"
+          <motion.div
+            className="inline-block mb-4"
             initial={{ opacity: 0, scale: 0, rotate: -180 }}
             whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
           >
-            ✦
-          </motion.span>
+            <Sparkle size={32} />
+          </motion.div>
 
           <motion.h2
             className="font-cursive text-4xl md:text-5xl lg:text-6xl text-olive mb-4"
@@ -366,7 +372,7 @@ export function InfoSection() {
         >
           {/* Gift suggestions */}
           <InfoCard
-            icon="💝"
+            icon={<GiftBoxIcon size={40} color="white" />}
             title="Sugerencia de Regalos"
             description={<p className="text-lg">Sobre / Efectivo</p>}
             footer="Tu presencia es el mejor regalo"
@@ -375,7 +381,7 @@ export function InfoSection() {
 
           {/* Adults only */}
           <InfoCard
-            icon="🥂"
+            icon={<ChampagneIcon size={40} color="white" />}
             title="Solo Adultos"
             description={
               <p>
@@ -388,7 +394,7 @@ export function InfoSection() {
 
           {/* Photo sharing */}
           <InfoCard
-            icon="📸"
+            icon={<CameraIcon size={40} color="white" />}
             title="Comparte tus Fotos"
             description={
               <p>
@@ -404,7 +410,7 @@ export function InfoSection() {
 
           {/* RSVP */}
           <InfoCard
-            icon="✉️"
+            icon={<EnvelopeIcon size={40} color="white" />}
             title="Confirma tu Asistencia"
             description={
               <p>

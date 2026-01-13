@@ -3,6 +3,12 @@ import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { useCountdown } from '../../hooks/useCountdown'
 import { cn } from '../../utils/cn'
 import { FlipDigit, ClockSeparator } from './FlipDigit'
+import {
+  CalendarIcon,
+  ClockIcon,
+  HourglassIcon,
+  StopwatchIcon,
+} from './svg'
 
 interface CountdownTimerProps {
   targetDate: Date
@@ -192,6 +198,17 @@ export function CountdownTimer({
         <div className={cn('flex justify-center items-start', config.gap)}>
           {/* Days */}
           <div className="flex flex-col items-center">
+            <motion.div
+              className="mb-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <CalendarIcon
+                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                color="#8d9e78"
+              />
+            </motion.div>
             <div className="flex gap-0.5 md:gap-1">
               <FlipDigit digit={Math.floor(days / 10)} size={config.digitSize} />
               <FlipDigit digit={days % 10} size={config.digitSize} />
@@ -207,6 +224,17 @@ export function CountdownTimer({
 
           {/* Hours */}
           <div className="flex flex-col items-center">
+            <motion.div
+              className="mb-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <ClockIcon
+                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                color="#8d9e78"
+              />
+            </motion.div>
             <div className="flex gap-0.5 md:gap-1">
               <FlipDigit digit={Math.floor(hours / 10)} size={config.digitSize} />
               <FlipDigit digit={hours % 10} size={config.digitSize} />
@@ -222,6 +250,17 @@ export function CountdownTimer({
 
           {/* Minutes */}
           <div className="flex flex-col items-center">
+            <motion.div
+              className="mb-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <HourglassIcon
+                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                color="#8d9e78"
+              />
+            </motion.div>
             <div className="flex gap-0.5 md:gap-1">
               <FlipDigit digit={Math.floor(minutes / 10)} size={config.digitSize} />
               <FlipDigit digit={minutes % 10} size={config.digitSize} />
@@ -237,6 +276,17 @@ export function CountdownTimer({
 
           {/* Seconds */}
           <div className="flex flex-col items-center">
+            <motion.div
+              className="mb-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <StopwatchIcon
+                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                color="#8d9e78"
+              />
+            </motion.div>
             <div className="flex gap-0.5 md:gap-1">
               <FlipDigit digit={Math.floor(seconds / 10)} size={config.digitSize} />
               <FlipDigit digit={seconds % 10} size={config.digitSize} />

@@ -218,6 +218,8 @@ export function ClosingSection() {
         </motion.div>
       </div>
 
+      {/* Content area wrapper - for positioning floating hearts */}
+      <div className="relative">
       {/* Message content */}
       <motion.div
         ref={contentRef}
@@ -361,55 +363,84 @@ export function ClosingSection() {
         </motion.div>
       </motion.div>
 
-      {/* Floating hearts */}
+      {/* Floating hearts - left and right, vertically centered */}
       <AnimatePresence>
         {isInView && (
           <>
+            {/* Left heart - same style as the main heart above */}
             <motion.div
-              className="absolute bottom-1/4 left-10 text-2xl hidden md:block"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 0.5, y: 0 }}
+              className="absolute top-1/2 -translate-y-1/2 left-4 md:left-10 hidden md:block"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ delay: 1.5 }}
+              transition={{ delay: 1.5, type: 'spring', stiffness: 200 }}
             >
-              <motion.span
+              {/* Glow behind heart */}
+              <motion.div
+                className="absolute inset-0 blur-xl"
                 animate={{
-                  y: [0, -20, 0],
-                  rotate: [0, 10, -10, 0],
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [1, 1.2, 1],
                 }}
                 transition={{
-                  duration: 3,
+                  duration: 2,
                   repeat: Infinity,
                   ease: 'easeInOut',
                 }}
+                style={{
+                  background: 'radial-gradient(circle, rgba(128,0,32,0.3) 0%, transparent 70%)',
+                }}
+              />
+              <motion.svg
+                className="w-14 h-14 text-burgundy relative z-10"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                variants={heartPulseVariants}
+                animate="animate"
               >
-                💕
-              </motion.span>
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </motion.svg>
             </motion.div>
+
+            {/* Right heart - same style as the main heart above */}
             <motion.div
-              className="absolute bottom-1/3 right-16 text-xl hidden md:block"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 0.4, y: 0 }}
+              className="absolute top-1/2 -translate-y-1/2 right-4 md:right-10 hidden md:block"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ delay: 2 }}
+              transition={{ delay: 2, type: 'spring', stiffness: 200 }}
             >
-              <motion.span
+              {/* Glow behind heart */}
+              <motion.div
+                className="absolute inset-0 blur-xl"
                 animate={{
-                  y: [0, -15, 0],
-                  rotate: [0, -10, 10, 0],
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [1, 1.2, 1],
                 }}
                 transition={{
-                  duration: 4,
+                  duration: 2.5,
                   repeat: Infinity,
                   ease: 'easeInOut',
+                  delay: 0.5,
                 }}
+                style={{
+                  background: 'radial-gradient(circle, rgba(128,0,32,0.3) 0%, transparent 70%)',
+                }}
+              />
+              <motion.svg
+                className="w-12 h-12 text-burgundy relative z-10"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                variants={heartPulseVariants}
+                animate="animate"
               >
-                💗
-              </motion.span>
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </motion.svg>
             </motion.div>
           </>
         )}
       </AnimatePresence>
+      </div>
 
       {/* Footer */}
       <motion.div

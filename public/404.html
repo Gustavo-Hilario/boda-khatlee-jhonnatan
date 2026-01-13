@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirigiendo...</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      // Redirects 404 responses to index.html preserving the path
+      const path = window.location.pathname;
+      const search = window.location.search;
+      const hash = window.location.hash;
+      window.location.replace(
+        window.location.origin + '/boda-khatlee-jhonnatan/' +
+        '?redirect=' + encodeURIComponent(path + search + hash)
+      );
+    </script>
+  </head>
+  <body>
+    <p>Redirigiendo...</p>
+  </body>
+</html>

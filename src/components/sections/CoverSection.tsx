@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { useMusic } from '../../context/MusicContext'
+import { getAssetPath } from '../../utils/assets'
 
 interface CoverSectionProps {
   onOpen?: () => void
@@ -159,7 +160,7 @@ export function CoverSection({ onOpen }: CoverSectionProps) {
             {/* Background with Ken Burns effect */}
             <motion.div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url('/images/portada/Fondo.jpg')" }}
+              style={{ backgroundImage: `url('${getAssetPath('images/portada/Fondo.jpg')}')` }}
               variants={kenBurnsVariants}
               animate="animate"
             />
@@ -203,7 +204,7 @@ export function CoverSection({ onOpen }: CoverSectionProps) {
 
                 {/* Envelope/Card image */}
                 <motion.img
-                  src="/images/portada/Tarjeta.png"
+                  src={getAssetPath('images/portada/Tarjeta.png')}
                   alt="Invitación de boda"
                   className="relative w-full max-w-[400px] md:max-w-[600px] lg:max-w-[800px] drop-shadow-2xl"
                   variants={cardVariants}

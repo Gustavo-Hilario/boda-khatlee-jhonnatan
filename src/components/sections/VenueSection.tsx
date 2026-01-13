@@ -3,6 +3,7 @@ import { motion, type Variants, useMotionValue, useSpring, useTransform } from '
 import { weddingConfig } from '../../config/wedding'
 import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
+import { getAssetPath } from '../../utils/assets'
 import {
   ChurchIcon,
   ChampagneIcon,
@@ -193,7 +194,7 @@ function VenueCard({
           {image ? (
             <>
               <motion.img
-                src={image}
+                src={image ? getAssetPath(image) : undefined}
                 alt={name}
                 className="w-full h-full object-cover"
                 loading="lazy"

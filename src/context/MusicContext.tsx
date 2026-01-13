@@ -1,4 +1,5 @@
 import { createContext, useContext, useRef, useState, useCallback, useEffect, type ReactNode } from 'react'
+import { getAssetPath } from '../utils/assets'
 
 interface MusicContextType {
   isPlaying: boolean
@@ -16,7 +17,7 @@ interface MusicProviderProps {
   audioSrc?: string
 }
 
-export function MusicProvider({ children, audioSrc = '/audio/background-music.mp3' }: MusicProviderProps) {
+export function MusicProvider({ children, audioSrc = getAssetPath('audio/background-music.mp3') }: MusicProviderProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const listenersAttachedRef = useRef(false)
   const [isPlaying, setIsPlaying] = useState(false)

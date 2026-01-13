@@ -1,6 +1,7 @@
 import { motion, type Variants } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
+import { getAssetPath } from '../../utils/assets'
 
 // Ken Burns effect for photo
 const kenBurnsVariants: Variants = {
@@ -193,7 +194,7 @@ export function WelcomeSection() {
           animate="animate"
         >
           <img
-            src="/images/gallery/Foto8.jpg"
+            src={getAssetPath('images/gallery/Foto8.jpg')}
             alt={`${couple.bride} y ${couple.groom}`}
             className="w-full h-full object-cover"
             loading="eager"

@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useTransform, type Variants, AnimatePresence, useInView } from 'framer-motion'
 import { weddingConfig, quotes } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
+import { getAssetPath } from '../../utils/assets'
 
 // Ken Burns effect for closing photo
 const kenBurnsVariants: Variants = {
@@ -161,7 +162,7 @@ export function ClosingSection() {
           style={{ y }}
         >
           <motion.img
-            src="/images/gallery/Foto7.jpg"
+            src={getAssetPath('images/gallery/Foto7.jpg')}
             alt={`${couple.bride} y ${couple.groom}`}
             className="w-full h-[120%] object-cover"
             loading="lazy"

@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useSpring, useTransform, type Variants } from 'framer-motion'
 import { timelineEvents } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
+import { getAssetPath } from '../../utils/assets'
 import { TimelinePath } from '../ui/TimelinePath'
 import { Sparkles } from '../ui/Sparkles'
 import { useMobile } from '../../hooks/useMobile'
@@ -193,7 +194,7 @@ function TimelineItem({
             <motion.div variants={wiggleVariants}>
               {event.icon ? (
                 <motion.img
-                  src={event.icon}
+                  src={getAssetPath(event.icon)}
                   alt={event.title}
                   className="w-full h-full object-cover"
                   initial={{ scale: 0, rotate: -20 }}

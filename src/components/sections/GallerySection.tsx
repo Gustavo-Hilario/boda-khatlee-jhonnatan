@@ -9,6 +9,7 @@ import 'swiper/swiper-bundle.css'
 import 'yet-another-react-lightbox/styles.css'
 import { galleryImages } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
+import { getAssetPath } from '../../utils/assets'
 
 // Container stagger variants
 const containerVariants: Variants = {
@@ -325,7 +326,7 @@ export function GallerySection() {
   }
 
   const slides = galleryImages.map((img) => ({
-    src: img.src,
+    src: getAssetPath(img.src),
     alt: img.alt,
   }))
 
@@ -405,7 +406,7 @@ export function GallerySection() {
           {slideshowImages.map((image, index) => (
             <SwiperSlide key={image.src}>
               <SlideshowImage
-                src={image.src}
+                src={getAssetPath(image.src)}
                 alt={image.alt}
                 index={index}
                 onClick={() => openLightbox(index)}
@@ -493,7 +494,7 @@ export function GallerySection() {
               return (
                 <GalleryImage
                   key={`gallery-${image.src}`}
-                  src={image.src}
+                  src={getAssetPath(image.src)}
                   alt={image.alt}
                   isLarge={isLarge}
                   onClick={() => openLightbox(gridIndex)}

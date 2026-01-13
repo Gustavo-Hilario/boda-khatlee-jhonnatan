@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState, useRef } from 'react'
 import type Lenis from 'lenis'
 
 interface UseKeyboardNavOptions {
@@ -8,6 +8,9 @@ interface UseKeyboardNavOptions {
 }
 
 export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboardNavOptions) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const isScrollingRef = useRef(false)
+
   const scrollToSection = useCallback((index: number) => {
     if (!lenis || index < 0 || index >= sectionIds.length) return
 
@@ -15,26 +18,67 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
     const element = document.getElementById(sectionId)
 
     if (element) {
+      isScrollingRef.current = true
+      setCurrentIndex(index)
+
       lenis.scrollTo(element, {
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        onComplete: () => {
+          isScrollingRef.current = false
+        },
       })
     }
   }, [lenis, sectionIds])
 
-  const getCurrentSectionIndex = useCallback((): number => {
-    const scrollY = window.scrollY
-    const viewportHeight = window.innerHeight
+  // Update current index based on scroll position (for manual scrolling)
+  useEffect(() => {
+    if (!enabled) return
 
-    for (let i = sectionIds.length - 1; i >= 0; i--) {
-      const element = document.getElementById(sectionIds[i])
-      if (element && element.offsetTop <= scrollY + viewportHeight / 2) {
-        return i
+    const updateCurrentIndex = () => {
+      // Don't update while programmatic scrolling is in progress
+      if (isScrollingRef.current) return
+
+      const viewportHeight = window.innerHeight
+
+      // Find which section is most visible (closest to viewport center)
+      let bestIndex = 0
+      let bestVisibility = -Infinity
+
+      for (let i = 0; i < sectionIds.length; i++) {
+        const element = document.getElementById(sectionIds[i])
+        if (!element) continue
+
+        const rect = element.getBoundingClientRect()
+
+        // Calculate how close the section center is to viewport center
+        const viewportCenter = viewportHeight / 2
+        const sectionCenter = rect.top + rect.height / 2
+        const distanceFromCenter = Math.abs(sectionCenter - viewportCenter)
+        const visibility = -distanceFromCenter // Higher (less negative) = more centered
+
+        if (visibility > bestVisibility) {
+          bestVisibility = visibility
+          bestIndex = i
+        }
       }
-    }
-    return 0
-  }, [sectionIds])
 
+      setCurrentIndex(bestIndex)
+    }
+
+    // Update on scroll
+    window.addEventListener('scroll', updateCurrentIndex, { passive: true })
+
+    // Initial update after a short delay to let DOM settle
+    const timeoutId = setTimeout(updateCurrentIndex, 100)
+
+    return () => {
+      window.removeEventListener('scroll', updateCurrentIndex)
+      clearTimeout(timeoutId)
+    }
+  }, [enabled, sectionIds])
+
+  // Handle keyboard navigation
   useEffect(() => {
     if (!enabled || !lenis) return
 
@@ -44,7 +88,8 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
         return
       }
 
-      const currentIndex = getCurrentSectionIndex()
+      // Ignore if already scrolling
+      if (isScrollingRef.current) return
 
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
         e.preventDefault()
@@ -67,7 +112,7 @@ export function useKeyboardNav({ sectionIds, lenis, enabled = true }: UseKeyboar
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [enabled, lenis, sectionIds, scrollToSection, getCurrentSectionIndex])
+  }, [enabled, lenis, sectionIds, currentIndex, scrollToSection])
 
-  return { scrollToSection, getCurrentSectionIndex }
+  return { scrollToSection, currentIndex }
 }

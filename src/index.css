@@ -219,3 +219,61 @@ html.lenis, html.lenis body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* 3D Perspective utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Performance hints */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Glow effects */
+.glow-gold {
+  filter: drop-shadow(0 0 10px rgba(193, 154, 91, 0.5));
+}
+
+.glow-gold-intense {
+  box-shadow:
+    0 0 20px rgba(193, 154, 91, 0.4),
+    0 0 40px rgba(193, 154, 91, 0.2),
+    0 0 60px rgba(193, 154, 91, 0.1);
+}
+
+.glow-olive {
+  filter: drop-shadow(0 0 10px rgba(141, 158, 120, 0.5));
+}
+
+/* Gradient text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #c19a5b, #c9a961);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Timeline path glow */
+.timeline-path-glow {
+  filter: drop-shadow(0 0 8px rgba(193, 154, 91, 0.6));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-pulse,
+  .animate-sparkle {
+    animation: none !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

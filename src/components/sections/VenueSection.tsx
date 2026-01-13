@@ -286,6 +286,240 @@ function VenueCard({
   )
 }
 
+// Dress Code Card with 3D tilt effect
+interface DressCodeCardProps {
+  dressCode: {
+    style: string
+    reserved: string[]
+    bridal: string[]
+    pinterestWomen?: string
+    pinterestMen?: string
+  }
+}
+
+function DressCodeCard({ dressCode }: DressCodeCardProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
+
+  // Mouse position for 3D tilt
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  // Spring physics for smooth tilt
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), {
+    stiffness: 150,
+    damping: 20,
+  })
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), {
+    stiffness: 150,
+    damping: 20,
+  })
+
+  // Handle mouse move
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    mouseX.set(x)
+    mouseY.set(y)
+  }
+
+  const handleMouseLeave = () => {
+    mouseX.set(0)
+    mouseY.set(0)
+    setIsHovered(false)
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariants}
+      className="relative"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{ perspective: 1000 }}
+    >
+      <motion.div
+        className="bg-burgundy text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden h-full"
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: 'preserve-3d',
+        }}
+        whileHover={{
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Background shimmer on hover */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{
+            opacity: isHovered ? 1 : 0,
+            x: isHovered ? ['0%', '100%'] : '0%',
+          }}
+          transition={{ duration: 0.6 }}
+          style={{
+            background:
+              'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)',
+          }}
+        />
+
+        {/* Fashion icon placeholder */}
+        <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
+          <motion.div
+            className="flex gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            animate={{ scale: isHovered ? 1.1 : 1 }}
+          >
+            <motion.span
+              className="text-4xl"
+              animate={{
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            >
+              👗
+            </motion.span>
+            <motion.span
+              className="text-4xl"
+              animate={{
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: 0.3,
+              }}
+            >
+              🤵
+            </motion.span>
+          </motion.div>
+
+          {/* Sparkle */}
+          <motion.div
+            className="absolute top-2 right-2"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            <span className="text-2xl">✨</span>
+          </motion.div>
+        </div>
+
+        <div className="flex-1 flex flex-col relative z-10">
+          {/* Title */}
+          <motion.div
+            className="flex items-center justify-center gap-2 mb-3"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <motion.span
+              className="text-2xl"
+              animate={isHovered ? { rotate: [0, -10, 10, 0], scale: [1, 1.2, 1] } : {}}
+              transition={{ duration: 0.5 }}
+            >
+              ✨
+            </motion.span>
+            <h3 className="text-xl font-semibold">Dress Code</h3>
+          </motion.div>
+
+          {/* Style name */}
+          <p className="text-white font-bold text-2xl mb-3">
+            {dressCode.style}
+          </p>
+
+          <div className="text-white/80 text-sm space-y-2 mb-4 flex-1">
+            <motion.p
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              El color{' '}
+              <strong className="text-white">{dressCode.reserved.join(', ')}</strong>{' '}
+              está reservado exclusivamente para la novia.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              <strong className="text-white">{dressCode.bridal.join(' y ')}</strong>{' '}
+              reservados para damas y caballeros de honor.
+            </motion.p>
+          </div>
+
+          {/* Pinterest buttons with hover effects */}
+          <motion.div
+            className="flex flex-wrap gap-3 justify-center"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 }}
+          >
+            {dressCode.pinterestWomen && (
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  href={dressCode.pinterestWomen}
+                  external
+                  size="sm"
+                  variant="outline-light"
+                >
+                  Pinterest Mujeres
+                </Button>
+              </motion.div>
+            )}
+            {dressCode.pinterestMen && (
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  href={dressCode.pinterestMen}
+                  external
+                  size="sm"
+                  variant="outline-light"
+                >
+                  Pinterest Hombres
+                </Button>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Corner decorations */}
+        <motion.div
+          className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-white/5"
+          animate={{ scale: isHovered ? 1.5 : 1 }}
+          transition={{ duration: 0.5 }}
+        />
+        <motion.div
+          className="absolute -bottom-5 -left-5 w-10 h-10 rounded-full bg-white/5"
+          animate={{ scale: isHovered ? 1.3 : 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        />
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export function VenueSection() {
   const { venues, dressCode } = weddingConfig
 
@@ -379,148 +613,7 @@ export function VenueSection() {
           />
 
           {/* Dress Code - special card */}
-          <motion.div variants={cardVariants} className="relative" style={{ perspective: 1000 }}>
-            <motion.div
-              className="bg-burgundy text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden h-full"
-              whileHover={{
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
-              }}
-            >
-              {/* Fashion icon placeholder */}
-              <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-4 bg-white/10 flex items-center justify-center relative">
-                <motion.div
-                  className="flex gap-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
-                >
-                  <motion.span
-                    className="text-4xl"
-                    animate={{
-                      y: [0, -5, 0],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    👗
-                  </motion.span>
-                  <motion.span
-                    className="text-4xl"
-                    animate={{
-                      y: [0, -5, 0],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                      delay: 0.3,
-                    }}
-                  >
-                    🤵
-                  </motion.span>
-                </motion.div>
-
-                {/* Sparkle */}
-                <motion.div
-                  className="absolute top-2 right-2"
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 1, 0.5],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                >
-                  <span className="text-2xl">✨</span>
-                </motion.div>
-              </div>
-
-              <div className="flex-1 flex flex-col">
-                {/* Title */}
-                <motion.div
-                  className="flex items-center justify-center gap-2 mb-3"
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <span className="text-2xl">✨</span>
-                  <h3 className="text-xl font-semibold">Dress Code</h3>
-                </motion.div>
-
-                {/* Style name */}
-                <p className="text-white font-bold text-2xl mb-3">
-                  {dressCode.style}
-                </p>
-
-                <div className="text-white/80 text-sm space-y-2 mb-4 flex-1">
-                  <motion.p
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    El color{' '}
-                    <strong className="text-white">{dressCode.reserved.join(', ')}</strong>{' '}
-                    está reservado exclusivamente para la novia.
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <strong className="text-white">{dressCode.bridal.join(' y ')}</strong>{' '}
-                    reservados para damas y caballeros de honor.
-                  </motion.p>
-                </div>
-
-                {/* Pinterest buttons with hover effects */}
-                <motion.div
-                  className="flex flex-wrap gap-3 justify-center"
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.6 }}
-                >
-                  {dressCode.pinterestWomen && (
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        href={dressCode.pinterestWomen}
-                        external
-                        size="sm"
-                        variant="outline-light"
-                      >
-                        Pinterest Mujeres
-                      </Button>
-                    </motion.div>
-                  )}
-                  {dressCode.pinterestMen && (
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        href={dressCode.pinterestMen}
-                        external
-                        size="sm"
-                        variant="outline-light"
-                      >
-                        Pinterest Hombres
-                      </Button>
-                    </motion.div>
-                  )}
-                </motion.div>
-              </div>
-
-              {/* Corner decorations */}
-              <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-white/5" />
-              <div className="absolute -bottom-5 -left-5 w-10 h-10 rounded-full bg-white/5" />
-            </motion.div>
-          </motion.div>
+          <DressCodeCard dressCode={dressCode} />
         </motion.div>
       </div>
 

@@ -21,6 +21,7 @@ const SECTION_IDS = [
   'venue',
   'itinerary',
   'gallery',
+  'galeria',
   'info',
   'closing',
 ]

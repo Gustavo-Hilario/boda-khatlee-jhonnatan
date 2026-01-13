@@ -325,9 +325,9 @@ export function GallerySection() {
     alt: img.alt,
   }))
 
-  // Split images: first 5 for slideshow, rest for grid
+  // First 5 for slideshow, ALL images for grid gallery
   const slideshowImages = galleryImages.slice(0, 5)
-  const gridImages = galleryImages.slice(5)
+  const gridImages = galleryImages // Show ALL images in gallery
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-cream overflow-hidden relative">
@@ -421,6 +421,58 @@ export function GallerySection() {
         />
       </motion.div>
 
+      {/* Visual separator between slideshow and gallery */}
+      <motion.div
+        className="max-w-4xl mx-auto px-4 my-16 relative z-10"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="flex items-center justify-center gap-4">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gold-warm/40 to-transparent" />
+          <motion.span
+            className="text-gold-warm text-xl"
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+          >
+            ✦
+          </motion.span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gold-warm/40 to-transparent" />
+        </div>
+      </motion.div>
+
+      {/* Gallery sub-header - separate scroll target */}
+      <motion.div
+        id="galeria"
+        className="text-center mb-10 px-4 pt-8 -mt-8 relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <motion.h3
+          className="font-cursive text-3xl md:text-4xl text-olive mb-2"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+        >
+          Galería
+        </motion.h3>
+        <motion.p
+          className="text-gray-600 font-serif text-lg"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          Momentos que atesoramos
+        </motion.p>
+      </motion.div>
+
       {/* Grid gallery */}
       {gridImages.length > 0 && (
         <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
@@ -432,16 +484,15 @@ export function GallerySection() {
             variants={containerVariants}
           >
             {gridImages.map((image, gridIndex) => {
-              const actualIndex = slideshowImages.length + gridIndex
               const isLarge = gridIndex === 0 || gridIndex === 5
 
               return (
                 <GalleryImage
-                  key={image.src}
+                  key={`gallery-${image.src}`}
                   src={image.src}
                   alt={image.alt}
                   isLarge={isLarge}
-                  onClick={() => openLightbox(actualIndex)}
+                  onClick={() => openLightbox(gridIndex)}
                 />
               )
             })}

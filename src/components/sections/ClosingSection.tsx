@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, type Variants, AnimatePresence, useInV
 import { weddingConfig, quotes } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { getAssetPath } from '../../utils/assets'
+import { HeartIcon } from '../ui/svg'
 
 // Ken Burns effect for closing photo
 const kenBurnsVariants: Variants = {
@@ -28,18 +29,6 @@ const lightLeakVariants: Variants = {
       duration: 10,
       repeat: Infinity,
       repeatDelay: 5,
-      ease: 'easeInOut',
-    },
-  },
-}
-
-// Heart pulse animation
-const heartPulseVariants: Variants = {
-  animate: {
-    scale: [1, 1.15, 1],
-    transition: {
-      duration: 1,
-      repeat: Infinity,
       ease: 'easeInOut',
     },
   },
@@ -232,38 +221,13 @@ export function ClosingSection() {
       >
         {/* Heart decoration with pulse */}
         <motion.div
-          className="mb-6 relative"
+          className="mb-6 flex justify-center"
           initial={{ scale: 0, rotate: -180 }}
           whileInView={{ scale: 1, rotate: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
         >
-          {/* Glow behind heart */}
-          <motion.div
-            className="absolute inset-0 blur-xl"
-            animate={{
-              opacity: [0.3, 0.6, 0.3],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            style={{
-              background: 'radial-gradient(circle, rgba(128,0,32,0.3) 0%, transparent 70%)',
-            }}
-          />
-
-          <motion.svg
-            className="w-10 h-10 mx-auto text-burgundy relative z-10"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            variants={heartPulseVariants}
-            animate="animate"
-          >
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-          </motion.svg>
+          <HeartIcon size={40} color="#800020" accentColor="#c19a5b" animate={true} />
         </motion.div>
 
         {/* Closing quote */}
@@ -368,7 +332,7 @@ export function ClosingSection() {
       <AnimatePresence>
         {isInView && (
           <>
-            {/* Left heart - same style as the main heart above */}
+            {/* Left heart */}
             <motion.div
               className="absolute top-1/2 -translate-y-1/2 left-4 md:left-10 hidden md:block"
               initial={{ opacity: 0, scale: 0 }}
@@ -376,34 +340,10 @@ export function ClosingSection() {
               exit={{ opacity: 0 }}
               transition={{ delay: 1.5, type: 'spring', stiffness: 200 }}
             >
-              {/* Glow behind heart */}
-              <motion.div
-                className="absolute inset-0 blur-xl"
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                style={{
-                  background: 'radial-gradient(circle, rgba(128,0,32,0.3) 0%, transparent 70%)',
-                }}
-              />
-              <motion.svg
-                className="w-14 h-14 text-burgundy relative z-10"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                variants={heartPulseVariants}
-                animate="animate"
-              >
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </motion.svg>
+              <HeartIcon size={56} color="#800020" accentColor="#c19a5b" animate={true} />
             </motion.div>
 
-            {/* Right heart - same style as the main heart above */}
+            {/* Right heart */}
             <motion.div
               className="absolute top-1/2 -translate-y-1/2 right-4 md:right-10 hidden md:block"
               initial={{ opacity: 0, scale: 0 }}
@@ -411,32 +351,7 @@ export function ClosingSection() {
               exit={{ opacity: 0 }}
               transition={{ delay: 2, type: 'spring', stiffness: 200 }}
             >
-              {/* Glow behind heart */}
-              <motion.div
-                className="absolute inset-0 blur-xl"
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 0.5,
-                }}
-                style={{
-                  background: 'radial-gradient(circle, rgba(128,0,32,0.3) 0%, transparent 70%)',
-                }}
-              />
-              <motion.svg
-                className="w-12 h-12 text-burgundy relative z-10"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                variants={heartPulseVariants}
-                animate="animate"
-              >
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </motion.svg>
+              <HeartIcon size={48} color="#800020" accentColor="#c19a5b" animate={true} />
             </motion.div>
           </>
         )}

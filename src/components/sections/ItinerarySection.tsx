@@ -133,7 +133,11 @@ function TimelineItem({
   return (
     <motion.div
       variants={isMobile ? itemVariantsMobile : itemVariants}
-      className="flex flex-col items-center text-center flex-shrink-0 min-w-[120px] md:min-w-[140px] perspective-1000"
+      className={`flex flex-col items-center text-center perspective-1000 ${
+        isMobile
+          ? 'w-full max-w-[200px] relative'
+          : 'flex-shrink-0 min-w-[120px] md:min-w-[140px]'
+      }`}
     >
       {/* Icon circle with 3D effects */}
       <div className="relative mb-6 pt-2">
@@ -359,24 +363,28 @@ export function ItinerarySection() {
             />
           )}
 
-          {/* Simple line for mobile */}
+          {/* Vertical line for mobile */}
           {isMobile && (
             <motion.div
-              className="absolute top-16 left-4 right-4 h-0.5 bg-gradient-to-r from-olive/30 via-gold-warm to-olive/30 md:hidden"
-              initial={{ scaleX: 0, opacity: 0 }}
-              whileInView={{ scaleX: 1, opacity: 1 }}
+              className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-olive/30 via-gold-warm to-olive/30 md:hidden -z-10"
+              initial={{ scaleY: 0, opacity: 0 }}
+              whileInView={{ scaleY: 1, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.3 }}
-              style={{ transformOrigin: 'left' }}
+              transition={{ duration: 1.5, delay: 0.3 }}
+              style={{ transformOrigin: 'top' }}
             />
           )}
 
-          {/* Timeline items */}
+          {/* Timeline items - vertical on mobile, horizontal on desktop */}
           <motion.div
-            className="flex flex-nowrap justify-start md:justify-center gap-6 md:gap-8 overflow-x-auto overflow-y-visible pt-4 pb-4 scrollbar-hide md:pt-20"
+            className={
+              isMobile
+                ? 'flex flex-col items-center gap-8 py-4 relative'
+                : 'flex flex-nowrap justify-center gap-6 md:gap-8 pt-20'
+            }
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
+            viewport={{ once: true, amount: isMobile ? 0.05 : 0.1 }}
             variants={containerVariants}
           >
             {timelineEvents.map((event, index) => (

@@ -47,16 +47,16 @@ const digitVariants: Variants = {
 
 const sizeClasses = {
   sm: {
-    container: 'w-10 h-14 md:w-12 md:h-16',
-    digit: 'text-2xl md:text-3xl',
+    container: 'w-8 h-12 sm:w-10 sm:h-14 md:w-12 md:h-16',
+    digit: 'text-xl sm:text-2xl md:text-3xl',
   },
   md: {
-    container: 'w-12 h-16 md:w-16 md:h-20',
-    digit: 'text-3xl md:text-4xl',
+    container: 'w-10 h-14 sm:w-12 sm:h-16 md:w-16 md:h-20',
+    digit: 'text-2xl sm:text-3xl md:text-4xl',
   },
   lg: {
-    container: 'w-16 h-20 md:w-20 md:h-24',
-    digit: 'text-4xl md:text-5xl',
+    container: 'w-14 h-18 sm:w-16 sm:h-20 md:w-20 md:h-24',
+    digit: 'text-3xl sm:text-4xl md:text-5xl',
   },
 }
 
@@ -132,16 +132,16 @@ export function FlipDigit({ digit, size = 'md' }: FlipDigitProps) {
   )
 }
 
-// Colon separator with pulse - height matches digit cards (h-16 / h-20)
-export function ClockSeparator() {
+// Colon separator with pulse - height matches digit cards
+export function ClockSeparator({ className = '' }: { className?: string }) {
   return (
     <motion.div
-      className="flex flex-col justify-center gap-2 px-1 md:px-2 h-16 md:h-20"
+      className={`flex flex-col justify-center gap-1.5 sm:gap-2 px-0.5 sm:px-1 md:px-2 h-14 sm:h-16 md:h-20 ${className}`}
       animate={{ opacity: [1, 0.3, 1] }}
       transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
     >
-      <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
-      <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
+      <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
+      <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
     </motion.div>
   )
 }

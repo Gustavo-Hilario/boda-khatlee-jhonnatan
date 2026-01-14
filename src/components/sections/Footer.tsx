@@ -1,4 +1,5 @@
 import { motion, type Variants } from 'framer-motion'
+import { HeartIcon } from '../ui/svg'
 
 // Container stagger
 const containerVariants: Variants = {
@@ -20,19 +21,6 @@ const itemVariants: Variants = {
     transition: {
       duration: 0.5,
       ease: [0.22, 1, 0.36, 1],
-    },
-  },
-}
-
-// Heart pulse with glow
-const heartPulseVariants: Variants = {
-  pulse: {
-    scale: [1, 1.3, 1],
-    transition: {
-      duration: 0.8,
-      repeat: Infinity,
-      repeatDelay: 2,
-      ease: 'easeInOut',
     },
   },
 }
@@ -142,13 +130,9 @@ export function Footer() {
           </motion.span>
 
           {/* Animated heart */}
-          <motion.span
-            className="relative inline-block"
-            variants={heartPulseVariants}
-            animate="pulse"
-          >
-            <span>❤️</span>
-          </motion.span>
+          <span className="relative inline-block align-middle">
+            <HeartIcon size={20} color="#800020" accentColor="#c19a5b" animate={true} />
+          </span>
 
           <motion.span
             initial={{ opacity: 0, x: 10 }}

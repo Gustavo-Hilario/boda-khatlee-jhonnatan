@@ -2,6 +2,7 @@ import { motion, type Variants, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Flourish } from '../ui/Flourish'
 import { weddingConfig } from '../../config/wedding'
+import { HeartIcon } from '../ui/svg'
 
 // Phrases for the journey
 const phrases = [
@@ -78,18 +79,6 @@ const heartVariants: Variants = {
       type: 'spring',
       stiffness: 200,
       damping: 12,
-    },
-  },
-}
-
-// Heart pulse
-const heartPulseVariants: Variants = {
-  animate: {
-    scale: [1, 1.15, 1],
-    transition: {
-      duration: 1.2,
-      repeat: Infinity,
-      ease: 'easeInOut',
     },
   },
 }
@@ -244,6 +233,103 @@ function SideMonogram({ position }: { position: 'left' | 'right' }) {
   )
 }
 
+// Mobile Monogram Component (centered, visible on mobile/tablet only)
+function MobileMonogram() {
+  const { couple } = weddingConfig
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+
+  return (
+    <motion.div
+      ref={ref}
+      className="flex lg:hidden justify-center mb-8"
+      variants={monogramVariants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+    >
+      <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center">
+        {/* Outer rotating glow */}
+        <motion.div
+          className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full opacity-40"
+          variants={glowVariants}
+          animate="animate"
+          style={{
+            background:
+              'conic-gradient(from 0deg, transparent 0%, rgba(193, 154, 91, 0.4) 25%, transparent 50%, rgba(193, 154, 91, 0.4) 75%, transparent 100%)',
+          }}
+        />
+
+        {/* SVG Ring */}
+        <svg
+          className="absolute w-20 h-20 sm:w-24 sm:h-24"
+          viewBox="0 0 100 100"
+          fill="none"
+        >
+          {/* Outer ring */}
+          <motion.circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="url(#mobileRingGradient)"
+            strokeWidth="1"
+            strokeLinecap="round"
+            variants={ringVariants}
+            initial="hidden"
+            animate={isInView ? 'visible' : 'hidden'}
+          />
+
+          {/* Inner dashed ring */}
+          <motion.circle
+            cx="50"
+            cy="50"
+            r="38"
+            stroke="rgba(255,255,255,0.15)"
+            strokeWidth="0.5"
+            strokeDasharray="3 6"
+            variants={ringVariants}
+            initial="hidden"
+            animate={isInView ? 'visible' : 'hidden'}
+          />
+
+          {/* Decorative dots */}
+          {[0, 90, 180, 270].map((angle) => (
+            <motion.circle
+              key={angle}
+              cx={50 + 45 * Math.cos((angle * Math.PI) / 180)}
+              cy={50 + 45 * Math.sin((angle * Math.PI) / 180)}
+              r="2"
+              fill="#c19a5b"
+              initial={{ scale: 0 }}
+              animate={isInView ? { scale: 1 } : { scale: 0 }}
+              transition={{ delay: 1.8 + angle / 500, type: 'spring' }}
+            />
+          ))}
+
+          <defs>
+            <linearGradient id="mobileRingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgba(193, 154, 91, 0.6)" />
+              <stop offset="50%" stopColor="rgba(255,255,255,0.3)" />
+              <stop offset="100%" stopColor="rgba(193, 154, 91, 0.6)" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Central initials */}
+        <motion.div
+          className="relative z-10 text-center"
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 1.2, duration: 0.6 }}
+        >
+          <p className="font-cursive text-lg sm:text-xl text-white/80">
+            {couple.bride.charAt(0)} & {couple.groom.charAt(0)}
+          </p>
+        </motion.div>
+      </div>
+    </motion.div>
+  )
+}
+
 // Phrase block component
 function PhraseBlock({
   text,
@@ -389,6 +475,9 @@ export function QuoteSectionPath() {
       />
 
       <div className="max-w-2xl mx-auto relative z-10">
+        {/* Mobile monogram (visible on mobile/tablet only) */}
+        <MobileMonogram />
+
         {/* Top decorative star */}
         <motion.div
           className="text-center mb-8"
@@ -420,18 +509,7 @@ export function QuoteSectionPath() {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              <motion.div
-                variants={heartPulseVariants}
-                animate="animate"
-              >
-                <svg
-                  className="w-12 h-12 text-gold-warm"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </motion.div>
+              <HeartIcon size={48} color="#c19a5b" accentColor="#ffffff" animate={true} />
             </motion.div>
           </div>
         </div>

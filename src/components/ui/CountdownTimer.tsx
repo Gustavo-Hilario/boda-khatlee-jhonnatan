@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { useCountdown } from '../../hooks/useCountdown'
+import { useMobile } from '../../hooks/useMobile'
 import { cn } from '../../utils/cn'
 import { FlipDigit, ClockSeparator } from './FlipDigit'
 import {
@@ -74,6 +75,7 @@ export function CountdownTimer({
   const [milestoneTriggered, setMilestoneTriggered] = useState<string | null>(null)
   const lastMilestone = useRef<string | null>(null)
   const config = sizeConfig[size]
+  const isExtraSmall = useMobile(480) // Extra small screens need 2x2 grid
 
   // Calculate total seconds remaining for milestones
   const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds
@@ -194,18 +196,23 @@ export function CountdownTimer({
           )}
         </AnimatePresence>
 
-        {/* Flip clock display */}
-        <div className={cn('flex justify-center items-start', config.gap)}>
+        {/* Flip clock display - 2x2 grid on extra small, horizontal on larger */}
+        <div className={cn(
+          isExtraSmall
+            ? 'grid grid-cols-2 gap-4 max-w-[240px] mx-auto'
+            : 'flex justify-center items-start',
+          !isExtraSmall && config.gap
+        )}>
           {/* Days */}
           <div className="flex flex-col items-center">
             <motion.div
-              className="mb-2"
+              className="mb-1 sm:mb-2"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
               <CalendarIcon
-                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
                 color="#8d9e78"
               />
             </motion.div>
@@ -213,25 +220,26 @@ export function CountdownTimer({
               <FlipDigit digit={Math.floor(days / 10)} size={config.digitSize} />
               <FlipDigit digit={days % 10} size={config.digitSize} />
             </div>
-            <span className={`mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-xs md:text-sm' : 'text-sm md:text-base'
+            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
+              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
             }`}>
               Días
             </span>
           </div>
 
-          <ClockSeparator />
+          {/* Separator - hidden on extra small */}
+          {!isExtraSmall && <ClockSeparator />}
 
           {/* Hours */}
           <div className="flex flex-col items-center">
             <motion.div
-              className="mb-2"
+              className="mb-1 sm:mb-2"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
               <ClockIcon
-                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
                 color="#8d9e78"
               />
             </motion.div>
@@ -239,25 +247,26 @@ export function CountdownTimer({
               <FlipDigit digit={Math.floor(hours / 10)} size={config.digitSize} />
               <FlipDigit digit={hours % 10} size={config.digitSize} />
             </div>
-            <span className={`mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-xs md:text-sm' : 'text-sm md:text-base'
+            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
+              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
             }`}>
               Horas
             </span>
           </div>
 
-          <ClockSeparator />
+          {/* Separator - hidden on extra small */}
+          {!isExtraSmall && <ClockSeparator />}
 
           {/* Minutes */}
           <div className="flex flex-col items-center">
             <motion.div
-              className="mb-2"
+              className="mb-1 sm:mb-2"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
               <HourglassIcon
-                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
                 color="#8d9e78"
               />
             </motion.div>
@@ -265,25 +274,26 @@ export function CountdownTimer({
               <FlipDigit digit={Math.floor(minutes / 10)} size={config.digitSize} />
               <FlipDigit digit={minutes % 10} size={config.digitSize} />
             </div>
-            <span className={`mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-xs md:text-sm' : 'text-sm md:text-base'
+            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
+              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
             }`}>
               Min
             </span>
           </div>
 
-          <ClockSeparator />
+          {/* Separator - hidden on extra small */}
+          {!isExtraSmall && <ClockSeparator />}
 
           {/* Seconds */}
           <div className="flex flex-col items-center">
             <motion.div
-              className="mb-2"
+              className="mb-1 sm:mb-2"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
               <StopwatchIcon
-                size={size === 'sm' ? 20 : size === 'md' ? 24 : 28}
+                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
                 color="#8d9e78"
               />
             </motion.div>
@@ -291,8 +301,8 @@ export function CountdownTimer({
               <FlipDigit digit={Math.floor(seconds / 10)} size={config.digitSize} />
               <FlipDigit digit={seconds % 10} size={config.digitSize} />
             </div>
-            <span className={`mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-xs md:text-sm' : 'text-sm md:text-base'
+            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
+              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
             }`}>
               Seg
             </span>

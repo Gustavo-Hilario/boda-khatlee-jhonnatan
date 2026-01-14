@@ -212,7 +212,7 @@ export function CountdownSection() {
           />
 
           <motion.h2
-            className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-burgundy font-semibold uppercase tracking-wide relative"
+            className="font-serif text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl text-burgundy font-semibold uppercase tracking-wide relative"
             variants={stampVariants}
             initial="hidden"
             whileInView="visible"

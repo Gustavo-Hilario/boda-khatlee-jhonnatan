@@ -10,7 +10,7 @@ export const weddingConfig: WeddingConfig = {
     parents: {
         bride: [
             { name: 'Victor Romero Santa Rosa' },
-            { name: 'Yaner Atao Eulate' },
+            { name: 'Yanet Atao Eulate' },
         ],
         groom: [
             { name: 'Gladys Cordova Yauri' },

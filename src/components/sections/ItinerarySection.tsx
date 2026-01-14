@@ -309,9 +309,10 @@ export function ItinerarySection() {
   const isMobile = useMobile()
 
   // Scroll-linked animations
+  // Animation triggers at 75% down viewport (3/4 mark)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ['start end', 'center center'],
+    offset: ['start 0.75', 'end 0.75'],
   })
 
   // Smooth spring for path drawing

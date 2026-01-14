@@ -366,7 +366,7 @@ export function ItinerarySection() {
           {/* Vertical line for mobile */}
           {isMobile && (
             <motion.div
-              className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-olive/30 via-gold-warm to-olive/30 md:hidden -z-10"
+              className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-olive/30 via-gold-warm to-olive/30 z-0"
               initial={{ scaleY: 0, opacity: 0 }}
               whileInView={{ scaleY: 1, opacity: 1 }}
               viewport={{ once: true }}
@@ -379,7 +379,7 @@ export function ItinerarySection() {
           <motion.div
             className={
               isMobile
-                ? 'flex flex-col items-center gap-8 py-4 relative'
+                ? 'flex flex-col items-center gap-8 py-4 relative z-10'
                 : 'flex flex-nowrap justify-center gap-6 md:gap-8 pt-20'
             }
             initial="hidden"

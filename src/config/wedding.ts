@@ -63,37 +63,31 @@ export const timelineEvents: TimelineEvent[] = [
         id: '1',
         time: '16:00',
         title: 'Ceremonia',
-        icon: 'images/icons/image-removebg-preview (19).png',
     },
     {
         id: '2',
         time: '17:30',
         title: 'Cóctel',
-        icon: 'images/icons/image-removebg-preview (19).png',
     },
     {
         id: '3',
         time: '18:30',
         title: 'Recepción',
-        icon: 'images/icons/image-removebg-preview (19).png',
     },
     {
         id: '4',
         time: '19:00',
         title: 'Cena',
-        icon: 'images/icons/image-removebg-preview (19).png',
     },
     {
         id: '5',
         time: '21:00',
         title: 'Baile',
-        icon: 'images/icons/image-removebg-preview (19).png',
     },
     {
         id: '6',
         time: '00:00',
         title: 'Brindis',
-        icon: 'images/icons/image-removebg-preview (19).png',
     },
 ];
 

@@ -2,7 +2,7 @@ export interface TimelineEvent {
   id: string
   time: string
   title: string
-  icon: string
+  icon?: string // Optional - now using component-based icons mapped by title
 }
 
 export interface Venue {

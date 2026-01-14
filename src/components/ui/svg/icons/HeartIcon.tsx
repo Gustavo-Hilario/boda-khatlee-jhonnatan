@@ -25,10 +25,10 @@ const drawVariants: Variants = {
 // Soft breathing animation - gentle and romantic
 const breatheVariants: Variants = {
   animate: {
-    scale: [1, 1.03, 1],
-    opacity: [0.85, 1, 0.85],
+    scale: [1, 1.15, 1],
+    opacity: [0.9, 1, 0.9],
     transition: {
-      duration: 4,
+      duration: 2,
       repeat: Infinity,
       ease: 'easeInOut',
     },
@@ -68,8 +68,8 @@ export function HeartIcon({
       className={className}
       aria-hidden="true"
     >
-      {/* Soft glow behind heart - dreamy effect */}
-      {animate && (
+      {/* Soft glow behind heart - dreamy effect (only for larger hearts) */}
+      {animate && size > 30 && (
         <motion.ellipse
           cx="24"
           cy="26"

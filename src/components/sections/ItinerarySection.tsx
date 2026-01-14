@@ -2,11 +2,28 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useSpring, useTransform, type Variants } from 'framer-motion'
 import { timelineEvents } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
-import { getAssetPath } from '../../utils/assets'
 import { TimelinePath, TimelinePathVertical } from '../ui/TimelinePath'
 import { Sparkles } from '../ui/Sparkles'
 import { useMobile } from '../../hooks/useMobile'
 import { useMagneticHover } from '../../hooks/useMagneticHover'
+import {
+  ChurchIcon,
+  CocktailIcon,
+  PartyIcon,
+  DinnerIcon,
+  DancingIcon,
+  ChampagneIcon,
+} from '../ui/svg'
+
+// Map event titles to icon components
+const eventIconMap: Record<string, React.ComponentType<{ size?: number; className?: string; animate?: boolean; color?: string }>> = {
+  'Ceremonia': ChurchIcon,
+  'Cóctel': CocktailIcon,
+  'Recepción': PartyIcon,
+  'Cena': DinnerIcon,
+  'Baile': DancingIcon,
+  'Brindis': ChampagneIcon,
+}
 
 // Container with staggered children
 const containerVariants: Variants = {
@@ -196,36 +213,45 @@ function TimelineItem({
             whileHover="wiggle"
           >
             <motion.div variants={wiggleVariants}>
-              {event.icon ? (
-                <motion.img
-                  src={getAssetPath(event.icon)}
-                  alt={event.title}
-                  className="w-full h-full object-cover"
-                  initial={{ scale: 0, rotate: -20 }}
-                  whileInView={{ scale: 1, rotate: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: 0.3 + index * 0.1,
-                    type: 'spring',
-                    stiffness: 200,
-                  }}
-                />
-              ) : (
-                <motion.span
-                  className="text-3xl md:text-4xl"
-                  initial={{ scale: 0, rotate: -30 }}
-                  whileInView={{ scale: 1, rotate: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: 0.4 + index * 0.12,
-                    type: 'spring',
-                    stiffness: 300,
-                    damping: 15,
-                  }}
-                >
-                  {getDefaultEmoji(index)}
-                </motion.span>
-              )}
+              {(() => {
+                const IconComponent = eventIconMap[event.title]
+                if (IconComponent) {
+                  return (
+                    <motion.div
+                      initial={{ scale: 0, rotate: -20 }}
+                      whileInView={{ scale: 1, rotate: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        delay: 0.3 + index * 0.1,
+                        type: 'spring',
+                        stiffness: 200,
+                      }}
+                    >
+                      <IconComponent
+                        size={isMobile ? 48 : 56}
+                        color="#8d9e78"
+                        animate={true}
+                      />
+                    </motion.div>
+                  )
+                }
+                return (
+                  <motion.span
+                    className="text-3xl md:text-4xl"
+                    initial={{ scale: 0, rotate: -30 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      delay: 0.4 + index * 0.12,
+                      type: 'spring',
+                      stiffness: 300,
+                      damping: 15,
+                    }}
+                  >
+                    {getDefaultEmoji(index)}
+                  </motion.span>
+                )
+              })()}
             </motion.div>
           </motion.div>
 

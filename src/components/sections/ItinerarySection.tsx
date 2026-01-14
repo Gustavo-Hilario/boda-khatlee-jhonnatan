@@ -3,7 +3,7 @@ import { motion, useScroll, useSpring, useTransform, type Variants } from 'frame
 import { timelineEvents } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { getAssetPath } from '../../utils/assets'
-import { TimelinePath } from '../ui/TimelinePath'
+import { TimelinePath, TimelinePathVertical } from '../ui/TimelinePath'
 import { Sparkles } from '../ui/Sparkles'
 import { useMobile } from '../../hooks/useMobile'
 import { useMagneticHover } from '../../hooks/useMagneticHover'
@@ -363,15 +363,13 @@ export function ItinerarySection() {
             />
           )}
 
-          {/* Vertical line for mobile */}
+          {/* Vertical timeline path for mobile with scroll animation */}
           {isMobile && (
-            <motion.div
-              className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-olive/30 via-gold-warm to-olive/30 z-0"
-              initial={{ scaleY: 0, opacity: 0 }}
-              whileInView={{ scaleY: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5, delay: 0.3 }}
-              style={{ transformOrigin: 'top' }}
+            <TimelinePathVertical
+              progress={pathProgress}
+              eventCount={timelineEvents.length}
+              activeIndex={activeIndex}
+              className="absolute left-1/2 -translate-x-1/2 top-0 w-16 h-full z-0"
             />
           )}
 

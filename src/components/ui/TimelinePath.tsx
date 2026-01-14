@@ -195,7 +195,7 @@ export function TimelinePath({
   )
 }
 
-// Simple horizontal line variant for mobile
+// Simple horizontal line variant for mobile (legacy)
 export function TimelinePathSimple({
   progress,
   className = '',
@@ -210,5 +210,192 @@ export function TimelinePathSimple({
         style={{ scaleX: progress, transformOrigin: 'left' }}
       />
     </div>
+  )
+}
+
+// Vertical timeline path for mobile with scroll-linked animation
+export function TimelinePathVertical({
+  progress,
+  eventCount,
+  activeIndex,
+  className = '',
+}: TimelinePathProps) {
+  // Generate vertical S-curve path
+  const generateVerticalPath = (height: number, eventCount: number) => {
+    const padding = height * 0.02
+    const usableHeight = height - padding * 2
+    const spacing = usableHeight / (eventCount - 1)
+
+    let path = `M 50 ${padding}`
+
+    for (let i = 1; i < eventCount; i++) {
+      const prevY = padding + spacing * (i - 1)
+      const currentY = padding + spacing * i
+      const midY = (prevY + currentY) / 2
+      // Gentle horizontal wave - alternating left/right
+      const waveOffset = i % 2 === 0 ? 30 : 70
+      path += ` Q ${waveOffset} ${midY} 50 ${currentY}`
+    }
+    return path
+  }
+
+  const svgHeight = 600
+  const pathD = generateVerticalPath(svgHeight, eventCount)
+
+  // Calculate stop positions for markers
+  const getStopPosition = (index: number, total: number, height: number) => {
+    const padding = height * 0.02
+    const usableHeight = height - padding * 2
+    const spacing = usableHeight / (total - 1)
+    return padding + spacing * index
+  }
+
+  return (
+    <svg
+      className={`pointer-events-none ${className}`}
+      viewBox={`0 0 100 ${svgHeight}`}
+      preserveAspectRatio="none"
+    >
+      <defs>
+        {/* Vertical gradient for the path */}
+        <linearGradient id="timeline-gradient-vertical" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#8d9e78" stopOpacity="0.4" />
+          <stop offset="20%" stopColor="#8d9e78" />
+          <stop offset="50%" stopColor="#c19a5b" />
+          <stop offset="80%" stopColor="#c19a5b" />
+          <stop offset="100%" stopColor="#800020" stopOpacity="0.4" />
+        </linearGradient>
+
+        {/* Glow filter */}
+        <filter id="glow-vertical" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        {/* Stronger glow for active elements */}
+        <filter id="glow-strong-vertical" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feFlood floodColor="#c19a5b" floodOpacity="0.5" result="color" />
+          <feComposite in="color" in2="blur" operator="in" result="shadow" />
+          <feMerge>
+            <feMergeNode in="shadow" />
+            <feMergeNode in="shadow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Background path (faded guide) */}
+      <motion.path
+        d={pathD}
+        stroke="url(#timeline-gradient-vertical)"
+        strokeWidth="3"
+        fill="none"
+        opacity="0.15"
+        strokeLinecap="round"
+      />
+
+      {/* Animated foreground path - draws as user scrolls */}
+      <motion.path
+        d={pathD}
+        stroke="url(#timeline-gradient-vertical)"
+        strokeWidth="4"
+        fill="none"
+        strokeLinecap="round"
+        filter="url(#glow-vertical)"
+        style={{
+          pathLength: progress,
+        }}
+        initial={{ pathLength: 0 }}
+      />
+
+      {/* Stop markers at each event position */}
+      {Array.from({ length: eventCount }).map((_, i) => {
+        const cy = getStopPosition(i, eventCount, svgHeight)
+        const isActive = activeIndex === i
+        const isPast = i < activeIndex || activeIndex === -1
+
+        return (
+          <g key={i}>
+            {/* Outer glow ring for active */}
+            {isActive && (
+              <motion.circle
+                cx={50}
+                cy={cy}
+                r={12}
+                fill="none"
+                stroke="#c19a5b"
+                strokeWidth="2"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{
+                  scale: [1, 1.4, 1],
+                  opacity: [0.6, 0, 0.6],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+            )}
+
+            {/* Main marker */}
+            <motion.circle
+              cx={50}
+              cy={cy}
+              r={isActive ? 8 : 6}
+              fill={isActive ? '#c19a5b' : isPast ? '#8d9e78' : '#d4d4d4'}
+              filter={isActive ? 'url(#glow-strong-vertical)' : undefined}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                delay: 0.2 + i * 0.08,
+                type: 'spring',
+                stiffness: 300,
+                damping: 20,
+              }}
+            />
+
+            {/* Inner highlight */}
+            <motion.circle
+              cx={50}
+              cy={cy - 1.5}
+              r={isActive ? 2.5 : 2}
+              fill="rgba(255,255,255,0.6)"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                delay: 0.3 + i * 0.08,
+                type: 'spring',
+                stiffness: 400,
+              }}
+            />
+          </g>
+        )
+      })}
+
+      {/* Traveling particle effect */}
+      <motion.circle
+        cx={50}
+        cy={0}
+        r={4}
+        fill="#c19a5b"
+        filter="url(#glow-strong-vertical)"
+        style={{
+          offsetPath: `path('${pathD}')`,
+          offsetDistance: progress,
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0.8, 0.8, 0] }}
+        transition={{
+          duration: 3,
+          delay: 0.5,
+          times: [0, 0.1, 0.9, 1],
+        }}
+      />
+    </svg>
   )
 }

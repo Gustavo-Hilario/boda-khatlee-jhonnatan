@@ -4,6 +4,7 @@ import { CountdownTimer } from '../ui/CountdownTimer'
 import { Button } from '../ui/Button'
 import { getWeddingCalendarUrl } from '../../utils/calendar'
 import { Flourish } from '../ui/Flourish'
+import { useMobile } from '../../hooks/useMobile'
 
 // Stamp effect for date
 const stampVariants: Variants = {
@@ -113,9 +114,42 @@ const buttonPulseVariants: Variants = {
   },
 }
 
+// Continuous glow for date text
+const dateGlowVariants: Variants = {
+  initial: {
+    textShadow: '2px 2px 0 rgba(128, 0, 32, 0.1), 0 0 10px rgba(128, 0, 32, 0.1)',
+  },
+  animate: {
+    textShadow: [
+      '2px 2px 0 rgba(128, 0, 32, 0.1), 0 0 10px rgba(128, 0, 32, 0.1)',
+      '2px 2px 0 rgba(128, 0, 32, 0.1), 0 0 30px rgba(128, 0, 32, 0.3)',
+      '2px 2px 0 rgba(128, 0, 32, 0.1), 0 0 10px rgba(128, 0, 32, 0.1)',
+    ],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: 'easeInOut',
+      delay: 0.5,
+    },
+  },
+}
+
+// Floating text animation - gentle up/down movement (desktop only)
+const floatingTextVariants: Variants = {
+  animate: {
+    y: [0, -3, 0],
+    transition: {
+      duration: 4,
+      repeat: Infinity,
+      ease: 'easeInOut',
+    },
+  },
+}
+
 export function CountdownSection() {
   const { date, displayDate } = weddingConfig
   const calendarUrl = getWeddingCalendarUrl()
+  const isMobile = useMobile()
 
   return (
     <section
@@ -217,11 +251,20 @@ export function CountdownSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            style={{
-              textShadow: '2px 2px 0 rgba(128, 0, 32, 0.1)',
-            }}
           >
-            {displayDate}
+            <motion.span
+              variants={!isMobile ? floatingTextVariants : undefined}
+              animate={!isMobile ? 'animate' : undefined}
+              className="inline-block"
+            >
+              <motion.span
+                variants={dateGlowVariants}
+                initial="initial"
+                animate="animate"
+              >
+                {displayDate}
+              </motion.span>
+            </motion.span>
           </motion.h2>
         </motion.div>
 

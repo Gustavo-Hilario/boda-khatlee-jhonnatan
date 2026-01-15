@@ -10,6 +10,8 @@ import 'yet-another-react-lightbox/styles.css'
 import { galleryImages } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { getAssetPath } from '../../utils/assets'
+import { useTiltConfig, useMobile } from '../../hooks/useMobile'
+import { useScrollParallax } from '../../hooks/useScrollParallax'
 
 // Container stagger variants
 const containerVariants: Variants = {
@@ -22,36 +24,48 @@ const containerVariants: Variants = {
   },
 }
 
-// Image reveal with circle clip-path
-const itemVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.8,
-    filter: 'grayscale(100%)',
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    filter: 'grayscale(0%)',
-    transition: {
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
+// Enhanced Ken Burns effect for slideshow - 4 variation patterns
+// Each image gets a unique movement pattern based on its index
+// Returns animation props for direct use with animate prop (not variants)
+const getKenBurnsAnimation = (index: number, isMobile: boolean) => {
+  // Reduce effect on mobile for performance
+  const scaleMultiplier = isMobile ? 0.5 : 1
+  const patterns = [
+    // Pattern 1: Zoom in from top-left
+    {
+      scale: [1, 1 + 0.15 * scaleMultiplier],
+      x: ['0%', `${4 * scaleMultiplier}%`],
+      y: ['0%', `${3 * scaleMultiplier}%`],
     },
-  },
+    // Pattern 2: Zoom out to center
+    {
+      scale: [1 + 0.12 * scaleMultiplier, 1],
+      x: [`${2 * scaleMultiplier}%`, '0%'],
+      y: [`${2 * scaleMultiplier}%`, '0%'],
+    },
+    // Pattern 3: Pan right to left with zoom
+    {
+      scale: [1, 1 + 0.1 * scaleMultiplier],
+      x: [`${3 * scaleMultiplier}%`, `${-3 * scaleMultiplier}%`],
+      y: ['0%', `${1 * scaleMultiplier}%`],
+    },
+    // Pattern 4: Subtle circular motion
+    {
+      scale: [1, 1 + 0.08 * scaleMultiplier, 1 + 0.12 * scaleMultiplier, 1 + 0.08 * scaleMultiplier, 1],
+      x: ['0%', `${2 * scaleMultiplier}%`, '0%', `${-2 * scaleMultiplier}%`, '0%'],
+      y: ['0%', `${1 * scaleMultiplier}%`, `${2 * scaleMultiplier}%`, `${1 * scaleMultiplier}%`, '0%'],
+    },
+  ]
+  return patterns[index % patterns.length]
 }
 
-// Ken Burns effect for slideshow
-const kenBurnsVariants: Variants = {
-  animate: (i: number) => ({
-    scale: [1, 1.08],
-    x: i % 2 === 0 ? ['0%', '2%'] : ['0%', '-2%'],
-    y: i % 2 === 0 ? ['0%', '1%'] : ['0%', '-1%'],
-    transition: {
-      duration: 8,
-      ease: 'linear',
-    },
-  }),
-}
+// Transition durations per pattern for variety
+const kenBurnsTransitions = [
+  { duration: 12, ease: 'linear' as const },
+  { duration: 10, ease: 'linear' as const },
+  { duration: 14, ease: 'linear' as const },
+  { duration: 20, ease: 'easeInOut' as const },
+]
 
 // Section header reveal
 const headerVariants: Variants = {
@@ -76,28 +90,52 @@ interface GalleryImageProps {
   onClick: () => void
 }
 
-function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'index'>) {
-  const ref = useRef<HTMLButtonElement>(null)
+function GalleryImage({ src, alt, index, isLarge, onClick }: GalleryImageProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const tiltConfig = useTiltConfig()
+  const isMobile = useMobile()
+
+  // Scroll parallax for grid items
+  const { ref: scrollRef, y: scrollY, scale: scrollScale, opacity: scrollOpacity } = useScrollParallax({
+    yIntensity: 0.2,
+    scaleRange: [0.94, 1],
+    opacityRange: [0.7, 1],
+    disableOnMobile: true,
+  })
+
+  // Alternating entrance direction based on index
+  const entranceX = isMobile ? 0 : (index % 2 === 0 ? -40 : 40)
 
   // Mouse position for 3D tilt
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  // Spring physics for smooth tilt
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), {
-    stiffness: 150,
-    damping: 20,
+  // Enhanced spring physics for smooth tilt with configurable range
+  const range = tiltConfig.rotationRange
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [range, -range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
   })
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), {
-    stiffness: 150,
-    damping: 20,
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-range, range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
+  })
+
+  // Dynamic shadow based on tilt direction
+  const shadowX = useTransform(rotateY, [-range, range], [15, -15])
+  const shadowY = useTransform(rotateX, [-range, range], [-15, 15])
+
+  // Z-axis depth on hover
+  const translateZ = useSpring(isHovered ? tiltConfig.translateZ : 0, {
+    stiffness: 300,
+    damping: 30,
   })
 
   // Handle mouse move for 3D tilt
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
+    if (!buttonRef.current) return
+    const rect = buttonRef.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width - 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5
     mouseX.set(x)
@@ -111,27 +149,47 @@ function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'i
   }
 
   return (
-    <motion.button
-      ref={ref}
-      variants={itemVariants}
-      type="button"
-      aria-label={`Ver ${alt}`}
-      className={`relative overflow-hidden rounded-xl cursor-pointer bg-transparent border-0 p-0 text-left focus:outline-none ${isLarge ? 'row-span-2' : ''}`}
-      onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
+    <motion.div
+      ref={scrollRef}
+      className={`${isLarge ? 'row-span-2' : ''}`}
       style={{
-        perspective: 1000,
-        transformStyle: 'preserve-3d',
+        y: scrollY,
+        scale: scrollScale,
+        opacity: scrollOpacity,
+      }}
+      initial={{ opacity: 0, x: entranceX, scale: 0.9 }}
+      whileInView={{ opacity: 1, x: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{
+        duration: 0.7,
+        ease: [0.22, 1, 0.36, 1],
+        delay: Math.min(index * 0.05, 0.4),
       }}
     >
+      <motion.button
+        ref={buttonRef}
+        type="button"
+        aria-label={`Ver ${alt}`}
+        className="relative overflow-hidden rounded-xl cursor-pointer bg-transparent border-0 p-0 text-left focus:outline-none w-full h-full"
+        onClick={onClick}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          perspective: 1000,
+          transformStyle: 'preserve-3d',
+        }}
+      >
       <motion.div
-        className="relative w-full h-full"
+        className="relative w-full h-full will-change-transform"
         style={{
           rotateX,
           rotateY,
+          z: translateZ,
           transformStyle: 'preserve-3d',
+          boxShadow: isHovered
+            ? `${shadowX.get()}px ${shadowY.get()}px 30px rgba(0, 0, 0, ${tiltConfig.shadowIntensity})`
+            : '0 5px 15px rgba(0, 0, 0, 0.2)',
         }}
       >
         <div className={`relative w-full ${isLarge ? 'aspect-[3/4]' : 'aspect-square'}`}>
@@ -207,17 +265,18 @@ function GalleryImage({ src, alt, isLarge, onClick }: Omit<GalleryImageProps, 'i
         </div>
       </motion.div>
 
-      {/* Card shadow that increases on hover */}
-      <motion.div
-        className="absolute inset-0 -z-10 rounded-xl"
-        animate={{
-          boxShadow: isHovered
-            ? '0 25px 50px -12px rgba(0, 0, 0, 0.35)'
-            : '0 10px 30px -12px rgba(0, 0, 0, 0.15)',
-        }}
-        transition={{ duration: 0.3 }}
-      />
-    </motion.button>
+        {/* Card shadow that increases on hover */}
+        <motion.div
+          className="absolute inset-0 -z-10 rounded-xl"
+          animate={{
+            boxShadow: isHovered
+              ? '0 25px 50px -12px rgba(0, 0, 0, 0.35)'
+              : '0 10px 30px -12px rgba(0, 0, 0, 0.15)',
+          }}
+          transition={{ duration: 0.3 }}
+        />
+      </motion.button>
+    </motion.div>
   )
 }
 
@@ -232,6 +291,14 @@ interface SlideshowImageProps {
 
 function SlideshowImage({ src, alt, index, onClick, isActive }: SlideshowImageProps) {
   const [isHovered, setIsHovered] = useState(false)
+  const isMobile = useMobile()
+
+  // Get unique Ken Burns pattern based on index
+  const kenBurnsAnimation = getKenBurnsAnimation(index, isMobile)
+  const kenBurnsTransition = kenBurnsTransitions[index % kenBurnsTransitions.length]
+
+  // Transform origins vary by pattern for more visual interest
+  const transformOrigins = ['top left', 'center right', 'bottom center', 'center']
 
   return (
     <button
@@ -242,15 +309,14 @@ function SlideshowImage({ src, alt, index, onClick, isActive }: SlideshowImagePr
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Ken Burns animated image */}
+      {/* Ken Burns animated image with unique pattern per slide */}
       <motion.img
         src={src}
         alt={alt}
         className="w-full h-full object-cover"
-        variants={kenBurnsVariants}
-        animate={isActive ? 'animate' : undefined}
-        custom={index}
-        style={{ transformOrigin: index % 2 === 0 ? 'center left' : 'center right' }}
+        animate={isActive ? kenBurnsAnimation : undefined}
+        transition={kenBurnsTransition}
+        style={{ transformOrigin: transformOrigins[index % transformOrigins.length] }}
       />
 
       {/* Light leak overlay */}
@@ -496,6 +562,7 @@ export function GallerySection() {
                   key={`gallery-${image.src}`}
                   src={getAssetPath(image.src)}
                   alt={image.alt}
+                  index={gridIndex}
                   isLarge={isLarge}
                   onClick={() => openLightbox(gridIndex)}
                 />

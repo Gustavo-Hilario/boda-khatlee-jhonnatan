@@ -65,6 +65,54 @@ const sizeConfig = {
   },
 }
 
+// Digit pair widths for each size (2 digits + gap between them)
+// sm: 2 * 40px + 4px = 84px, md: 2 * 48px + 4px = 100px at sm, 2 * 64px = 132px at md
+const digitPairWidthClasses = {
+  sm: 'w-[84px]',
+  md: 'w-[84px] sm:w-[100px] md:w-[132px]',
+  lg: 'w-[116px] sm:w-[132px] md:w-[164px]',
+}
+
+// Helper components for three-row layout
+function DigitPair({ value, size }: { value: number; size: 'sm' | 'md' | 'lg' }) {
+  return (
+    <div className="flex gap-0.5 md:gap-1">
+      <FlipDigit digit={Math.floor(value / 10)} size={size} />
+      <FlipDigit digit={value % 10} size={size} />
+    </div>
+  )
+}
+
+function CountdownIcon({ children, delay, size }: { children: React.ReactNode; delay: number; size: 'sm' | 'md' | 'lg' }) {
+  return (
+    <motion.div
+      className={cn('flex justify-center', digitPairWidthClasses[size])}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function CountdownLabel({ children, size }: { children: React.ReactNode; size: 'sm' | 'md' | 'lg' }) {
+  return (
+    <span className={cn(
+      'text-gray-600 font-medium uppercase tracking-wider text-center',
+      digitPairWidthClasses[size],
+      size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
+    )}>
+      {children}
+    </span>
+  )
+}
+
+// Spacer that matches ClockSeparator's horizontal padding
+function SeparatorSpacer() {
+  return <div className="w-1 sm:w-2 md:w-4" />
+}
+
 export function CountdownTimer({
   targetDate,
   className,
@@ -196,118 +244,137 @@ export function CountdownTimer({
           )}
         </AnimatePresence>
 
-        {/* Flip clock display - 2x2 grid on extra small, horizontal on larger */}
-        <div className={cn(
-          isExtraSmall
-            ? 'grid grid-cols-2 gap-4 max-w-[240px] mx-auto'
-            : 'flex justify-center items-start',
-          !isExtraSmall && config.gap
-        )}>
-          {/* Days */}
-          <div className="flex flex-col items-center">
-            <motion.div
-              className="mb-1 sm:mb-2"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <CalendarIcon
-                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
-                color="#8d9e78"
-              />
-            </motion.div>
-            <div className="flex gap-0.5 md:gap-1">
-              <FlipDigit digit={Math.floor(days / 10)} size={config.digitSize} />
-              <FlipDigit digit={days % 10} size={config.digitSize} />
+        {/* Flip clock display - 2x2 grid on extra small, three-row layout on larger */}
+        {isExtraSmall ? (
+          // Extra small: 2x2 grid layout (no separators)
+          <div className="grid grid-cols-2 gap-4 max-w-[240px] mx-auto">
+            {/* Days */}
+            <div className="flex flex-col items-center">
+              <motion.div
+                className="mb-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <CalendarIcon size={18} color="#8d9e78" />
+              </motion.div>
+              <div className="flex gap-0.5">
+                <FlipDigit digit={Math.floor(days / 10)} size={config.digitSize} />
+                <FlipDigit digit={days % 10} size={config.digitSize} />
+              </div>
+              <span className={`mt-1 text-gray-600 font-medium uppercase tracking-wider ${
+                size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs' : 'text-sm'
+              }`}>
+                Días
+              </span>
             </div>
-            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
-            }`}>
-              Días
-            </span>
-          </div>
-
-          {/* Separator - hidden on extra small */}
-          {!isExtraSmall && <ClockSeparator />}
-
-          {/* Hours */}
-          <div className="flex flex-col items-center">
-            <motion.div
-              className="mb-1 sm:mb-2"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <ClockIcon
-                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
-                color="#8d9e78"
-              />
-            </motion.div>
-            <div className="flex gap-0.5 md:gap-1">
-              <FlipDigit digit={Math.floor(hours / 10)} size={config.digitSize} />
-              <FlipDigit digit={hours % 10} size={config.digitSize} />
+            {/* Hours */}
+            <div className="flex flex-col items-center">
+              <motion.div
+                className="mb-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <ClockIcon size={18} color="#8d9e78" />
+              </motion.div>
+              <div className="flex gap-0.5">
+                <FlipDigit digit={Math.floor(hours / 10)} size={config.digitSize} />
+                <FlipDigit digit={hours % 10} size={config.digitSize} />
+              </div>
+              <span className={`mt-1 text-gray-600 font-medium uppercase tracking-wider ${
+                size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs' : 'text-sm'
+              }`}>
+                Horas
+              </span>
             </div>
-            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
-            }`}>
-              Horas
-            </span>
-          </div>
-
-          {/* Separator - hidden on extra small */}
-          {!isExtraSmall && <ClockSeparator />}
-
-          {/* Minutes */}
-          <div className="flex flex-col items-center">
-            <motion.div
-              className="mb-1 sm:mb-2"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <HourglassIcon
-                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
-                color="#8d9e78"
-              />
-            </motion.div>
-            <div className="flex gap-0.5 md:gap-1">
-              <FlipDigit digit={Math.floor(minutes / 10)} size={config.digitSize} />
-              <FlipDigit digit={minutes % 10} size={config.digitSize} />
+            {/* Minutes */}
+            <div className="flex flex-col items-center">
+              <motion.div
+                className="mb-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <HourglassIcon size={18} color="#8d9e78" />
+              </motion.div>
+              <div className="flex gap-0.5">
+                <FlipDigit digit={Math.floor(minutes / 10)} size={config.digitSize} />
+                <FlipDigit digit={minutes % 10} size={config.digitSize} />
+              </div>
+              <span className={`mt-1 text-gray-600 font-medium uppercase tracking-wider ${
+                size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs' : 'text-sm'
+              }`}>
+                Min
+              </span>
             </div>
-            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
-            }`}>
-              Min
-            </span>
-          </div>
-
-          {/* Separator - hidden on extra small */}
-          {!isExtraSmall && <ClockSeparator />}
-
-          {/* Seconds */}
-          <div className="flex flex-col items-center">
-            <motion.div
-              className="mb-1 sm:mb-2"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <StopwatchIcon
-                size={isExtraSmall ? 18 : size === 'sm' ? 20 : size === 'md' ? 24 : 28}
-                color="#8d9e78"
-              />
-            </motion.div>
-            <div className="flex gap-0.5 md:gap-1">
-              <FlipDigit digit={Math.floor(seconds / 10)} size={config.digitSize} />
-              <FlipDigit digit={seconds % 10} size={config.digitSize} />
+            {/* Seconds */}
+            <div className="flex flex-col items-center">
+              <motion.div
+                className="mb-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <StopwatchIcon size={18} color="#8d9e78" />
+              </motion.div>
+              <div className="flex gap-0.5">
+                <FlipDigit digit={Math.floor(seconds / 10)} size={config.digitSize} />
+                <FlipDigit digit={seconds % 10} size={config.digitSize} />
+              </div>
+              <span className={`mt-1 text-gray-600 font-medium uppercase tracking-wider ${
+                size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs' : 'text-sm'
+              }`}>
+                Seg
+              </span>
             </div>
-            <span className={`mt-1 sm:mt-2 text-gray-600 font-medium uppercase tracking-wider ${
-              size === 'sm' ? 'text-xs' : size === 'md' ? 'text-[10px] sm:text-xs md:text-sm' : 'text-sm md:text-base'
-            }`}>
-              Seg
-            </span>
           </div>
-        </div>
+        ) : (
+          // Larger screens: Three-row layout for proper separator alignment
+          // This structure ensures separators always align with digits regardless of icon size changes
+          <div className="flex flex-col items-center">
+            {/* Row 1: Icons - using same widths as digit pairs below */}
+            <div className={cn('flex justify-center items-end mb-1 sm:mb-2', config.gap)}>
+              <CountdownIcon delay={0.2} size={size}>
+                <CalendarIcon size={size === 'sm' ? 20 : size === 'md' ? 24 : 28} color="#8d9e78" />
+              </CountdownIcon>
+              <SeparatorSpacer />
+              <CountdownIcon delay={0.3} size={size}>
+                <ClockIcon size={size === 'sm' ? 20 : size === 'md' ? 24 : 28} color="#8d9e78" />
+              </CountdownIcon>
+              <SeparatorSpacer />
+              <CountdownIcon delay={0.4} size={size}>
+                <HourglassIcon size={size === 'sm' ? 20 : size === 'md' ? 24 : 28} color="#8d9e78" />
+              </CountdownIcon>
+              <SeparatorSpacer />
+              <CountdownIcon delay={0.5} size={size}>
+                <StopwatchIcon size={size === 'sm' ? 20 : size === 'md' ? 24 : 28} color="#8d9e78" />
+              </CountdownIcon>
+            </div>
+
+            {/* Row 2: Digits with Separators - naturally aligned */}
+            <div className={cn('flex justify-center items-center', config.gap)}>
+              <DigitPair value={days} size={config.digitSize} />
+              <ClockSeparator />
+              <DigitPair value={hours} size={config.digitSize} />
+              <ClockSeparator />
+              <DigitPair value={minutes} size={config.digitSize} />
+              <ClockSeparator />
+              <DigitPair value={seconds} size={config.digitSize} />
+            </div>
+
+            {/* Row 3: Labels - matching digit pair widths */}
+            <div className={cn('flex justify-center items-start mt-1 sm:mt-2', config.gap)}>
+              <CountdownLabel size={size}>Días</CountdownLabel>
+              <SeparatorSpacer />
+              <CountdownLabel size={size}>Horas</CountdownLabel>
+              <SeparatorSpacer />
+              <CountdownLabel size={size}>Min</CountdownLabel>
+              <SeparatorSpacer />
+              <CountdownLabel size={size}>Seg</CountdownLabel>
+            </div>
+          </div>
+        )}
       </div>
     </>
   )

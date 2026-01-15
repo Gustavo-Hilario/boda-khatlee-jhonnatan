@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { cn } from '../../utils/cn'
-import type { ReactNode } from 'react'
+import type { ReactNode, MouseEvent } from 'react'
+import { useRipple, RippleContainer } from './ButtonRipple'
 
 interface ButtonProps {
   children: ReactNode
@@ -25,10 +26,18 @@ export function Button({
   disabled,
   type = 'button',
 }: ButtonProps) {
+  const { ripples, onRipple } = useRipple()
+
+  // Determine ripple color based on variant
+  const rippleColor = variant === 'outline-light' || variant === 'primary' || variant === 'secondary'
+    ? 'light' as const
+    : 'gold' as const
+
   const baseStyles = cn(
     'inline-flex items-center justify-center rounded-full font-semibold uppercase tracking-wider',
     'transition-all duration-300 ease-out',
     'focus:outline-none focus:ring-2 focus:ring-offset-2',
+    'relative overflow-hidden', // Required for ripple effect
     {
       'bg-burgundy text-white hover:bg-burgundy-light focus:ring-burgundy shadow-lg hover:shadow-xl hover:-translate-y-0.5': variant === 'primary',
       'bg-olive text-white hover:bg-olive-light focus:ring-olive shadow-lg hover:shadow-xl hover:-translate-y-0.5': variant === 'secondary',
@@ -42,6 +51,13 @@ export function Button({
     className
   )
 
+  const handleClick = (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    if (!disabled) {
+      onRipple(e as MouseEvent<HTMLElement>)
+    }
+    onClick?.()
+  }
+
   if (href) {
     return (
       <motion.a
@@ -51,8 +67,10 @@ export function Button({
         className={baseStyles}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={handleClick}
       >
-        {children}
+        <RippleContainer ripples={ripples} color={rippleColor} />
+        <span className="relative z-10">{children}</span>
       </motion.a>
     )
   }
@@ -63,10 +81,11 @@ export function Button({
       className={baseStyles}
       whileHover={disabled ? undefined : { scale: 1.02 }}
       whileTap={disabled ? undefined : { scale: 0.98 }}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
     >
-      {children}
+      <RippleContainer ripples={ripples} color={rippleColor} />
+      <span className="relative z-10">{children}</span>
     </motion.button>
   )
 }

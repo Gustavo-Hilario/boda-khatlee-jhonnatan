@@ -2,21 +2,22 @@ import { motion, type Variants } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { getAssetPath } from '../../utils/assets'
+import { useMobile } from '../../hooks/useMobile'
 
-// Ken Burns effect for photo
-const kenBurnsVariants: Variants = {
+// Ken Burns effect for photo - mobile-aware with enhanced scale
+const getKenBurnsVariants = (isMobile: boolean): Variants => ({
   animate: {
-    scale: [1, 1.08, 1.04],
-    x: ['0%', '2%', '-1%'],
-    y: ['0%', '1%', '-0.5%'],
+    scale: isMobile ? [1, 1.05, 1.02] : [1, 1.12, 1.06],
+    x: isMobile ? ['0%', '1%', '-0.5%'] : ['0%', '3%', '-1.5%'],
+    y: isMobile ? ['0%', '0.5%', '-0.3%'] : ['0%', '2%', '-1%'],
     transition: {
-      duration: 15,
+      duration: isMobile ? 18 : 14,
       repeat: Infinity,
       repeatType: 'reverse',
       ease: 'linear',
     },
   },
-}
+})
 
 // Light leak overlay animation
 const lightLeakVariants: Variants = {
@@ -63,15 +64,34 @@ const letterVariants: Variants = {
   },
 }
 
-// Shimmer effect passing through text
-const shimmerVariants: Variants = {
+// Continuous glow pulse for headings
+const glowPulseVariants: Variants = {
+  initial: {
+    textShadow: '0 0 0px rgba(193, 154, 91, 0)',
+  },
   animate: {
-    backgroundPosition: ['200% center', '-200% center'],
+    textShadow: [
+      '0 0 0px rgba(193, 154, 91, 0)',
+      '0 0 20px rgba(193, 154, 91, 0.5)',
+      '0 0 0px rgba(193, 154, 91, 0)',
+    ],
     transition: {
-      duration: 4,
+      duration: 3,
       repeat: Infinity,
-      repeatDelay: 3,
-      ease: 'linear',
+      ease: 'easeInOut',
+      delay: 0.5,
+    },
+  },
+}
+
+// Floating text animation - gentle up/down movement
+const floatingTextVariants: Variants = {
+  animate: {
+    y: [0, -4, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: 'easeInOut',
     },
   },
 }
@@ -150,6 +170,7 @@ function AnimatedLetter({ letter }: { letter: string }) {
     <motion.span
       className="inline-block"
       variants={letterVariants}
+      initial="hidden"
       style={{ display: 'inline-block' }}
     >
       {letter}
@@ -179,6 +200,8 @@ function AnimatedName({ name }: { name: string }) {
 export function WelcomeSection() {
   const { couple } = weddingConfig
   const invitationWords = 'Tenemos el honor de invitarte a nuestra boda'.split(' ')
+  const isMobile = useMobile()
+  const kenBurnsVariants = getKenBurnsVariants(isMobile)
 
   return (
     <section
@@ -262,7 +285,7 @@ export function WelcomeSection() {
           <Flourish variant="corner" className="w-16 h-16 text-olive transform scale-x-[-1]" />
         </motion.div>
 
-        {/* "¡NOS CASAMOS!" - Bounces down */}
+        {/* "¡NOS CASAMOS!" - Bounces down with continuous glow and float */}
         <motion.p
           className="text-gold-warm font-serif text-xl md:text-3xl lg:text-4xl tracking-widest uppercase mb-4 md:mb-6"
           variants={bounceDownVariants}
@@ -270,10 +293,21 @@ export function WelcomeSection() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          ¡Nos Casamos!
+          <motion.span
+            variants={!isMobile ? floatingTextVariants : undefined}
+            animate={!isMobile ? 'animate' : undefined}
+          >
+            <motion.span
+              variants={glowPulseVariants}
+              initial="initial"
+              animate="animate"
+            >
+              ¡Nos Casamos!
+            </motion.span>
+          </motion.span>
         </motion.p>
 
-        {/* Couple names - Letter by letter with shimmer */}
+        {/* Couple names - Letter by letter with shimmer, glow, and float */}
         <motion.h1
           className="font-cursive text-4xl md:text-6xl lg:text-7xl xl:text-8xl text-olive mb-4 md:mb-6 leading-tight relative"
           initial={{ opacity: 0 }}
@@ -281,8 +315,26 @@ export function WelcomeSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.3 }}
         >
-          {/* Base text layer */}
-          <span className="relative">
+          {/* Base text layer with continuous glow and float (desktop only) */}
+          <motion.span
+            className="relative inline-block"
+            animate={!isMobile ? {
+              y: [0, -4, 0],
+              transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+            } : undefined}
+          >
+            <motion.span
+              className="relative"
+              initial={{ textShadow: '0 0 10px rgba(141, 158, 120, 0.2)' }}
+              animate={{
+                textShadow: [
+                  '0 0 10px rgba(141, 158, 120, 0.2)',
+                  '0 0 25px rgba(141, 158, 120, 0.4)',
+                  '0 0 10px rgba(141, 158, 120, 0.2)',
+                ],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+            >
             <AnimatedName name={couple.bride} />
             <motion.span
               className="inline-block mx-2 md:mx-4"
@@ -298,15 +350,23 @@ export function WelcomeSection() {
               &
             </motion.span>
             <AnimatedName name={couple.groom} />
-          </span>
+            </motion.span>
+          </motion.span>
 
-          {/* Shimmer overlay */}
+          {/* Enhanced shimmer overlay */}
           <motion.span
             className="absolute inset-0 pointer-events-none"
-            variants={shimmerVariants}
-            animate="animate"
+            initial={{ opacity: 0, backgroundPosition: '200% center' }}
+            animate={{
+              opacity: 1,
+              backgroundPosition: ['200% center', '-200% center'],
+            }}
+            transition={{
+              opacity: { duration: 0.5, delay: 0.3 },
+              backgroundPosition: { duration: 5, repeat: Infinity, repeatDelay: 2, ease: 'linear', delay: 1 },
+            }}
             style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(193,154,91,0.3) 50%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(193,154,91,0.5) 50%, transparent 100%)',
               backgroundSize: '200% 100%',
               mixBlendMode: 'overlay',
             }}

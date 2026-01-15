@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { useMusic } from '../../context/MusicContext'
 import { getAssetPath } from '../../utils/assets'
+import { useMobile } from '../../hooks/useMobile'
 
 interface CoverSectionProps {
   onOpen?: () => void
@@ -52,20 +53,20 @@ const floatVariants: Variants = {
   },
 }
 
-// Ken Burns effect for background
-const kenBurnsVariants: Variants = {
+// Ken Burns effect for background - mobile-aware
+const getKenBurnsVariants = (isMobile: boolean): Variants => ({
   animate: {
-    scale: [1, 1.1],
-    x: ['0%', '2%'],
-    y: ['0%', '1%'],
+    scale: [1, isMobile ? 1.06 : 1.15],
+    x: ['0%', isMobile ? '1%' : '3%'],
+    y: ['0%', isMobile ? '0.5%' : '2%'],
     transition: {
-      duration: 20,
+      duration: isMobile ? 25 : 18,
       repeat: Infinity,
       repeatType: 'reverse',
       ease: 'linear',
     },
   },
-}
+})
 
 // Arrow with glow pulse
 const arrowVariants: Variants = {
@@ -122,6 +123,8 @@ const shimmerVariants: Variants = {
 export function CoverSection({ onOpen }: CoverSectionProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { togglePlay, hasInteracted } = useMusic()
+  const isMobile = useMobile()
+  const kenBurnsVariants = getKenBurnsVariants(isMobile)
 
   const handleOpen = () => {
     setIsOpen(true)

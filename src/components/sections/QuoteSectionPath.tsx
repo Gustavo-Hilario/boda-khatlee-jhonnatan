@@ -1,4 +1,4 @@
-import { motion, type Variants, useInView } from 'framer-motion'
+import { motion, type Variants, useInView, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useRef } from 'react'
 import { Flourish } from '../ui/Flourish'
 import { weddingConfig } from '../../config/wedding'
@@ -136,11 +136,11 @@ const glowVariants: Variants = {
   },
 }
 
-// Side Monogram Component (K&J with rotating ring)
+// Side Monogram Component (K&J with rotating ring) - reversible animation
 function SideMonogram({ position }: { position: 'left' | 'right' }) {
   const { couple } = weddingConfig
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const isInView = useInView(ref, { once: false, margin: '-10% 0px -10% 0px' })
 
   return (
     <motion.div
@@ -233,11 +233,11 @@ function SideMonogram({ position }: { position: 'left' | 'right' }) {
   )
 }
 
-// Mobile Monogram Component (centered, visible on mobile/tablet only)
+// Mobile Monogram Component (centered, visible on mobile/tablet only) - reversible animation
 function MobileMonogram() {
   const { couple } = weddingConfig
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const isInView = useInView(ref, { once: false, margin: '-10% 0px -10% 0px' })
 
   return (
     <motion.div
@@ -330,7 +330,7 @@ function MobileMonogram() {
   )
 }
 
-// Phrase block component
+// Phrase block component - reversible animation
 function PhraseBlock({
   text,
   delay,
@@ -340,6 +340,12 @@ function PhraseBlock({
   delay: number
   align?: 'left' | 'center' | 'right'
 }) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, {
+    once: false, // Allow reverse animation
+    margin: '-10% 0px -10% 0px', // Trigger slightly inside viewport
+  })
+
   const alignClass = {
     left: 'text-left',
     center: 'text-center',
@@ -348,12 +354,27 @@ function PhraseBlock({
 
   return (
     <motion.div
+      ref={ref}
       className={`relative ${alignClass[align]}`}
-      variants={phraseVariants}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      custom={delay}
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={{
+        hidden: {
+          opacity: 0,
+          y: 20,
+          scale: 0.95,
+        },
+        visible: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          transition: {
+            delay: isInView ? delay * 0.3 : 0, // Reduced delay on reverse
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1],
+          },
+        },
+      }}
     >
       <p className="font-elegant text-white text-xl md:text-2xl lg:text-3xl italic leading-relaxed">
         {text}
@@ -362,10 +383,31 @@ function PhraseBlock({
   )
 }
 
-// Connecting curved path SVG
+// Connecting curved path SVG - scroll-linked for reversible animation
 function ConnectingPath() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+
+  // Scroll-linked animation for reversible path drawing
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start 0.8', 'end 0.2'], // Start when 80% visible, end when 20% visible
+  })
+
+  // Smooth spring animation for the path
+  const pathLength = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  })
+
+  // Opacity based on scroll - fade in as it enters, fade out as it exits
+  const pathOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0.8])
+
+  // Dot scales based on scroll progress (appear sequentially)
+  const dot1Scale = useTransform(scrollYProgress, [0.1, 0.25], [0, 1])
+  const dot2Scale = useTransform(scrollYProgress, [0.3, 0.45], [0, 1])
+  const dot3Scale = useTransform(scrollYProgress, [0.5, 0.65], [0, 1])
+  const dot4Scale = useTransform(scrollYProgress, [0.7, 0.85], [0, 1])
 
   return (
     <div ref={ref} className="absolute inset-0 pointer-events-none">
@@ -375,7 +417,7 @@ function ConnectingPath() {
         fill="none"
         preserveAspectRatio="xMidYMid meet"
       >
-        {/* Main flowing path */}
+        {/* Main flowing path - scroll-linked */}
         <motion.path
           d="M200 30
              C200 60, 200 80, 200 100
@@ -390,51 +432,40 @@ function ConnectingPath() {
           stroke="url(#goldGradient)"
           strokeWidth="2"
           strokeLinecap="round"
-          variants={pathVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
+          style={{
+            pathLength,
+            opacity: pathOpacity,
+          }}
         />
 
-        {/* Decorative dots along the path */}
+        {/* Decorative dots along the path - scroll-linked */}
         <motion.circle
           cx="200"
           cy="100"
           r="4"
           fill="#c19a5b"
-          variants={dotVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          custom={0.6}
+          style={{ scale: dot1Scale, opacity: dot1Scale }}
         />
         <motion.circle
           cx="200"
           cy="240"
           r="4"
           fill="#c19a5b"
-          variants={dotVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          custom={1.2}
+          style={{ scale: dot2Scale, opacity: dot2Scale }}
         />
         <motion.circle
           cx="200"
           cy="340"
           r="4"
           fill="#c19a5b"
-          variants={dotVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          custom={1.8}
+          style={{ scale: dot3Scale, opacity: dot3Scale }}
         />
         <motion.circle
           cx="200"
           cy="440"
           r="4"
           fill="#c19a5b"
-          variants={dotVariants}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          custom={2.2}
+          style={{ scale: dot4Scale, opacity: dot4Scale }}
         />
 
         {/* Gradient definition */}
@@ -478,12 +509,12 @@ export function QuoteSectionPath() {
         {/* Mobile monogram (visible on mobile/tablet only) */}
         <MobileMonogram />
 
-        {/* Top decorative star */}
+        {/* Top decorative star - reversible animation */}
         <motion.div
           className="text-center mb-8"
           initial={{ opacity: 0, scale: 0, rotate: -180 }}
           whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false, margin: '-10% 0px -10% 0px' }}
           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
         >
           <span className="text-gold-warm text-3xl">✦</span>
@@ -501,26 +532,38 @@ export function QuoteSectionPath() {
             <PhraseBlock text={phrases[2]} delay={1.3} />
             <PhraseBlock text={phrases[3]} delay={1.8} />
 
-            {/* Heart at the end */}
+            {/* Heart at the end - reversible animation */}
             <motion.div
               className="mt-4"
-              variants={heartVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true }}
+              viewport={{ once: false, margin: '-10% 0px -10% 0px' }}
+              variants={{
+                hidden: { scale: 0, opacity: 0, rotate: -45 },
+                visible: {
+                  scale: 1,
+                  opacity: 1,
+                  rotate: 0,
+                  transition: {
+                    type: 'spring',
+                    stiffness: 200,
+                    damping: 12,
+                  },
+                },
+              }}
             >
               <HeartIcon size={48} color="#c19a5b" accentColor="#ffffff" animate={true} />
             </motion.div>
           </div>
         </div>
 
-        {/* Bottom flourish */}
+        {/* Bottom flourish - reversible animation */}
         <motion.div
           className="mt-12"
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 2.8, duration: 0.6 }}
+          viewport={{ once: false, margin: '-10% 0px -10% 0px' }}
+          transition={{ duration: 0.6 }}
         >
           <Flourish variant="header" className="text-white/30" />
         </motion.div>

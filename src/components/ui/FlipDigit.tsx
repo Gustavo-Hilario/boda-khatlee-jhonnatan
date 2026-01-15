@@ -6,13 +6,20 @@ interface FlipDigitProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-// Glow pulse on change
+// Enhanced glow pulse on change - golden burst effect
 const glowVariants: Variants = {
-  initial: { opacity: 0 },
+  initial: { opacity: 0, scale: 0.8 },
   animate: {
-    opacity: [0, 0.6, 0],
+    opacity: [0, 0.8, 0.4, 0],
+    scale: [0.8, 1.2, 1.1, 1],
+    boxShadow: [
+      '0 0 0px rgba(193, 154, 91, 0)',
+      '0 0 25px rgba(193, 154, 91, 0.8)',
+      '0 0 15px rgba(193, 154, 91, 0.5)',
+      '0 0 0px rgba(193, 154, 91, 0)',
+    ],
     transition: {
-      duration: 0.5,
+      duration: 0.6,
       ease: 'easeOut',
     },
   },
@@ -90,16 +97,26 @@ export function FlipDigit({ digit, size = 'md' }: FlipDigitProps) {
       className={`${classes.container} relative`}
       style={{ perspective: '400px' }}
     >
-      {/* Glow effect on change */}
+      {/* Enhanced glow effect on change - golden burst */}
       <AnimatePresence>
         {showGlow && (
-          <motion.div
-            className="absolute inset-0 rounded-lg bg-gold-warm/30 blur-md z-0"
-            variants={glowVariants}
-            initial="initial"
-            animate="animate"
-            exit={{ opacity: 0 }}
-          />
+          <>
+            {/* Outer glow ring */}
+            <motion.div
+              className="absolute -inset-2 rounded-xl bg-gold-warm/40 blur-lg z-0"
+              variants={glowVariants}
+              initial="initial"
+              animate="animate"
+              exit={{ opacity: 0 }}
+            />
+            {/* Inner glow */}
+            <motion.div
+              className="absolute inset-0 rounded-lg bg-gold-warm/50 blur-md z-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.6, 0] }}
+              transition={{ duration: 0.4 }}
+            />
+          </>
         )}
       </AnimatePresence>
 
@@ -132,16 +149,17 @@ export function FlipDigit({ digit, size = 'md' }: FlipDigitProps) {
   )
 }
 
-// Colon separator with pulse - height matches digit cards
+// Colon separator with pulse - designed to be used in a row with FlipDigits
+// Uses the same height as FlipDigit containers so they naturally align
 export function ClockSeparator({ className = '' }: { className?: string }) {
   return (
     <motion.div
-      className={`flex flex-col justify-center gap-1.5 sm:gap-2 px-0.5 sm:px-1 md:px-2 h-14 sm:h-16 md:h-20 ${className}`}
+      className={`flex flex-col justify-center gap-1.5 sm:gap-2 px-0.5 sm:px-1 md:px-2 ${className}`}
       animate={{ opacity: [1, 0.3, 1] }}
       transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
     >
-      <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
-      <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 rounded-full bg-gold-warm" />
+      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-gold-warm" />
+      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 rounded-full bg-gold-warm" />
     </motion.div>
   )
 }

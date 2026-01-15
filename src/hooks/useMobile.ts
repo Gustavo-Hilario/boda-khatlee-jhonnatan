@@ -43,3 +43,26 @@ export function useAnimationConfig() {
         staggerDelay: 0.12,
       }
 }
+
+// Enhanced tilt configuration for 3D card effects
+export function useTiltConfig() {
+  const isMobile = useMobile()
+
+  return isMobile
+    ? {
+        // Reduced tilt for mobile (saves battery, better performance)
+        rotationRange: 6, // ±6 degrees
+        stiffness: 150,
+        damping: 20,
+        translateZ: 0, // No Z translation on mobile
+        shadowIntensity: 0.3,
+      }
+    : {
+        // Enhanced tilt for desktop - more dramatic effect
+        rotationRange: 12, // ±12 degrees (up from ±5)
+        stiffness: 200, // Snappier response
+        damping: 25, // Less wobble
+        translateZ: 30, // Depth on hover
+        shadowIntensity: 0.5,
+      }
+}

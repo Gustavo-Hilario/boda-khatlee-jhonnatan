@@ -4,6 +4,7 @@ import { weddingConfig } from '../../config/wedding'
 import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
 import { getAssetPath } from '../../utils/assets'
+import { useTiltConfig } from '../../hooks/useMobile'
 import {
   ChurchIcon,
   ChampagneIcon,
@@ -120,19 +121,31 @@ function VenueCard({
 }: VenueCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const tiltConfig = useTiltConfig()
 
   // Mouse position for 3D tilt
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  // Spring physics for smooth tilt
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), {
-    stiffness: 150,
-    damping: 20,
+  // Enhanced spring physics for smooth tilt with configurable range
+  const range = tiltConfig.rotationRange
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [range, -range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
   })
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), {
-    stiffness: 150,
-    damping: 20,
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-range, range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
+  })
+
+  // Dynamic shadow based on tilt direction
+  const shadowX = useTransform(rotateY, [-range, range], [20, -20])
+  const shadowY = useTransform(rotateX, [-range, range], [-20, 20])
+
+  // Z-axis depth on hover
+  const translateZ = useSpring(isHovered ? tiltConfig.translateZ : 0, {
+    stiffness: 300,
+    damping: 30,
   })
 
   // Handle mouse move
@@ -164,14 +177,15 @@ function VenueCard({
       style={{ perspective: 1000 }}
     >
       <motion.div
-        className={`${bgClass} text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden`}
+        className={`${bgClass} text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden will-change-transform`}
         style={{
           rotateX,
           rotateY,
+          z: translateZ,
           transformStyle: 'preserve-3d',
-        }}
-        whileHover={{
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+          boxShadow: isHovered
+            ? `${shadowX.get()}px ${shadowY.get()}px 40px rgba(0, 0, 0, ${tiltConfig.shadowIntensity})`
+            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)',
         }}
         transition={{ duration: 0.3 }}
       >
@@ -308,19 +322,31 @@ interface DressCodeCardProps {
 function DressCodeCard({ dressCode }: DressCodeCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const tiltConfig = useTiltConfig()
 
   // Mouse position for 3D tilt
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  // Spring physics for smooth tilt
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), {
-    stiffness: 150,
-    damping: 20,
+  // Enhanced spring physics for smooth tilt with configurable range
+  const range = tiltConfig.rotationRange
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [range, -range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
   })
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), {
-    stiffness: 150,
-    damping: 20,
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-range, range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
+  })
+
+  // Dynamic shadow based on tilt direction
+  const shadowX = useTransform(rotateY, [-range, range], [20, -20])
+  const shadowY = useTransform(rotateX, [-range, range], [-20, 20])
+
+  // Z-axis depth on hover
+  const translateZ = useSpring(isHovered ? tiltConfig.translateZ : 0, {
+    stiffness: 300,
+    damping: 30,
   })
 
   // Handle mouse move
@@ -350,14 +376,15 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
       style={{ perspective: 1000 }}
     >
       <motion.div
-        className="bg-burgundy text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden h-full"
+        className="bg-burgundy text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden h-full will-change-transform"
         style={{
           rotateX,
           rotateY,
+          z: translateZ,
           transformStyle: 'preserve-3d',
-        }}
-        whileHover={{
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+          boxShadow: isHovered
+            ? `${shadowX.get()}px ${shadowY.get()}px 40px rgba(0, 0, 0, ${tiltConfig.shadowIntensity})`
+            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)',
         }}
         transition={{ duration: 0.3 }}
       >

@@ -13,6 +13,8 @@ import { GallerySection } from './components/sections/GallerySection'
 import { InfoSection } from './components/sections/InfoSection'
 import { ClosingSection } from './components/sections/ClosingSection'
 import { MusicPlayer } from './components/ui/MusicPlayer'
+import { SectionDivider } from './components/ui/SectionDivider'
+import { AnimatedBackground } from './components/ui/AnimatedBackground'
 
 const SECTION_IDS = [
   'welcome',
@@ -33,6 +35,9 @@ function App() {
   return (
     <MotionConfig reducedMotion="user">
       <MusicProvider>
+        {/* Animated background layer */}
+        <AnimatedBackground particleCount={12} />
+
         {/* Cover section (overlay) */}
         <CoverSection onOpen={() => setCoverOpen(true)} />
 
@@ -42,10 +47,12 @@ function App() {
             <WelcomeSection />
             <QuoteSection />
             <FamilySection />
+            <SectionDivider variant="flourish" color="olive" className="bg-white" />
             <CountdownSection />
             <VenueSection />
             <ItinerarySection />
             <GallerySection />
+            <SectionDivider variant="simple" color="olive" className="bg-white" />
             <InfoSection />
             <ClosingSection />
           </main>

@@ -3,6 +3,129 @@ import { weddingConfig } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { getAssetPath } from '../../utils/assets'
 import { useMobile } from '../../hooks/useMobile'
+import { memo, useState } from 'react'
+
+// ==========================================
+// FLOATING ROSE PETALS COMPONENT
+// ==========================================
+interface PetalProps {
+  index: number
+  isMobile: boolean
+}
+
+const petalColors = [
+  'rgba(255, 182, 193, 0.6)', // Light pink
+  'rgba(255, 218, 233, 0.5)', // Soft pink
+  'rgba(255, 192, 203, 0.55)', // Pink
+  'rgba(248, 200, 220, 0.5)', // Blush
+  'rgba(255, 228, 225, 0.45)', // Misty rose
+]
+
+const FloatingPetal = memo(function FloatingPetal({ index, isMobile }: PetalProps) {
+  // Deterministic random values based on index
+  const seed = index * 137.5
+  const startX = (seed * 2.7) % 100
+  const size = isMobile ? 8 + (seed % 6) : 12 + (seed % 10)
+  const duration = isMobile ? 10 + (seed % 6) : 8 + (seed % 5)
+  const delay = 0.5 + (seed % 8)
+  const rotateStart = (seed * 3) % 360
+  const swayAmount = 30 + (seed % 40)
+  const color = petalColors[index % petalColors.length]
+
+  return (
+    <motion.div
+      className="absolute pointer-events-none"
+      style={{
+        width: size,
+        height: size * 0.6,
+        left: `${startX}%`,
+        top: '-5%',
+        background: color,
+        borderRadius: '50% 0 50% 50%',
+        filter: 'blur(0.5px)',
+        boxShadow: `0 0 ${size / 3}px ${color}`,
+      }}
+      initial={{ opacity: 0, y: 0, rotate: rotateStart }}
+      animate={{
+        y: ['0vh', '110vh'],
+        x: [0, swayAmount, -swayAmount / 2, swayAmount / 3, 0],
+        rotate: [rotateStart, rotateStart + 180, rotateStart + 360],
+        opacity: [0, 0.8, 0.8, 0.6, 0],
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: 'linear',
+        times: [0, 0.1, 0.5, 0.9, 1],
+      }}
+    />
+  )
+})
+
+function FloatingPetals({ count = 12, isMobile }: { count?: number; isMobile: boolean }) {
+  const actualCount = isMobile ? Math.min(6, count) : count
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+      {Array.from({ length: actualCount }).map((_, i) => (
+        <FloatingPetal key={i} index={i} isMobile={isMobile} />
+      ))}
+    </div>
+  )
+}
+
+// ==========================================
+// GOLD DUST PARTICLES FOR LETTER ANIMATION
+// ==========================================
+interface GoldDustProps {
+  isAnimating: boolean
+}
+
+function GoldDustParticles({ isAnimating }: GoldDustProps) {
+  const particles = Array.from({ length: 6 })
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-visible">
+      {particles.map((_, i) => {
+        const angle = (i / particles.length) * 360
+        const distance = 15 + (i % 3) * 8
+        const size = 2 + (i % 2) * 2
+
+        return (
+          <motion.div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: size,
+              height: size,
+              background: 'radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(193,154,91,0.6) 100%)',
+              left: '50%',
+              top: '50%',
+              boxShadow: '0 0 4px rgba(255,215,0,0.8)',
+            }}
+            initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+            animate={isAnimating ? {
+              opacity: [0, 1, 0],
+              scale: [0, 1.2, 0],
+              x: [0, Math.cos(angle * Math.PI / 180) * distance],
+              y: [0, Math.sin(angle * Math.PI / 180) * distance - 10],
+            } : {}}
+            transition={{
+              duration: 0.6,
+              delay: i * 0.05,
+              ease: 'easeOut',
+            }}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+// ==========================================
+// KEN BURNS AND OTHER EXISTING ANIMATIONS
+// ==========================================
 
 // Ken Burns effect for photo - mobile-aware with enhanced scale
 const getKenBurnsVariants = (isMobile: boolean): Variants => ({
@@ -34,16 +157,6 @@ const lightLeakVariants: Variants = {
 }
 
 // Letter animation for names
-const letterContainerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.3,
-    },
-  },
-}
-
 const letterVariants: Variants = {
   hidden: {
     opacity: 0,
@@ -158,9 +271,10 @@ const cornerVariants: Variants = {
   },
 }
 
-// Animated letter component
+// Animated letter component with gold dust effect - inherits animation state from parent AnimatedName
 function AnimatedLetter({ letter }: { letter: string }) {
   const isSpace = letter === ' '
+  const [hasAnimated, setHasAnimated] = useState(false)
 
   if (isSpace) {
     return <span className="inline-block w-[0.15em]">&nbsp;</span>
@@ -168,24 +282,44 @@ function AnimatedLetter({ letter }: { letter: string }) {
 
   return (
     <motion.span
-      className="inline-block"
+      className="inline-block relative"
       variants={letterVariants}
-      initial="hidden"
       style={{ display: 'inline-block' }}
+      onAnimationComplete={() => setHasAnimated(true)}
     >
       {letter}
+      {/* Gold dust particles that burst when letter appears */}
+      <GoldDustParticles isAnimating={hasAnimated} />
     </motion.span>
   )
 }
 
-// Animated name with shimmer
-function AnimatedName({ name }: { name: string }) {
+// Animated name with shimmer, gold dust effect, and slide-in direction
+function AnimatedName({ name, direction = 'left' }: { name: string; direction?: 'left' | 'right' }) {
   const letters = name.split('')
+
+  // Slide in from left or right
+  const slideVariants: Variants = {
+    hidden: {
+      x: direction === 'left' ? -100 : 100,
+      opacity: 0,
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+        staggerChildren: 0.04,
+        delayChildren: 0.2,
+      },
+    },
+  }
 
   return (
     <motion.span
       className="inline-flex flex-wrap justify-center"
-      variants={letterContainerVariants}
+      variants={slideVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
@@ -274,6 +408,9 @@ export function WelcomeSection() {
         {/* Background pattern */}
         <div className="absolute inset-0 bg-pattern-floral opacity-30" />
 
+        {/* Floating rose petals */}
+        <FloatingPetals count={15} isMobile={isMobile} />
+
         {/* Decorative corner */}
         <motion.div
           className="absolute top-4 right-4 opacity-30 hidden md:block"
@@ -307,23 +444,24 @@ export function WelcomeSection() {
           </motion.span>
         </motion.p>
 
-        {/* Couple names - Letter by letter with shimmer, glow, and float */}
-        <motion.h1
-          className="font-cursive text-4xl md:text-6xl lg:text-7xl xl:text-8xl text-olive mb-4 md:mb-6 leading-tight relative"
+        {/* Couple names - Vertical layout with slide-in from opposite sides */}
+        <motion.div
+          className="font-cursive text-4xl md:text-6xl lg:text-7xl xl:text-8xl text-olive mb-4 md:mb-6 leading-tight relative flex flex-col items-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.3 }}
         >
-          {/* Base text layer with continuous glow and float (desktop only) */}
-          <motion.span
-            className="relative inline-block"
+          {/* Continuous glow and float wrapper (desktop only) */}
+          <motion.div
+            className="relative flex flex-col items-center"
             animate={!isMobile ? {
               y: [0, -4, 0],
               transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
             } : undefined}
           >
-            <motion.span
+            {/* Bride name - slides from left */}
+            <motion.div
               className="relative"
               initial={{ textShadow: '0 0 10px rgba(141, 158, 120, 0.2)' }}
               animate={{
@@ -335,26 +473,44 @@ export function WelcomeSection() {
               }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
             >
-            <AnimatedName name={couple.bride} />
+              <AnimatedName name={couple.bride} direction="left" />
+            </motion.div>
+
+            {/* Ampersand - center with scale animation */}
             <motion.span
-              className="inline-block mx-2 md:mx-4"
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              className="block my-1 md:my-2 text-gold-warm"
+              initial={{ opacity: 0, scale: 0, rotate: -180 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true }}
               transition={{
-                delay: 0.5,
+                delay: 0.6,
                 type: 'spring',
-                stiffness: 300,
+                stiffness: 200,
+                damping: 12,
               }}
             >
               &
             </motion.span>
-            <AnimatedName name={couple.groom} />
-            </motion.span>
-          </motion.span>
+
+            {/* Groom name - slides from right */}
+            <motion.div
+              className="relative"
+              initial={{ textShadow: '0 0 10px rgba(141, 158, 120, 0.2)' }}
+              animate={{
+                textShadow: [
+                  '0 0 10px rgba(141, 158, 120, 0.2)',
+                  '0 0 25px rgba(141, 158, 120, 0.4)',
+                  '0 0 10px rgba(141, 158, 120, 0.2)',
+                ],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+            >
+              <AnimatedName name={couple.groom} direction="right" />
+            </motion.div>
+          </motion.div>
 
           {/* Enhanced shimmer overlay */}
-          <motion.span
+          <motion.div
             className="absolute inset-0 pointer-events-none"
             initial={{ opacity: 0, backgroundPosition: '200% center' }}
             animate={{
@@ -371,7 +527,7 @@ export function WelcomeSection() {
               mixBlendMode: 'overlay',
             }}
           />
-        </motion.h1>
+        </motion.div>
 
         {/* Invitation text - Word by word */}
         <motion.p

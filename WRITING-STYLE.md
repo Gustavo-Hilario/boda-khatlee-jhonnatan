@@ -1,0 +1,1 @@
+/Users/gustavo/ai-config-hub/WRITING-STYLE.md

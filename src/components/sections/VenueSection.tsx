@@ -462,6 +462,15 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
               <strong className="text-white">{dressCode.bridal.join(' y ')}</strong>{' '}
               reservados para damas y caballeros de honor.
             </motion.p>
+            <motion.p
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+            >
+              Caballeros: por favor, evitar el uso de{' '}
+              <strong className="text-white">corbata michi</strong>.
+            </motion.p>
           </div>
 
           {/* Pinterest buttons with hover effects */}
@@ -593,6 +602,7 @@ export function VenueSection() {
             name={venues.reception.name}
             location={venues.reception.location}
             mapUrl={venues.reception.mapUrl}
+            image={venues.reception.image}
             bgColor="olive"
           />
 

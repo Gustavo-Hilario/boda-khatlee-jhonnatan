@@ -53,7 +53,7 @@ export const weddingConfig: WeddingConfig = {
         deadline: 'antes del inicio del mes',
     },
     photoUpload:
-        'https://drive.google.com/drive/folders/1_ECAEtDQNt4oUvzhOqzj3inq7GtpWwgp?usp=sharing',
+        'https://drive.google.com/drive/folders/1YWaPAznJ3sA19CbZpUcXY-KyHHG0brsO',
     contact: {
         invitationCreator: '920756997',
     },

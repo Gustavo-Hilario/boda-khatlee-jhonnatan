@@ -190,96 +190,275 @@ function GiftSuggestionCard() {
               'linear-gradient(90deg, transparent 0%, rgba(141,158,120,0.1) 50%, transparent 100%)',
           }}
         />
-      {/* Gift icon */}
-      <motion.div
-        className="w-16 h-16 mx-auto mb-6"
-        variants={iconVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
-        <GiftBoxIcon size={64} color="#8D9E78" />
+
+        {/* Gift icon */}
+        <motion.div
+          className="w-16 h-16 mx-auto mb-6 relative z-10"
+          variants={iconVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <GiftBoxIcon size={64} color="#8D9E78" />
+        </motion.div>
+
+        {/* Title */}
+        <h3 className="font-cursive text-3xl md:text-4xl text-olive mb-6 relative z-10">
+          Sugerencia de Regalo
+        </h3>
+
+        {/* Description paragraphs */}
+        <div className="max-w-2xl mx-auto space-y-4 text-gray-600 font-elegant text-lg mb-8 relative z-10">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            Con la bendición de Dios en nuestras vidas, iniciamos con ilusión esta nueva etapa.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            Contamos ya con un hogar lleno de amor y todo lo necesario para comenzar juntos este camino.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+          >
+            Si desean acompañarnos con un detalle, agradeceremos su muestra de cariño a través de la siguiente cuenta:
+          </motion.p>
+        </div>
+
+        {/* Bank account details */}
+        <motion.div
+          className="space-y-2 relative z-10"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <p className="text-olive font-semibold text-xl">Depósito a Cuenta</p>
+          <p className="text-gray-600 font-elegant">Cuenta de Ahorro en Soles</p>
+
+          {/* Account Number */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="text-gray-700 font-medium">No: {accountNo}</span>
+            <button
+              onClick={() => copyToClipboard(accountNo, 'no')}
+              className="p-1.5 rounded-lg hover:bg-olive/10 transition-colors"
+              title="Copiar número de cuenta"
+            >
+              {copiedNo ? (
+                <span className="text-olive text-sm">✓</span>
+              ) : (
+                <svg className="w-5 h-5 text-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          {/* CCI */}
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-gray-700 font-medium">CCI: {accountCci}</span>
+            <button
+              onClick={() => copyToClipboard(accountCci, 'cci')}
+              className="p-1.5 rounded-lg hover:bg-olive/10 transition-colors"
+              title="Copiar CCI"
+            >
+              {copiedCci ? (
+                <span className="text-olive text-sm">✓</span>
+              ) : (
+                <svg className="w-5 h-5 text-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Corner decorations */}
+        <motion.div
+          className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-olive/5"
+          animate={{ scale: isHovered ? 1.5 : 1 }}
+          transition={{ duration: 0.5 }}
+        />
+        <motion.div
+          className="absolute -bottom-5 -left-5 w-10 h-10 rounded-full bg-olive/5"
+          animate={{ scale: isHovered ? 1.3 : 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        />
       </motion.div>
+    </motion.div>
+  )
+}
 
-      {/* Title */}
-      <h3 className="font-cursive text-3xl md:text-4xl text-olive mb-6">
-        Sugerencia de Regalo
-      </h3>
+// RSVP Card component matching GiftSuggestionCard design
+function RSVPCard() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const tiltConfig = useTiltConfig()
+  const { rsvp } = weddingConfig
 
-      {/* Description paragraphs */}
-      <div className="max-w-2xl mx-auto space-y-4 text-gray-600 font-elegant text-lg mb-8">
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-        >
-          Con la bendición de Dios en nuestras vidas, iniciamos con ilusión esta nueva etapa.
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-        >
-          Contamos ya con un hogar lleno de amor y todo lo necesario para comenzar juntos este camino.
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-        >
-          Si desean acompañarnos con un detalle, agradeceremos su muestra de cariño a través de la siguiente cuenta:
-        </motion.p>
-      </div>
+  const whatsappUrl = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(
+    'Hola! Confirmo mi asistencia a la boda.'
+  )}`
 
-      {/* Bank account details */}
+  // Mouse position for 3D tilt
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  // Enhanced spring physics for smooth tilt with configurable range
+  const range = tiltConfig.rotationRange
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [range, -range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
+  })
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-range, range]), {
+    stiffness: tiltConfig.stiffness,
+    damping: tiltConfig.damping,
+  })
+
+  // Dynamic shadow based on tilt direction
+  const shadowX = useTransform(rotateY, [-range, range], [20, -20])
+  const shadowY = useTransform(rotateX, [-range, range], [-20, 20])
+
+  // Z-axis depth on hover
+  const translateZ = useSpring(isHovered ? tiltConfig.translateZ : 0, {
+    stiffness: 300,
+    damping: 30,
+  })
+
+  // Handle mouse move
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    mouseX.set(x)
+    mouseY.set(y)
+  }
+
+  const handleMouseLeave = () => {
+    mouseX.set(0)
+    mouseY.set(0)
+    setIsHovered(false)
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={cardVariants}
+      className="md:col-span-2 relative"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{ perspective: 1000 }}
+    >
       <motion.div
-        className="space-y-2"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.5 }}
+        className="bg-gradient-to-b from-cream to-white p-8 md:p-10 rounded-3xl shadow-xl text-center relative overflow-hidden will-change-transform"
+        style={{
+          rotateX,
+          rotateY,
+          z: translateZ,
+          transformStyle: 'preserve-3d',
+          boxShadow: isHovered
+            ? `${shadowX.get()}px ${shadowY.get()}px 40px rgba(0, 0, 0, ${tiltConfig.shadowIntensity})`
+            : '0 10px 30px -10px rgba(0, 0, 0, 0.2)',
+        }}
+        transition={{ duration: 0.3 }}
       >
-        <p className="text-olive font-semibold text-xl">Depósito a Cuenta</p>
-        <p className="text-gray-600 font-elegant">Cuenta de Ahorro en Soles</p>
+        {/* Background shimmer on hover */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          animate={{
+            opacity: isHovered ? 1 : 0,
+            x: isHovered ? ['0%', '100%'] : '0%',
+          }}
+          transition={{ duration: 0.6 }}
+          style={{
+            background:
+              'linear-gradient(90deg, transparent 0%, rgba(141,158,120,0.1) 50%, transparent 100%)',
+          }}
+        />
 
-        {/* Account Number */}
-        <div className="flex items-center justify-center gap-2 mt-4">
-          <span className="text-gray-700 font-medium">No: {accountNo}</span>
-          <button
-            onClick={() => copyToClipboard(accountNo, 'no')}
-            className="p-1.5 rounded-lg hover:bg-olive/10 transition-colors"
-            title="Copiar número de cuenta"
+        {/* Envelope icon */}
+        <motion.div
+          className="w-16 h-16 mx-auto mb-6 relative z-10"
+          variants={iconVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <EnvelopeIcon size={64} color="#8D9E78" />
+        </motion.div>
+
+        {/* Title */}
+        <h3 className="font-cursive text-3xl md:text-4xl text-olive mb-6 relative z-10">
+          Confirma tu Asistencia
+        </h3>
+
+        {/* Description paragraphs */}
+        <div className="max-w-2xl mx-auto space-y-4 text-gray-600 font-elegant text-lg mb-8 relative z-10">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
           >
-            {copiedNo ? (
-              <span className="text-olive text-sm">✓</span>
-            ) : (
-              <svg className="w-5 h-5 text-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            )}
-          </button>
+            Decir «No puedo asistir» no es descortés. Es honesto.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-xl"
+          >
+            Confirma tu asistencia antes del:
+            <br />
+            <strong className="text-2xl text-olive">Enero 31</strong>
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+          >
+            Para mantenerte en nuestra lista de invitados y unirte a nuestra celebración.
+          </motion.p>
         </div>
 
-        {/* CCI */}
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-gray-700 font-medium">CCI: {accountCci}</span>
-          <button
-            onClick={() => copyToClipboard(accountCci, 'cci')}
-            className="p-1.5 rounded-lg hover:bg-olive/10 transition-colors"
-            title="Copiar CCI"
-          >
-            {copiedCci ? (
-              <span className="text-olive text-sm">✓</span>
-            ) : (
-              <svg className="w-5 h-5 text-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            )}
-          </button>
-        </div>
+        {/* WhatsApp button */}
+        <motion.div
+          className="relative z-10"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <Button href={whatsappUrl} variant="primary" size="lg">
+            Confirmar por WhatsApp
+          </Button>
+        </motion.div>
+
+        {/* Corner decorations */}
+        <motion.div
+          className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-olive/5"
+          animate={{ scale: isHovered ? 1.5 : 1 }}
+          transition={{ duration: 0.5 }}
+        />
+        <motion.div
+          className="absolute -bottom-5 -left-5 w-10 h-10 rounded-full bg-olive/5"
+          animate={{ scale: isHovered ? 1.3 : 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        />
       </motion.div>
     </motion.div>
   )
@@ -517,11 +696,7 @@ function InfoCard({ icon, title, description, bgColor, action, footer }: InfoCar
 }
 
 export function InfoSection() {
-  const { rsvp, photoUpload } = weddingConfig
-
-  const whatsappUrl = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(
-    'Hola! Confirmo mi asistencia a la boda.'
-  )}`
+  const { photoUpload } = weddingConfig
 
   return (
     <section
@@ -610,29 +785,8 @@ export function InfoSection() {
             }}
           />
 
-          {/* RSVP */}
-          <InfoCard
-            icon={<EnvelopeIcon size={40} color="white" />}
-            title="Confirma tu Asistencia"
-            description={
-              <>
-                <p>Decir «No puedo asistir» no es descortés. Es honesto.</p>
-                <p className="mt-2">
-                  Confirma tu asistencia antes del:
-                  <br />
-                  <strong className="text-lg">Enero 31</strong>
-                </p>
-                <p className="mt-2">
-                  Para mantenerte en nuestra lista de invitados y unirte a nuestra celebración.
-                </p>
-              </>
-            }
-            bgColor="burgundy"
-            action={{
-              label: 'Confirmar por WhatsApp',
-              href: whatsappUrl,
-            }}
-          />
+          {/* RSVP - Full width card matching gift section */}
+          <RSVPCard />
         </motion.div>
       </div>
 

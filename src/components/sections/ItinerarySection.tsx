@@ -12,7 +12,6 @@ import {
   PartyIcon,
   DinnerIcon,
   DancingIcon,
-  ChampagneIcon,
 } from '../ui/svg'
 
 // Map event titles to icon components

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
+import { BrideIcon } from '../ui/svg/icons/BrideIcon'
+import { GroomIcon } from '../ui/svg/icons/GroomIcon'
 
 // Container stagger variants
 const containerVariants: Variants = {
@@ -154,7 +156,7 @@ const glowVariants: Variants = {
 
 interface FamilyCardProps {
   title: string
-  icon: string
+  icon: string | React.ComponentType<{ size?: number; className?: string; animate?: boolean; color?: string }>
   names: { name: string; relationship?: string }[]
   delay: number
 }
@@ -241,13 +243,19 @@ function FamilyCard({ title, icon, names, delay }: FamilyCardProps) {
               transition: { duration: 0.4 },
             }}
           >
-            <motion.span
-              className="text-4xl"
+            <motion.div
               animate={isHovered ? { scale: [1, 1.2, 1] } : {}}
               transition={{ duration: 0.3 }}
             >
-              {icon}
-            </motion.span>
+              {typeof icon === 'string' ? (
+                <span className="text-4xl">{icon}</span>
+              ) : (
+                (() => {
+                  const IconComponent = icon
+                  return <IconComponent size={48} className="text-olive" animate={true} />
+                })()
+              )}
+            </motion.div>
           </motion.div>
         </div>
 
@@ -422,7 +430,7 @@ export function FamilySection() {
           </motion.h2>
 
           <motion.p
-            className="text-gray-600 font-elegant text-2xl md:text-3xl mb-2 italic"
+            className="font-cursive text-3xl md:text-4xl lg:text-5xl text-olive"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -456,14 +464,14 @@ export function FamilySection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8">
           <FamilyCard
             title="Padres de la Novia"
-            icon="👰"
+            icon={BrideIcon}
             names={parents.bride}
             delay={0.2}
           />
 
           <FamilyCard
             title="Padres del Novio"
-            icon="🤵"
+            icon={GroomIcon}
             names={parents.groom}
             delay={0.4}
           />

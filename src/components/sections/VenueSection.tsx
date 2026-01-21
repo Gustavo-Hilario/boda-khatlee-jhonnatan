@@ -10,7 +10,6 @@ import {
   ChampagneIcon,
   MapPinIcon,
   DressCodeIcon,
-  ScrollIcon,
   PartyIcon,
   Sparkle,
 } from '../ui/svg'
@@ -583,17 +582,6 @@ export function VenueSection() {
             location={venues.religious.location}
             mapUrl={venues.religious.mapUrl}
             image={venues.religious.image}
-            bgColor="olive"
-          />
-
-          {/* Civil Ceremony */}
-          <VenueCard
-            title="Ceremonia Civil"
-            icon={<ScrollIcon size={64} color="white" />}
-            headerIcon={<ScrollIcon size={28} color="white" />}
-            name={venues.civil.name}
-            location={venues.civil.location}
-            mapUrl={venues.civil.mapUrl}
             bgColor="olive"
           />
 

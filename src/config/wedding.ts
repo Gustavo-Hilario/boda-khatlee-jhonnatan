@@ -5,7 +5,7 @@ export const weddingConfig: WeddingConfig = {
         bride: 'Khatlee',
         groom: 'Jhonnatan',
     },
-    date: new Date('2026-03-07T16:00:00-05:00'),
+    date: new Date('2026-03-07T12:00:00-05:00'),
     displayDate: 'SÁBADO 07 DE MARZO DE 2026',
     parents: {
         bride: [
@@ -19,14 +19,14 @@ export const weddingConfig: WeddingConfig = {
         ],
     },
     godparents: [
-        { name: 'Ricardo ------- ------' },
-        { name: 'Cinthia Silvera Romero' },
+        { name: 'Ricardo Reyes Mango' },
+        { name: 'Cyntia Milagros Silvera Romero' },
     ],
     venues: {
         religious: {
-            name: 'Ceremonia Religiosa',
-            location: '----------',
-            mapUrl: 'https://maps.app.goo.gl/Nun6z5gpkLXgA5c87?g_st=iw',
+            name: 'Santuario Arquidiocesano del Sagrado Corazón de Jesús',
+            location: 'Lima, Perú',
+            mapUrl: 'https://maps.app.goo.gl/cSpP4f9mpqxb7GcPA',
             image: 'images/venue.png',
         },
         civil: {
@@ -35,17 +35,17 @@ export const weddingConfig: WeddingConfig = {
             mapUrl: 'https://maps.app.goo.gl/Nun6z5gpkLXgA5c87?g_st=iw',
         },
         reception: {
-            name: 'Recepción Social',
-            location: '----------',
-            mapUrl: 'https://maps.app.goo.gl/Nun6z5gpkLXgA5c87?g_st=iw',
+            name: 'Villa Virginia Eventos – Huachipa',
+            location: 'Lima, Perú',
+            mapUrl: 'https://maps.app.goo.gl/SsUhZSHG1edUDrPD8',
         },
     },
     dressCode: {
         style: 'ELEGANTE',
         reserved: ['blanco', 'ivory', 'perla'],
         bridal: ['Verde Oliva', 'Borgoña'],
-        pinterestWomen: '#',
-        pinterestMen: '#',
+        pinterestWomen: 'https://pin.it/3kgK9tEUd',
+        pinterestMen: 'https://pin.it/210NZNEKg',
     },
     rsvp: {
         whatsappNumber: '51924161790',
@@ -61,32 +61,27 @@ export const weddingConfig: WeddingConfig = {
 export const timelineEvents: TimelineEvent[] = [
     {
         id: '1',
-        time: '16:00',
+        time: '12:00',
         title: 'Ceremonia',
     },
     {
         id: '2',
-        time: '17:30',
-        title: 'Cóctel',
+        time: '14:00',
+        title: 'Recepción',
     },
     {
         id: '3',
-        time: '18:30',
-        title: 'Recepción',
+        time: '16:00',
+        title: 'Cena',
     },
     {
         id: '4',
         time: '19:00',
-        title: 'Cena',
-    },
-    {
-        id: '5',
-        time: '21:00',
         title: 'Baile',
     },
     {
-        id: '6',
-        time: '00:00',
+        id: '5',
+        time: '23:00',
         title: 'Brindis',
     },
 ];

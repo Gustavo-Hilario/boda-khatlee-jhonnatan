@@ -80,7 +80,7 @@ export function getWeddingCalendarUrl(): string {
         'Boda de Khatlee & Jhonnatan',
         startDate,
         endDate,
-        'Acompananos en nuestro gran dia!',
-        'Lima, Peru'
+        'Acompananos en nuestro gran dia! Ubicacion: https://maps.app.goo.gl/5fWxP7niQrBhtanm7',
+        'https://maps.app.goo.gl/5fWxP7niQrBhtanm7'
     )
 }

@@ -18,11 +18,13 @@ import {
 // Map event titles to icon components
 const eventIconMap: Record<string, React.ComponentType<{ size?: number; className?: string; animate?: boolean; color?: string }>> = {
   'Ceremonia': ChurchIcon,
+  'Iglesia': ChurchIcon,
   'Cóctel': CocktailIcon,
   'Recepción': PartyIcon,
   'Cena': DinnerIcon,
+  'Almuerzo': DinnerIcon,
   'Baile': DancingIcon,
-  'Brindis': ChampagneIcon,
+  'Fiesta': PartyIcon,
 }
 
 // Container with staggered children

@@ -27,7 +27,7 @@ export const weddingConfig: WeddingConfig = {
             name: 'Santuario Arquidiocesano del Sagrado Corazón de Jesús',
             location: 'Lima, Perú',
             mapUrl: 'https://maps.app.goo.gl/cSpP4f9mpqxb7GcPA',
-            image: 'images/venue.png',
+            image: 'images/cards/Iglesia Sagrado Corazon de Jesus.jpg',
         },
         civil: {
             name: 'Ceremonia Civil',
@@ -38,6 +38,7 @@ export const weddingConfig: WeddingConfig = {
             name: 'Villa Virginia Eventos – Huachipa',
             location: 'Lima, Perú',
             mapUrl: 'https://maps.app.goo.gl/SsUhZSHG1edUDrPD8',
+            image: 'images/cards/Villa Virginia.jpg',
         },
     },
     dressCode: {
@@ -62,27 +63,22 @@ export const timelineEvents: TimelineEvent[] = [
     {
         id: '1',
         time: '12:00',
-        title: 'Ceremonia',
+        title: 'Iglesia',
     },
     {
         id: '2',
-        time: '14:00',
+        time: '15:00',
         title: 'Recepción',
     },
     {
         id: '3',
-        time: '16:00',
-        title: 'Cena',
+        time: '15:45',
+        title: 'Almuerzo',
     },
     {
         id: '4',
-        time: '19:00',
-        title: 'Baile',
-    },
-    {
-        id: '5',
-        time: '23:00',
-        title: 'Brindis',
+        time: '16:30',
+        title: 'Fiesta',
     },
 ];
 

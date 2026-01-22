@@ -169,14 +169,14 @@ function VenueCard({
     <motion.div
       ref={ref}
       variants={cardVariants}
-      className="relative"
+      className="relative h-full"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       style={{ perspective: 1000 }}
     >
       <motion.div
-        className={`${bgClass} text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden will-change-transform`}
+        className={`${bgClass} text-white p-6 md:p-8 rounded-2xl shadow-xl flex flex-col relative overflow-hidden will-change-transform h-full`}
         style={{
           rotateX,
           rotateY,
@@ -368,7 +368,7 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
     <motion.div
       ref={ref}
       variants={cardVariants}
-      className="relative"
+      className="relative h-full"
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
@@ -576,7 +576,7 @@ export function VenueSection() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}

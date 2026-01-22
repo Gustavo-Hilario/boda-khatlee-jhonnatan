@@ -9,6 +9,7 @@ import { FamilySection } from './components/sections/FamilySection'
 import { CountdownSection } from './components/sections/CountdownSection'
 import { VenueSection } from './components/sections/VenueSection'
 import { ItinerarySection } from './components/sections/ItinerarySection'
+import { OurStorySection } from './components/sections/OurStorySection'
 import { GallerySection } from './components/sections/GallerySection'
 import { InfoSection } from './components/sections/InfoSection'
 import { ClosingSection } from './components/sections/ClosingSection'
@@ -24,8 +25,8 @@ const SECTION_IDS = [
   'countdown',
   'venue',
   'itinerary',
+  'our-story',
   'gallery',
-  'galeria',
   'info',
   'closing',
 ]
@@ -62,6 +63,7 @@ function App() {
             <CountdownSection />
             <VenueSection />
             <ItinerarySection />
+            <OurStorySection />
             <GallerySection />
             <SectionDivider variant="simple" color="olive" className="bg-white" />
             <InfoSection />

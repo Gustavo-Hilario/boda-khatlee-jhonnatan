@@ -1,5 +1,6 @@
 import { motion, type Variants, useInView, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useRef } from 'react'
+import { useGuest } from '../../hooks/useGuest'
 import { Flourish } from '../ui/Flourish'
 import { weddingConfig } from '../../config/wedding'
 import { HeartIcon } from '../ui/svg'
@@ -410,6 +411,114 @@ function ConnectingPath() {
   )
 }
 
+// Guest pass information component
+function GuestPassInfo() {
+  const guest = useGuest()
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: false, margin: '-10% 0px -10% 0px' })
+
+  if (!guest) return null
+
+  const passLabel = guest.passes === 1 ? 'Pase' : 'Pases'
+
+  return (
+    <motion.div
+      ref={ref}
+      className="mt-16 text-center"
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+        },
+      }}
+    >
+      {/* Decorative line */}
+      <motion.div
+        className="w-24 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mb-8"
+        variants={{
+          hidden: { scaleX: 0, opacity: 0 },
+          visible: { scaleX: 1, opacity: 1, transition: { duration: 0.8 } },
+        }}
+      />
+
+      {/* Main message */}
+      <motion.p
+        className="font-cursive text-xl md:text-2xl lg:text-3xl text-white/90 leading-relaxed mb-6"
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+        }}
+      >
+        Su presencia es el regalo más valioso que podemos recibir
+      </motion.p>
+
+      {/* Heart divider */}
+      <motion.div
+        className="flex justify-center mb-6"
+        variants={{
+          hidden: { opacity: 0, scale: 0 },
+          visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 200 } },
+        }}
+      >
+        <HeartIcon size={20} color="#ffffff" accentColor="#c19a5b" animate={false} />
+      </motion.div>
+
+      {/* Guest name */}
+      <motion.h3
+        className="font-serif text-xl md:text-2xl lg:text-3xl text-white tracking-[0.15em] uppercase mb-3"
+        variants={{
+          hidden: { opacity: 0, y: 15 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+        }}
+      >
+        {guest.name}
+      </motion.h3>
+
+      {/* Reserved text */}
+      <motion.p
+        className="font-elegant text-base md:text-lg text-white/70 mb-1"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { duration: 0.5 } },
+        }}
+      >
+        Hemos reservado:
+      </motion.p>
+
+      {/* Number of passes */}
+      <motion.div
+        className="mb-1"
+        variants={{
+          hidden: { opacity: 0, scale: 0.5 },
+          visible: {
+            opacity: 1,
+            scale: 1,
+            transition: { type: 'spring', stiffness: 150, damping: 12 },
+          },
+        }}
+      >
+        <span className="font-serif text-3xl md:text-4xl lg:text-5xl text-white tracking-wider">
+          {guest.passes} {passLabel}
+        </span>
+      </motion.div>
+
+      {/* In your honor */}
+      <motion.p
+        className="font-cursive text-lg md:text-xl text-white/60 italic"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { duration: 0.5 } },
+        }}
+      >
+        en su honor
+      </motion.p>
+    </motion.div>
+  )
+}
+
 export function QuoteSectionPath() {
   return (
     <section
@@ -496,6 +605,9 @@ export function QuoteSectionPath() {
         >
           <Flourish variant="header" className="text-white/30" />
         </motion.div>
+
+        {/* Guest Pass Info */}
+        <GuestPassInfo />
       </div>
 
       {/* K&J Monograms on sides (desktop only) */}

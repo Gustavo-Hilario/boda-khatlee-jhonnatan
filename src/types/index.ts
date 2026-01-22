@@ -1,3 +1,9 @@
+export interface Guest {
+  id: string
+  name: string
+  passes: number
+}
+
 export interface TimelineEvent {
   id: string
   time: string

@@ -12,6 +12,7 @@ import { ItinerarySection } from './components/sections/ItinerarySection'
 import { GallerySection } from './components/sections/GallerySection'
 import { InfoSection } from './components/sections/InfoSection'
 import { ClosingSection } from './components/sections/ClosingSection'
+
 import { MusicPlayer } from './components/ui/MusicPlayer'
 import { SectionDivider } from './components/ui/SectionDivider'
 import { AnimatedBackground } from './components/ui/AnimatedBackground'

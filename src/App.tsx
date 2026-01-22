@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MotionConfig } from 'framer-motion'
 import { MusicProvider } from './context/MusicContext'
 import { SmoothScroller } from './components/layout/SmoothScroller'
@@ -32,6 +32,16 @@ const SECTION_IDS = [
 
 function App() {
   const [coverOpen, setCoverOpen] = useState(false)
+
+  // Reset scroll position on page load/refresh
+  useEffect(() => {
+    // Disable browser's automatic scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+    // Ensure page starts at top
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <MotionConfig reducedMotion="user">

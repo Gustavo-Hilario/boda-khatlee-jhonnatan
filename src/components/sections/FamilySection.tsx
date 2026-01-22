@@ -4,6 +4,7 @@ import { weddingConfig } from '../../config/wedding'
 import { Flourish } from '../ui/Flourish'
 import { BrideIcon } from '../ui/svg/icons/BrideIcon'
 import { GroomIcon } from '../ui/svg/icons/GroomIcon'
+import { PadrinosIcon } from '../ui/svg/icons/PadrinosIcon'
 
 // Container stagger variants
 const containerVariants: Variants = {
@@ -478,7 +479,7 @@ export function FamilySection() {
 
           <FamilyCard
             title="Padrinos"
-            icon="✨"
+            icon={PadrinosIcon}
             names={godparents}
             delay={0.6}
           />

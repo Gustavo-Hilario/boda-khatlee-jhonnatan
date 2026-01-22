@@ -21,28 +21,16 @@ const drawVariants: Variants = {
   },
 }
 
-// Boutonniere glow animation
-const boutonniereGlowVariants: Variants = {
+// Bow tie glow animation
+const bowTieGlowVariants: Variants = {
   animate: {
     filter: [
-      'drop-shadow(0 0 2px rgba(193, 154, 91, 0.3))',
-      'drop-shadow(0 0 6px rgba(193, 154, 91, 0.6))',
-      'drop-shadow(0 0 2px rgba(193, 154, 91, 0.3))',
+      'drop-shadow(0 0 2px rgba(128, 0, 32, 0.3))',
+      'drop-shadow(0 0 5px rgba(128, 0, 32, 0.5))',
+      'drop-shadow(0 0 2px rgba(128, 0, 32, 0.3))',
     ],
     transition: {
       duration: 2.5,
-      repeat: Infinity,
-      ease: 'easeInOut',
-    },
-  },
-}
-
-// Bow tie subtle pulse
-const bowTiePulseVariants: Variants = {
-  animate: {
-    scale: [1, 1.05, 1],
-    transition: {
-      duration: 3,
       repeat: Infinity,
       ease: 'easeInOut',
     },
@@ -68,10 +56,10 @@ export function GroomIcon({
       className={className}
       aria-hidden="true"
     >
-      {/* Head/face circle */}
+      {/* Head circle */}
       <motion.circle
         cx="32"
-        cy="14"
+        cy="16"
         r="8"
         stroke={color}
         strokeWidth="2"
@@ -81,9 +69,9 @@ export function GroomIcon({
         animate={isInView ? 'visible' : 'hidden'}
       />
 
-      {/* Hair - short styled */}
+      {/* Short hair - simple curve */}
       <motion.path
-        d="M24 12C24 12 26 6 32 6C38 6 40 12 40 12"
+        d="M24 14C24 14 26 8 32 8C38 8 40 14 40 14"
         stroke={color}
         strokeWidth="2"
         strokeLinecap="round"
@@ -94,21 +82,22 @@ export function GroomIcon({
         transition={{ delay: 0.2 }}
       />
 
-      {/* Neck */}
+      {/* Shoulders - simple elegant line */}
       <motion.path
-        d="M29 22V26M35 22V26"
+        d="M20 30C20 30 25 26 32 26C39 26 44 30 44 30"
         stroke={color}
-        strokeWidth="1.5"
+        strokeWidth="2"
         strokeLinecap="round"
+        fill="none"
         variants={drawVariants}
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
         transition={{ delay: 0.3 }}
       />
 
-      {/* Shirt collar - V shape */}
+      {/* Suit jacket - left side */}
       <motion.path
-        d="M26 26L32 34L38 26"
+        d="M20 30L18 56H30"
         stroke={color}
         strokeWidth="2"
         strokeLinecap="round"
@@ -120,178 +109,108 @@ export function GroomIcon({
         transition={{ delay: 0.4 }}
       />
 
-      {/* Bow tie with pulse */}
+      {/* Suit jacket - right side */}
+      <motion.path
+        d="M44 30L46 56H34"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        variants={drawVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        transition={{ delay: 0.4 }}
+      />
+
+      {/* Lapel - simple V */}
+      <motion.path
+        d="M28 30L32 40L36 30"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        opacity={0.7}
+        variants={drawVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        transition={{ delay: 0.5 }}
+      />
+
+      {/* Shirt front line */}
+      <motion.path
+        d="M32 40V56"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity={0.5}
+        variants={drawVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        transition={{ delay: 0.6 }}
+      />
+
+      {/* Bow tie with glow - cleaner design */}
       <motion.g
-        variants={animate ? bowTiePulseVariants : undefined}
+        variants={animate ? bowTieGlowVariants : undefined}
         animate={animate && isInView ? 'animate' : undefined}
-        style={{ originX: '32px', originY: '28px' }}
       >
-        <motion.path
-          d="M26 28L29 26V30L26 28Z"
+        {/* Left bow */}
+        <motion.ellipse
+          cx="27"
+          cy="30"
+          rx="4"
+          ry="2.5"
           fill="#800020"
-          stroke="#800020"
-          strokeWidth="1"
           initial={{ opacity: 0, scale: 0 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ delay: 0.8, type: 'spring' }}
+          transition={{ delay: 0.8, type: 'spring', stiffness: 200 }}
         />
-        <motion.path
-          d="M38 28L35 26V30L38 28Z"
+        {/* Right bow */}
+        <motion.ellipse
+          cx="37"
+          cy="30"
+          rx="4"
+          ry="2.5"
           fill="#800020"
-          stroke="#800020"
-          strokeWidth="1"
           initial={{ opacity: 0, scale: 0 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ delay: 0.85, type: 'spring' }}
+          transition={{ delay: 0.85, type: 'spring', stiffness: 200 }}
         />
+        {/* Center knot */}
         <motion.circle
           cx="32"
-          cy="28"
+          cy="30"
           r="2"
           fill="#800020"
           initial={{ opacity: 0, scale: 0 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ delay: 0.9, type: 'spring' }}
+          transition={{ delay: 0.9, type: 'spring', stiffness: 200 }}
         />
       </motion.g>
 
-      {/* Suit jacket - left side */}
-      <motion.path
-        d="M26 26L18 58H30"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        variants={drawVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        transition={{ delay: 0.5 }}
-      />
-
-      {/* Suit jacket - right side */}
-      <motion.path
-        d="M38 26L46 58H34"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        variants={drawVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        transition={{ delay: 0.5 }}
-      />
-
-      {/* Jacket lapel left */}
-      <motion.path
-        d="M26 26L28 38"
-        stroke={color}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity={0.7}
-        variants={drawVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        transition={{ delay: 0.6 }}
-      />
-
-      {/* Jacket lapel right */}
-      <motion.path
-        d="M38 26L36 38"
-        stroke={color}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity={0.7}
-        variants={drawVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        transition={{ delay: 0.6 }}
-      />
-
-      {/* Shirt front / placket */}
-      <motion.path
-        d="M32 34V58"
-        stroke={color}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity={0.6}
-        variants={drawVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        transition={{ delay: 0.7 }}
-      />
-
-      {/* Shirt buttons */}
-      <motion.circle
-        cx="32"
-        cy="40"
-        r="1"
-        fill={color}
-        opacity={0.6}
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 0.6 } : {}}
-        transition={{ delay: 1 }}
-      />
-      <motion.circle
-        cx="32"
-        cy="46"
-        r="1"
-        fill={color}
-        opacity={0.6}
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 0.6 } : {}}
-        transition={{ delay: 1.1 }}
-      />
-      <motion.circle
-        cx="32"
-        cy="52"
-        r="1"
-        fill={color}
-        opacity={0.6}
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 0.6 } : {}}
-        transition={{ delay: 1.2 }}
-      />
-
-      {/* Boutonniere (flower on lapel) with glow */}
-      <motion.g
-        variants={animate ? boutonniereGlowVariants : undefined}
-        animate={animate && isInView ? 'animate' : undefined}
-      >
+      {/* Small boutonniere flower */}
+      <motion.g>
         <motion.circle
           cx="24"
-          cy="34"
-          r="2.5"
+          cy="38"
+          r="2"
           fill="#c19a5b"
           initial={{ opacity: 0, scale: 0 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ delay: 1.3, type: 'spring' }}
+          animate={isInView ? { opacity: 0.9, scale: 1 } : {}}
+          transition={{ delay: 1.1, type: 'spring', stiffness: 200 }}
         />
         <motion.path
-          d="M24 36.5L23 40M24 36.5L25 39"
+          d="M24 40L23 43"
           stroke="#8d9e78"
           strokeWidth="1"
           strokeLinecap="round"
           initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 0.8 } : {}}
-          transition={{ delay: 1.4 }}
+          animate={isInView ? { opacity: 0.7 } : {}}
+          transition={{ delay: 1.2 }}
         />
       </motion.g>
-
-      {/* Pocket square */}
-      <motion.path
-        d="M40 36L42 34L44 36L43 40H41L40 36Z"
-        stroke={color}
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        opacity={0.7}
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 0.7 } : {}}
-        transition={{ delay: 1.5 }}
-      />
     </motion.svg>
   )
 }

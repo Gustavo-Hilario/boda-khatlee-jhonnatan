@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState, useCallback, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useRef, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react'
 import { getAssetPath } from '../utils/assets'
 
 interface MusicContextType {
@@ -24,11 +24,14 @@ export function MusicProvider({ children, audioSrc = getAssetPath('audio/backgro
   const [volume, setVolumeState] = useState(0.5)
   const [hasInteracted, setHasInteracted] = useState(false)
 
+  // Use ref to track volume without causing callback recreation
+  const volumeRef = useRef(volume)
+
   const ensureAudio = useCallback(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio(audioSrc)
       audioRef.current.loop = true
-      audioRef.current.volume = volume
+      audioRef.current.volume = volumeRef.current
     }
     if (!listenersAttachedRef.current && audioRef.current) {
       listenersAttachedRef.current = true
@@ -37,7 +40,7 @@ export function MusicProvider({ children, audioSrc = getAssetPath('audio/backgro
       audioRef.current.addEventListener('ended', () => setIsPlaying(false))
     }
     return audioRef.current
-  }, [audioSrc, volume])
+  }, [audioSrc])
 
   const togglePlay = useCallback(() => {
     const audio = ensureAudio()
@@ -72,8 +75,25 @@ export function MusicProvider({ children, audioSrc = getAssetPath('audio/backgro
     }
   }, [])
 
+  // Sync volume changes to audio element and ref
+  useEffect(() => {
+    volumeRef.current = volume
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+  }, [volume])
+
+  const contextValue = useMemo(() => ({
+    isPlaying,
+    togglePlay,
+    volume,
+    setVolume,
+    hasInteracted,
+    setHasInteracted,
+  }), [isPlaying, togglePlay, volume, setVolume, hasInteracted, setHasInteracted])
+
   return (
-    <MusicContext.Provider value={{ isPlaying, togglePlay, volume, setVolume, hasInteracted, setHasInteracted }}>
+    <MusicContext.Provider value={contextValue}>
       {children}
     </MusicContext.Provider>
   )

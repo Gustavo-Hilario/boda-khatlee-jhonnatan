@@ -406,7 +406,7 @@ export function ItinerarySection() {
             className={
               isMobile
                 ? 'flex flex-col items-center gap-8 py-4 relative z-10'
-                : 'flex flex-nowrap justify-center gap-6 md:gap-8 pt-20'
+                : 'flex flex-nowrap justify-between px-8 md:px-12 lg:px-16 pt-20'
             }
             initial="hidden"
             whileInView="visible"

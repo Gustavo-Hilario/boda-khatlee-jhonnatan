@@ -16,9 +16,13 @@ export function AdminPage() {
     addGuest,
     updateGuest,
     deleteGuest,
+    confirmGuest,
+    clearConfirmation,
     exportJson,
     importJson,
     totalPasses,
+    totalConfirmed,
+    confirmedGuests,
   } = useGuestManager()
 
   // Modal states
@@ -91,6 +95,8 @@ export function AdminPage() {
       <AdminHeader
         totalGuests={guests.length}
         totalPasses={totalPasses}
+        totalConfirmed={totalConfirmed}
+        confirmedGuests={confirmedGuests}
         onAddGuest={handleAddGuest}
         onExport={exportJson}
         onImport={handleImport}
@@ -102,6 +108,8 @@ export function AdminPage() {
           guests={guests}
           onEdit={handleEditGuest}
           onDelete={handleDeleteClick}
+          onConfirm={confirmGuest}
+          onClearConfirm={clearConfirmation}
         />
       </main>
 

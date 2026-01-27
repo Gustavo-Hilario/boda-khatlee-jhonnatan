@@ -3,6 +3,8 @@ import { useRef } from 'react'
 interface AdminHeaderProps {
   totalGuests: number
   totalPasses: number
+  totalConfirmed: number
+  confirmedGuests: number
   onAddGuest: () => void
   onExport: () => void
   onImport: (file: File) => Promise<boolean>
@@ -12,6 +14,8 @@ interface AdminHeaderProps {
 export function AdminHeader({
   totalGuests,
   totalPasses,
+  totalConfirmed,
+  confirmedGuests,
   onAddGuest,
   onExport,
   onImport,
@@ -54,14 +58,24 @@ export function AdminHeader({
         </div>
 
         {/* Stats */}
-        <div className="flex gap-6 mb-4">
+        <div className="flex flex-wrap gap-4 md:gap-6 mb-4">
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-sm">Total Invitados:</span>
+            <span className="text-gray-500 text-sm">Invitados:</span>
             <span className="font-semibold text-olive">{totalGuests}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-sm">Total Pases:</span>
+            <span className="text-gray-500 text-sm">Pases:</span>
             <span className="font-semibold text-olive">{totalPasses}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-500 text-sm">Confirmados:</span>
+            <span className="font-semibold text-green-600">
+              {confirmedGuests}/{totalGuests}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-500 text-sm">Personas confirmadas:</span>
+            <span className="font-semibold text-green-600">{totalConfirmed}</span>
           </div>
         </div>
 

@@ -9,9 +9,13 @@ interface UseGuestManagerReturn {
   addGuest: (data: GuestFormData) => Guest
   updateGuest: (id: string, data: GuestFormData) => void
   deleteGuest: (id: string) => void
+  confirmGuest: (id: string, confirmed: number) => void
+  clearConfirmation: (id: string) => void
   exportJson: () => void
   importJson: (file: File) => Promise<boolean>
   totalPasses: number
+  totalConfirmed: number
+  confirmedGuests: number
 }
 
 /**
@@ -59,6 +63,22 @@ export function useGuestManager(): UseGuestManagerReturn {
     setGuests((prev) => prev.filter((guest) => guest.id !== id))
   }, [])
 
+  const confirmGuest = useCallback((id: string, confirmed: number): void => {
+    setGuests((prev) =>
+      prev.map((guest) =>
+        guest.id === id ? { ...guest, confirmed } : guest
+      )
+    )
+  }, [])
+
+  const clearConfirmation = useCallback((id: string): void => {
+    setGuests((prev) =>
+      prev.map((guest) =>
+        guest.id === id ? { ...guest, confirmed: undefined } : guest
+      )
+    )
+  }, [])
+
   const exportJson = useCallback((): void => {
     exportGuestsJson(guests)
   }, [guests])
@@ -82,6 +102,8 @@ export function useGuestManager(): UseGuestManagerReturn {
   }, [])
 
   const totalPasses = guests.reduce((sum, guest) => sum + guest.passes, 0)
+  const totalConfirmed = guests.reduce((sum, guest) => sum + (guest.confirmed ?? 0), 0)
+  const confirmedGuests = guests.filter((guest) => guest.confirmed !== undefined).length
 
   return {
     guests,
@@ -89,8 +111,12 @@ export function useGuestManager(): UseGuestManagerReturn {
     addGuest,
     updateGuest,
     deleteGuest,
+    confirmGuest,
+    clearConfirmation,
     exportJson,
     importJson,
     totalPasses,
+    totalConfirmed,
+    confirmedGuests,
   }
 }

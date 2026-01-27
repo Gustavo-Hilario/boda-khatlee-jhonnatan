@@ -2,6 +2,7 @@ export interface Guest {
   id: string
   name: string
   passes: number
+  confirmed?: number // Number of confirmed attendees (undefined = not yet confirmed)
 }
 
 export interface GuestFormData {

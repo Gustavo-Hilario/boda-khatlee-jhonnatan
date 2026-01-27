@@ -78,7 +78,7 @@ function isValidGuest(obj: unknown): obj is Guest {
   if (typeof obj !== 'object' || obj === null) return false
   
   const guest = obj as Record<string, unknown>
-  return (
+  const hasRequiredFields = (
     typeof guest.id === 'string' &&
     typeof guest.name === 'string' &&
     typeof guest.passes === 'number' &&
@@ -86,4 +86,12 @@ function isValidGuest(obj: unknown): obj is Guest {
     guest.name.length > 0 &&
     guest.passes >= 1
   )
+  
+  // confirmed is optional, but if present must be a valid number
+  const hasValidConfirmed = (
+    guest.confirmed === undefined ||
+    (typeof guest.confirmed === 'number' && guest.confirmed >= 0)
+  )
+  
+  return hasRequiredFields && hasValidConfirmed
 }

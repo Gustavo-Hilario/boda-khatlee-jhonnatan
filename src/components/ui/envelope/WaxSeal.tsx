@@ -121,16 +121,16 @@ function Diamond({
 
   return (
     <g>
-      {/* Diamond glow */}
+      {/* Diamond glow - soft and subtle */}
       <motion.ellipse
         cx={cx}
         cy={cy}
-        rx={s * 1.5}
-        ry={s * 1.2}
+        rx={s * 1.2}
+        ry={s * 1}
         fill={DIAMOND.blue}
         initial={{ opacity: 0 }}
-        animate={{ opacity: sparkleIntensity * 0.3 }}
-        style={{ filter: 'blur(3px)' }}
+        animate={{ opacity: sparkleIntensity * 0.15 }}
+        style={{ filter: 'blur(2px)' }}
       />
 
       {/* Main diamond body - octagonal brilliant cut */}
@@ -177,49 +177,50 @@ function Diamond({
       <line x1={cx - s} y1={cy} x2={cx - s * 0.5} y2={cy} stroke={DIAMOND.facet2} strokeWidth="0.2" />
       <line x1={cx - s * 0.7} y1={cy - s * 0.7} x2={cx - s * 0.35} y2={cy - s * 0.35} stroke={DIAMOND.facet2} strokeWidth="0.2" />
 
-      {/* Sparkle highlights */}
+      {/* Sparkle highlights - soft and subtle */}
       <motion.g
         initial={{ opacity: 0 }}
-        animate={{ opacity: sparkleIntensity }}
+        animate={{ opacity: sparkleIntensity * 0.5 }}
+        style={{ filter: 'blur(0.5px)' }}
       >
-        {/* Main sparkle cross */}
+        {/* Main sparkle cross - softer */}
         <line
-          x1={cx - s * 0.8} y1={cy}
-          x2={cx + s * 0.8} y2={cy}
-          stroke={DIAMOND.sparkle}
-          strokeWidth="0.8"
-          strokeLinecap="round"
-          opacity={0.9}
-        />
-        <line
-          x1={cx} y1={cy - s * 0.8}
-          x2={cx} y2={cy + s * 0.8}
-          stroke={DIAMOND.sparkle}
-          strokeWidth="0.8"
-          strokeLinecap="round"
-          opacity={0.9}
-        />
-        {/* Diagonal sparkles */}
-        <line
-          x1={cx - s * 0.5} y1={cy - s * 0.5}
-          x2={cx + s * 0.5} y2={cy + s * 0.5}
+          x1={cx - s * 0.6} y1={cy}
+          x2={cx + s * 0.6} y2={cy}
           stroke={DIAMOND.sparkle}
           strokeWidth="0.5"
           strokeLinecap="round"
-          opacity={0.6}
+          opacity={0.5}
         />
         <line
-          x1={cx + s * 0.5} y1={cy - s * 0.5}
-          x2={cx - s * 0.5} y2={cy + s * 0.5}
+          x1={cx} y1={cy - s * 0.6}
+          x2={cx} y2={cy + s * 0.6}
           stroke={DIAMOND.sparkle}
           strokeWidth="0.5"
           strokeLinecap="round"
-          opacity={0.6}
+          opacity={0.5}
+        />
+        {/* Diagonal sparkles - very subtle */}
+        <line
+          x1={cx - s * 0.4} y1={cy - s * 0.4}
+          x2={cx + s * 0.4} y2={cy + s * 0.4}
+          stroke={DIAMOND.sparkle}
+          strokeWidth="0.3"
+          strokeLinecap="round"
+          opacity={0.3}
+        />
+        <line
+          x1={cx + s * 0.4} y1={cy - s * 0.4}
+          x2={cx - s * 0.4} y2={cy + s * 0.4}
+          stroke={DIAMOND.sparkle}
+          strokeWidth="0.3"
+          strokeLinecap="round"
+          opacity={0.3}
         />
       </motion.g>
 
-      {/* Center highlight dot */}
-      <circle cx={cx} cy={cy} r={s * 0.15} fill={DIAMOND.sparkle} opacity={0.8} />
+      {/* Center highlight dot - softer */}
+      <circle cx={cx} cy={cy} r={s * 0.12} fill={DIAMOND.sparkle} opacity={0.5} style={{ filter: 'blur(0.3px)' }} />
     </g>
   )
 }
@@ -238,7 +239,7 @@ function DiamondSetting({ cx, cy, size }: { cx: number; cy: number; size: number
   )
 }
 
-// Sparkle burst effect
+// Sparkle burst effect - soft and subtle
 function SparkleBurst({
   cx,
   cy,
@@ -254,20 +255,22 @@ function SparkleBurst({
     <motion.g
       initial={{ scale: 0, opacity: 0 }}
       animate={isActive ? {
-        scale: [0, 1.5, 0],
-        opacity: [0, 1, 0],
+        scale: [0, 1.2, 0],
+        opacity: [0, 0.6, 0],
       } : {}}
       transition={{
-        duration: 0.6,
+        duration: 0.8,
         delay,
         ease: elegantEase,
       }}
+      style={{ filter: 'blur(0.3px)' }}
     >
-      {/* Four-pointed star sparkle */}
+      {/* Four-pointed star sparkle - smaller and softer */}
       <path
-        d={`M${cx},${cy - 4} L${cx + 1},${cy} L${cx},${cy + 4} L${cx - 1},${cy} Z
-            M${cx - 4},${cy} L${cx},${cy + 1} L${cx + 4},${cy} L${cx},${cy - 1} Z`}
+        d={`M${cx},${cy - 3} L${cx + 0.8},${cy} L${cx},${cy + 3} L${cx - 0.8},${cy} Z
+            M${cx - 3},${cy} L${cx},${cy + 0.8} L${cx + 3},${cy} L${cx},${cy - 0.8} Z`}
         fill={DIAMOND.sparkle}
+        opacity={0.7}
       />
     </motion.g>
   )
@@ -356,8 +359,8 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
       },
     })
 
-    // Diamond sparkle intensifies
-    setSparkleIntensity(1)
+    // Diamond sparkle - soft glow
+    setSparkleIntensity(0.6)
 
     // Phase 3: Sparkle burst
     setAnimationPhase('sparkling')
@@ -366,15 +369,15 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
     // Phase 4: Idle with subtle animations
     setAnimationPhase('idle')
 
-    // Idle sparkle animation
+    // Idle sparkle animation - soft pulsing
     const sparkleLoop = async () => {
       while (true) {
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        setSparkleIntensity(0.3)
-        await new Promise(resolve => setTimeout(resolve, 300))
-        setSparkleIntensity(1)
-        await new Promise(resolve => setTimeout(resolve, 200))
+        await new Promise(resolve => setTimeout(resolve, 2500))
+        setSparkleIntensity(0.2)
+        await new Promise(resolve => setTimeout(resolve, 400))
         setSparkleIntensity(0.6)
+        await new Promise(resolve => setTimeout(resolve, 300))
+        setSparkleIntensity(0.4)
       }
     }
 
@@ -468,9 +471,9 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
                 </feMerge>
               </filter>
 
-              {/* Diamond sparkle filter */}
-              <filter id="diamondGlow" x="-100%" y="-100%" width="300%" height="300%">
-                <feGaussianBlur stdDeviation="2" result="blur" />
+              {/* Diamond sparkle filter - softer glow */}
+              <filter id="diamondGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="0.8" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -545,8 +548,8 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
               style={{ transformOrigin: '16px 12px' }}
               filter="url(#diamondGlow)"
             >
-              <Diamond cx={16} cy={12} size={7} sparkleIntensity={sparkleIntensity} />
-              <DiamondSetting cx={16} cy={12} size={7} />
+              <Diamond cx={16} cy={12} size={5} sparkleIntensity={sparkleIntensity} />
+              <DiamondSetting cx={16} cy={12} size={5} />
             </motion.g>
 
             {/* Right ring - front portion (in front of left ring) */}
@@ -586,43 +589,45 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
             <SparkleBurst cx={8} cy={16} isActive={animationPhase === 'sparkling'} delay={0.2} />
             <SparkleBurst cx={24} cy={6} isActive={animationPhase === 'sparkling'} delay={0.25} />
 
-            {/* Idle twinkle effects */}
+            {/* Idle twinkle effects - soft and subtle */}
             {animationPhase === 'idle' && (
               <>
                 <motion.circle
                   cx="16"
-                  cy="5"
-                  r="1"
+                  cy="6"
+                  r="0.6"
                   fill={DIAMOND.sparkle}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{
-                    opacity: [0, 1, 0],
-                    scale: [0, 1.5, 0],
+                    opacity: [0, 0.5, 0],
+                    scale: [0, 1, 0],
                   }}
                   transition={{
-                    duration: 1.5,
+                    duration: 2,
                     repeat: Infinity,
-                    repeatDelay: 2,
+                    repeatDelay: 3,
                     ease: 'easeInOut',
                   }}
+                  style={{ filter: 'blur(0.3px)' }}
                 />
                 <motion.circle
                   cx="28"
                   cy="20"
-                  r="0.8"
+                  r="0.5"
                   fill={GOLD.bright}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{
-                    opacity: [0, 0.8, 0],
-                    scale: [0, 1.2, 0],
+                    opacity: [0, 0.4, 0],
+                    scale: [0, 0.8, 0],
                   }}
                   transition={{
-                    duration: 1.2,
+                    duration: 1.5,
                     repeat: Infinity,
-                    repeatDelay: 3,
-                    delay: 1,
+                    repeatDelay: 4,
+                    delay: 1.5,
                     ease: 'easeInOut',
                   }}
+                  style={{ filter: 'blur(0.2px)' }}
                 />
               </>
             )}

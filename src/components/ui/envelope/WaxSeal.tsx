@@ -391,7 +391,7 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
     if (isBreaking) return
 
     let mounted = true
-    let timeoutId: NodeJS.Timeout
+    let timeoutId: ReturnType<typeof setTimeout>
 
     const runAndRepeat = async () => {
       if (!mounted) return

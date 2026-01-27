@@ -71,22 +71,20 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
   const config = sizeConfig[size]
 
   return (
-    <motion.div
-      className="absolute z-20 flex items-center justify-center"
-      style={{
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}
-      variants={breakVariants}
-      initial="initial"
-      animate={isBreaking ? 'breaking' : 'initial'}
-      onAnimationComplete={() => {
-        if (isBreaking && onBreakComplete) {
-          onBreakComplete()
-        }
-      }}
+    <div
+      className="absolute z-20 inset-0 flex items-center justify-center pointer-events-none"
     >
+      <motion.div
+        className="flex items-center justify-center pointer-events-auto"
+        variants={breakVariants}
+        initial="initial"
+        animate={isBreaking ? 'breaking' : 'initial'}
+        onAnimationComplete={() => {
+          if (isBreaking && onBreakComplete) {
+            onBreakComplete()
+          }
+        }}
+      >
       {/* Outer glow ring */}
       <motion.div
         className={`absolute ${config.glow} rounded-full`}
@@ -115,18 +113,110 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
           }}
         />
 
-        {/* Interlocking rings SVG */}
+        {/* Elegant Interlocking Rings SVG */}
         <svg
-          viewBox="0 0 48 48"
+          viewBox="0 0 40 40"
           className={config.svg}
           fill="none"
-          stroke="rgba(255, 255, 255, 0.85)"
-          strokeWidth="1.5"
         >
-          {/* Left ring */}
-          <circle cx="18" cy="24" r="8" />
-          {/* Right ring */}
-          <circle cx="30" cy="24" r="8" />
+          <defs>
+            {/* Gold metallic gradient - elegant warm tones */}
+            <linearGradient id="goldMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e8d5a3" />
+              <stop offset="30%" stopColor="#d4b86a" />
+              <stop offset="60%" stopColor="#c9a84c" />
+              <stop offset="100%" stopColor="#a68a3a" />
+            </linearGradient>
+
+            {/* Inner highlight for 3D effect */}
+            <linearGradient id="goldInner" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#f5ecd3" />
+              <stop offset="50%" stopColor="#d9c27a" />
+              <stop offset="100%" stopColor="#b8984a" />
+            </linearGradient>
+
+            {/* Dark edge for depth */}
+            <linearGradient id="goldEdge" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#8b7335" />
+              <stop offset="100%" stopColor="#6b5625" />
+            </linearGradient>
+          </defs>
+
+          {/* Subtle shadow for depth */}
+          <circle cx="17.5" cy="20.5" r="9" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="2.5" />
+          <circle cx="23.5" cy="20.5" r="9" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="2.5" />
+
+          {/* Right ring - BACK half (behind left ring) */}
+          {/* Circumference = 2 * PI * 9 ≈ 56.55, half = 28.27 */}
+          <circle
+            cx="23"
+            cy="20"
+            r="9"
+            fill="none"
+            stroke="url(#goldEdge)"
+            strokeWidth="2.8"
+            strokeDasharray="28.27 28.27"
+            strokeDashoffset="-14.14"
+          />
+          <circle
+            cx="23"
+            cy="20"
+            r="9"
+            fill="none"
+            stroke="url(#goldMetal)"
+            strokeWidth="2.2"
+            strokeDasharray="28.27 28.27"
+            strokeDashoffset="-14.14"
+          />
+          <circle
+            cx="23"
+            cy="20"
+            r="9"
+            fill="none"
+            stroke="url(#goldInner)"
+            strokeWidth="1"
+            strokeDasharray="28.27 28.27"
+            strokeDashoffset="-14.14"
+            opacity="0.6"
+          />
+
+          {/* Left ring - COMPLETE */}
+          <circle cx="17" cy="20" r="9" fill="none" stroke="url(#goldEdge)" strokeWidth="2.8" />
+          <circle cx="17" cy="20" r="9" fill="none" stroke="url(#goldMetal)" strokeWidth="2.2" />
+          <circle cx="17" cy="20" r="9" fill="none" stroke="url(#goldInner)" strokeWidth="1" opacity="0.6" />
+
+          {/* Right ring - FRONT half (in front of left ring) */}
+          <circle
+            cx="23"
+            cy="20"
+            r="9"
+            fill="none"
+            stroke="url(#goldEdge)"
+            strokeWidth="2.8"
+            strokeDasharray="28.27 28.27"
+            strokeDashoffset="14.14"
+          />
+          <circle
+            cx="23"
+            cy="20"
+            r="9"
+            fill="none"
+            stroke="url(#goldMetal)"
+            strokeWidth="2.2"
+            strokeDasharray="28.27 28.27"
+            strokeDashoffset="14.14"
+          />
+          <circle
+            cx="23"
+            cy="20"
+            r="9"
+            fill="none"
+            stroke="url(#goldInner)"
+            strokeWidth="1"
+            strokeDasharray="28.27 28.27"
+            strokeDashoffset="14.14"
+            opacity="0.6"
+          />
         </svg>
 
         {/* Subtle texture overlay */}
@@ -159,27 +249,28 @@ export function WaxSeal({ isBreaking, onBreakComplete, size = 'medium' }: WaxSea
         <motion.div
           className="mt-2"
           animate={{
-            y: [0, 5, 0],
+            opacity: [0.5, 0.8, 0.5],
           }}
           transition={{
-            duration: 1.2,
+            duration: 2.5,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
         >
           <svg
             viewBox="0 0 24 24"
-            className="w-5 h-5 md:w-6 md:h-6"
+            className="w-4 h-4 md:w-5 md:h-5"
             fill="none"
-            stroke="rgba(161, 125, 66, 0.7)"
-            strokeWidth="2"
+            stroke="rgba(161, 125, 66, 0.6)"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <polyline points="6 9 12 15 18 9" />
+            <polyline points="7 10 12 15 17 10" />
           </svg>
         </motion.div>
       </motion.div>
     </motion.div>
+    </div>
   )
 }

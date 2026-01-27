@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { Guest } from '../types'
-import guestsData from '../data/guests.json'
+import { loadGuests } from '../utils/guestStorage'
 
 /**
  * Hook to get guest information from URL query parameter
@@ -14,7 +14,8 @@ export function useGuest(): Guest | null {
 
     if (!guestId) return null
 
-    const foundGuest = (guestsData as Guest[]).find((g) => g.id === guestId)
+    const guests = loadGuests()
+    const foundGuest = guests.find((g) => g.id === guestId)
     return foundGuest || null
   }, [])
 

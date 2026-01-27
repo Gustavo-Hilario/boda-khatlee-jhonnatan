@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react'
 const AUTH_KEY = 'admin_authenticated'
 const CREDENTIALS = {
   username: 'admin',
-  password: '@Brocal.@',
+  password: '@Brocal2018.@',
 }
 
 interface UseAdminAuthReturn {

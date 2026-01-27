@@ -266,7 +266,7 @@ export function Envelope({ isOpening, onOpenComplete, fullScreen = false }: Enve
         </motion.div>
       </div>
 
-      {/* Center X pattern where flaps meet */}
+      {/* V-shaped fold pattern - elegant envelope flap effect */}
       <AnimatePresence>
         {!isFlapsOpening && (
           <motion.div
@@ -274,24 +274,82 @@ export function Envelope({ isOpening, onOpenComplete, fullScreen = false }: Enve
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
           >
-            <svg className="w-full h-full" preserveAspectRatio="none">
+            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs>
+                {/* Subtle gradient for V fold - left side */}
+                <linearGradient id="vFoldLeft" x1="0%" y1="0%" x2="50%" y2="55%">
+                  <stop offset="0%" stopColor="rgba(180, 160, 140, 0.03)" />
+                  <stop offset="50%" stopColor="rgba(160, 140, 120, 0.06)" />
+                  <stop offset="100%" stopColor="rgba(180, 160, 140, 0.03)" />
+                </linearGradient>
+                {/* Subtle gradient for V fold - right side */}
+                <linearGradient id="vFoldRight" x1="100%" y1="0%" x2="50%" y2="55%">
+                  <stop offset="0%" stopColor="rgba(180, 160, 140, 0.03)" />
+                  <stop offset="50%" stopColor="rgba(160, 140, 120, 0.06)" />
+                  <stop offset="100%" stopColor="rgba(180, 160, 140, 0.03)" />
+                </linearGradient>
+                {/* Light highlight for paper crease */}
+                <linearGradient id="vHighlightLeft" x1="0%" y1="0%" x2="50%" y2="55%">
+                  <stop offset="0%" stopColor="rgba(255, 252, 248, 0.02)" />
+                  <stop offset="50%" stopColor="rgba(255, 252, 248, 0.08)" />
+                  <stop offset="100%" stopColor="rgba(255, 252, 248, 0.02)" />
+                </linearGradient>
+                <linearGradient id="vHighlightRight" x1="100%" y1="0%" x2="50%" y2="55%">
+                  <stop offset="0%" stopColor="rgba(255, 252, 248, 0.02)" />
+                  <stop offset="50%" stopColor="rgba(255, 252, 248, 0.08)" />
+                  <stop offset="100%" stopColor="rgba(255, 252, 248, 0.02)" />
+                </linearGradient>
+              </defs>
+
+              {/* V fold line - left side: top-left corner to center point */}
               <line
                 x1="0"
                 y1="0"
-                x2="100%"
-                y2="100%"
-                stroke="rgba(161, 125, 66, 0.1)"
-                strokeWidth="1"
+                x2="50"
+                y2="55"
+                stroke="url(#vFoldLeft)"
+                strokeWidth="0.8"
               />
+              {/* Highlight edge - left */}
               <line
-                x1="100%"
+                x1="0"
                 y1="0"
-                x2="0"
-                y2="100%"
-                stroke="rgba(161, 125, 66, 0.1)"
-                strokeWidth="1"
+                x2="50"
+                y2="55"
+                stroke="url(#vHighlightLeft)"
+                strokeWidth="0.4"
+                transform="translate(-0.2, -0.2)"
+              />
+
+              {/* V fold line - right side: top-right corner to center point */}
+              <line
+                x1="100"
+                y1="0"
+                x2="50"
+                y2="55"
+                stroke="url(#vFoldRight)"
+                strokeWidth="0.8"
+              />
+              {/* Highlight edge - right */}
+              <line
+                x1="100"
+                y1="0"
+                x2="50"
+                y2="55"
+                stroke="url(#vHighlightRight)"
+                strokeWidth="0.4"
+                transform="translate(0.2, -0.2)"
               />
             </svg>
+
+            {/* Subtle triangular shadow for flap depth */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.015) 0%, transparent 30%)',
+                clipPath: 'polygon(0 0, 100% 0, 50% 55%)',
+              }}
+            />
           </motion.div>
         )}
       </AnimatePresence>

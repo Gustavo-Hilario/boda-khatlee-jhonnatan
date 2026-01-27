@@ -1,10 +1,9 @@
 import type { Guest } from '../types'
-import initialGuestsData from '../data/guests.json'
 
 const STORAGE_KEY = 'wedding_guests'
 
 /**
- * Load guests from localStorage, fallback to initial JSON data
+ * Load guests from localStorage
  */
 export function loadGuests(): Guest[] {
   try {
@@ -16,9 +15,9 @@ export function loadGuests(): Guest[] {
       }
     }
   } catch {
-    console.warn('Failed to load guests from localStorage, using default data')
+    console.warn('Failed to load guests from localStorage')
   }
-  return initialGuestsData as Guest[]
+  return []
 }
 
 /**
@@ -34,11 +33,11 @@ export function saveGuests(guests: Guest[]): void {
 }
 
 /**
- * Clear localStorage and revert to initial data
+ * Clear guests from localStorage
  */
 export function resetGuests(): Guest[] {
   localStorage.removeItem(STORAGE_KEY)
-  return initialGuestsData as Guest[]
+  return []
 }
 
 /**

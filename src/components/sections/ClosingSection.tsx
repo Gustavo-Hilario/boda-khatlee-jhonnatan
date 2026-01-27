@@ -230,18 +230,7 @@ export function ClosingSection() {
           <HeartIcon size={40} color="#800020" accentColor="#c19a5b" animate={true} />
         </motion.div>
 
-        {/* Closing quote */}
-        <motion.p
-          className="text-gray-600 font-elegant text-xl md:text-2xl leading-relaxed mb-6 italic"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          {quotes.closing}
-        </motion.p>
-
-        {/* Full closing text */}
+                {/* Full closing text */}
         <motion.p
           className="text-gray-500 font-elegant text-lg md:text-xl leading-relaxed mb-8"
           initial={{ opacity: 0, y: 20 }}

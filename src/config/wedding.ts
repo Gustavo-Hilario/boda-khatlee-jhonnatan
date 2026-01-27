@@ -97,8 +97,6 @@ export const galleryImages: GalleryImage[] = [
 
 export const quotes = {
     main: 'Nuestro gran día se aproxima y nos encantaría que formaras parte de él. Nos hace mucha ilusión invitarlos a nuestra boda.',
-    closing:
-        'Creemos que mereces una noche llena de alegría y de buenos momentos. Por eso esperamos contar con tu compañía para hacer aún más especial este momento.',
     closingFull:
         'Gracias por acompañarnos el día más especial de nuestra historia. Su compañía en este día es el mayor regalo que podemos recibir. Gracias a sus oraciones y su cariño, por esta parte de nuestro camino estamos agradecidos con Dios y con la vida por permitirnos celebrar este momento con ustedes, nuestra familia y amigos queridos.',
 };

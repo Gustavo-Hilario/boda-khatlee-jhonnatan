@@ -25,7 +25,7 @@ export const weddingConfig: WeddingConfig = {
     venues: {
         religious: {
             name: 'Santuario Arquidiocesano del Sagrado Corazón de Jesús',
-            location: 'Lima, Perú',
+            location: 'Santorín 258, Santiago de Surco 15023',
             mapUrl: 'https://maps.app.goo.gl/cSpP4f9mpqxb7GcPA',
             image: 'images/cards/Iglesia Sagrado Corazon de Jesus.jpg',
         },
@@ -36,7 +36,7 @@ export const weddingConfig: WeddingConfig = {
         },
         reception: {
             name: 'Villa Virginia Eventos – Huachipa',
-            location: 'Lima, Perú',
+            location: 'C. Los Gavilanes LT.2, Lurigancho-Chosica 15457',
             mapUrl: 'https://maps.app.goo.gl/SsUhZSHG1edUDrPD8',
             image: 'images/cards/Villa Virginia.jpg',
         },

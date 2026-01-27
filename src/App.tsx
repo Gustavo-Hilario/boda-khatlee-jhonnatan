@@ -71,7 +71,10 @@ function App() {
             <WelcomeSection />
             <QuoteSection />
             <FamilySection />
-            <SectionDivider variant="flourish" color="olive" className="bg-white" />
+            <div className="relative bg-white overflow-hidden">
+              <div className="absolute inset-0 bg-pattern-dots opacity-30" />
+              <SectionDivider variant="flourish" color="olive" />
+            </div>
             <CountdownSection />
             <VenueSection />
             <ItinerarySection />

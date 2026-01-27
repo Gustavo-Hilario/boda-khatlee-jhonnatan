@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { MotionConfig } from 'framer-motion'
 import { MusicProvider } from './context/MusicContext'
+import { AdminPage } from './components/admin/AdminPage'
 import { SmoothScroller } from './components/layout/SmoothScroller'
 import { CoverSection } from './components/sections/CoverSection'
 import { WelcomeSection } from './components/sections/WelcomeSection'
@@ -34,6 +35,12 @@ const SECTION_IDS = [
 function App() {
   const [coverOpen, setCoverOpen] = useState(false)
 
+  // Check for admin mode via URL parameter
+  const isAdminMode = useMemo(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('admin') === 'true'
+  }, [])
+
   // Reset scroll position on page load/refresh
   useEffect(() => {
     // Disable browser's automatic scroll restoration
@@ -43,6 +50,11 @@ function App() {
     // Ensure page starts at top
     window.scrollTo(0, 0)
   }, [])
+
+  // Render admin page if in admin mode
+  if (isAdminMode) {
+    return <AdminPage />
+  }
 
   return (
     <MotionConfig reducedMotion="user">

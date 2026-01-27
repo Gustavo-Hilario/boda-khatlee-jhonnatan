@@ -4,6 +4,11 @@ export interface Guest {
   passes: number
 }
 
+export interface GuestFormData {
+  name: string
+  passes: number
+}
+
 export interface TimelineEvent {
   id: string
   time: string

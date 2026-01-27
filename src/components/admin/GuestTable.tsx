@@ -10,9 +10,51 @@ interface GuestTableProps {
   onClearConfirm: (guestId: string) => void
 }
 
+type SortDirection = 'asc' | 'desc'
+type PrimarySort = 'name' | 'passes'
+
 export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm }: GuestTableProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [confirmInputs, setConfirmInputs] = useState<Record<string, string>>({})
+  const [nameSort, setNameSort] = useState<SortDirection>('asc')
+  const [passesSort, setPassesSort] = useState<SortDirection>('desc')
+  const [primarySort, setPrimarySort] = useState<PrimarySort>('name')
+
+  const handleNameSort = () => {
+    setNameSort(nameSort === 'asc' ? 'desc' : 'asc')
+    setPrimarySort('name')
+  }
+
+  const handlePassesSort = () => {
+    setPassesSort(passesSort === 'asc' ? 'desc' : 'asc')
+    setPrimarySort('passes')
+  }
+
+  const sortedGuests = [...guests].sort((a, b) => {
+    if (primarySort === 'name') {
+      // Primary sort by name
+      const nameComparison = a.name.localeCompare(b.name, 'es')
+      if (nameComparison !== 0) {
+        return nameSort === 'asc' ? nameComparison : -nameComparison
+      }
+      // Secondary sort by passes
+      const passesComparison = a.passes - b.passes
+      return passesSort === 'asc' ? passesComparison : -passesComparison
+    } else {
+      // Primary sort by passes
+      const passesComparison = a.passes - b.passes
+      if (passesComparison !== 0) {
+        return passesSort === 'asc' ? passesComparison : -passesComparison
+      }
+      // Secondary sort by name
+      const nameComparison = a.name.localeCompare(b.name, 'es')
+      return nameSort === 'asc' ? nameComparison : -nameComparison
+    }
+  })
+
+  const SortIcon = ({ direction }: { direction: SortDirection }) => {
+    return <span className="ml-1">{direction === 'asc' ? '↑' : '↓'}</span>
+  }
 
   const getInvitationUrl = (guestId: string): string => {
     const baseUrl = window.location.origin + window.location.pathname
@@ -83,11 +125,21 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
         <table className="w-full">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-6 py-4 text-sm font-semibold text-gray-700">
-                Nombre
+              <th
+                className={`text-left px-6 py-4 text-sm font-semibold cursor-pointer hover:bg-gray-100 select-none transition-colors ${
+                  primarySort === 'name' ? 'text-olive' : 'text-gray-700'
+                }`}
+                onClick={handleNameSort}
+              >
+                Nombre<SortIcon direction={nameSort} />
               </th>
-              <th className="text-center px-6 py-4 text-sm font-semibold text-gray-700">
-                Pases
+              <th
+                className={`text-center px-6 py-4 text-sm font-semibold cursor-pointer hover:bg-gray-100 select-none transition-colors ${
+                  primarySort === 'passes' ? 'text-olive' : 'text-gray-700'
+                }`}
+                onClick={handlePassesSort}
+              >
+                Pases<SortIcon direction={passesSort} />
               </th>
               <th className="text-center px-6 py-4 text-sm font-semibold text-gray-700">
                 Confirmados
@@ -101,7 +153,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {guests.map((guest, index) => {
+            {sortedGuests.map((guest, index) => {
               const isConfirmed = guest.confirmed !== undefined
               return (
                 <motion.tr
@@ -196,9 +248,34 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
         </table>
       </div>
 
+      {/* Mobile Sort Controls */}
+      <div className="md:hidden flex gap-2 p-3 bg-gray-50 border-b">
+        <span className="text-sm text-gray-600 self-center">Ordenar:</span>
+        <button
+          onClick={handleNameSort}
+          className={`px-3 py-1.5 text-xs font-medium rounded transition-colors border ${
+            primarySort === 'name'
+              ? 'bg-olive text-white border-olive'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          Nombre {nameSort === 'asc' ? '↑' : '↓'}
+        </button>
+        <button
+          onClick={handlePassesSort}
+          className={`px-3 py-1.5 text-xs font-medium rounded transition-colors border ${
+            primarySort === 'passes'
+              ? 'bg-olive text-white border-olive'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          Pases {passesSort === 'asc' ? '↑' : '↓'}
+        </button>
+      </div>
+
       {/* Mobile Cards */}
       <div className="md:hidden divide-y divide-gray-100">
-        {guests.map((guest, index) => {
+        {sortedGuests.map((guest, index) => {
           const isConfirmed = guest.confirmed !== undefined
           return (
             <motion.div

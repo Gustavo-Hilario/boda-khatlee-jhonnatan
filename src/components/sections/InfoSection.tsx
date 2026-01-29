@@ -460,7 +460,7 @@ function RSVPCard() {
           >
             Confirma tu asistencia antes del:
             <br />
-            <strong className="text-2xl text-olive">Enero 31</strong>
+            <strong className="text-2xl text-olive">Febrero 06</strong>
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 10 }}

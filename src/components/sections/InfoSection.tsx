@@ -97,10 +97,12 @@ function GiftSuggestionCard() {
   const [isHovered, setIsHovered] = useState(false)
   const [copiedNo, setCopiedNo] = useState(false)
   const [copiedCci, setCopiedCci] = useState(false)
+  const [copiedPhone, setCopiedPhone] = useState(false)
   const tiltConfig = useTiltConfig()
 
-  const accountNo = '6393453701494'
-  const accountCci = '00363901345370149423'
+  const accountNo = '2800225282'
+  const accountCci = '00928020280022528292'
+  const phoneNumber = '967754506'
 
   // Mouse position for 3D tilt
   const mouseX = useMotionValue(0)
@@ -143,14 +145,17 @@ function GiftSuggestionCard() {
     setIsHovered(false)
   }
 
-  const copyToClipboard = (text: string, type: 'no' | 'cci') => {
+  const copyToClipboard = (text: string, type: 'no' | 'cci' | 'phone') => {
     navigator.clipboard.writeText(text)
     if (type === 'no') {
       setCopiedNo(true)
       setTimeout(() => setCopiedNo(false), 2000)
-    } else {
+    } else if (type === 'cci') {
       setCopiedCci(true)
       setTimeout(() => setCopiedCci(false), 2000)
+    } else {
+      setCopiedPhone(true)
+      setTimeout(() => setCopiedPhone(false), 2000)
     }
   }
 
@@ -280,6 +285,38 @@ function GiftSuggestionCard() {
                 </svg>
               )}
             </button>
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-olive/20" />
+            <span className="text-olive/60 font-elegant text-sm">o también</span>
+            <div className="flex-1 h-px bg-olive/20" />
+          </div>
+
+          {/* Yape and Plin */}
+          <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-[#742284]/5 via-olive/5 to-[#00D4AA]/5 px-5 py-4 rounded-xl border border-olive/10">
+            <div className="flex items-center gap-2">
+              <img src="./images/yape.png" alt="Yape" className="h-8 w-auto object-contain" />
+              <span className="text-olive/40 font-light">/</span>
+              <img src="./images/plin.png" alt="Plin" className="h-8 w-auto object-contain" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-700 font-medium text-lg">{phoneNumber}</span>
+              <button
+                onClick={() => copyToClipboard(phoneNumber, 'phone')}
+                className="p-1.5 rounded-lg hover:bg-olive/10 transition-colors"
+                title="Copiar número"
+              >
+                {copiedPhone ? (
+                  <span className="text-olive text-sm">✓</span>
+                ) : (
+                  <svg className="w-5 h-5 text-olive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </motion.div>
 

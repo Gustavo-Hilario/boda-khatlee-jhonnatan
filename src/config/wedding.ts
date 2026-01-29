@@ -13,9 +13,9 @@ export const weddingConfig: WeddingConfig = {
             { name: 'Yanet Atao Eulate' },
         ],
         groom: [
+            { name: 'Hugo Samanamud Loyola' },
             { name: 'Gladys Cordova Yauri' },
             { name: 'Teresa Cordova Yauri' },
-            { name: 'Hugo Samanamud Loyola' },
         ],
     },
     godparents: [
@@ -53,7 +53,7 @@ export const weddingConfig: WeddingConfig = {
         deadline: 'antes del inicio del mes',
     },
     photoUpload:
-        'https://drive.google.com/drive/folders/1YWaPAznJ3sA19CbZpUcXY-KyHHG0brsO',
+        'https://drive.google.com/drive/folders/14FXRk7gEAx2mKtKzT7SmrybqSdTZ2j_w',
     contact: {
         invitationCreator: '920756997',
     },

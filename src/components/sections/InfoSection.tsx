@@ -249,7 +249,7 @@ function GiftSuggestionCard() {
           transition={{ delay: 0.5 }}
         >
           <p className="text-olive font-semibold text-xl">Depósito a Cuenta</p>
-          <p className="text-gray-600 font-elegant">Cuenta de Ahorro en Soles</p>
+          <p className="text-gray-600 font-elegant">Cuenta de Ahorro en Soles Scotiabank</p>
 
           {/* Account Number */}
           <div className="flex items-center justify-center gap-2 mt-4">

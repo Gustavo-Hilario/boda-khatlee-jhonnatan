@@ -32,9 +32,9 @@ export function AdminLogin({ onLogin, error }: AdminLoginProps) {
       >
         <div className="text-center mb-8">
           <h1 className="text-3xl font-serif text-burgundy mb-2">
-            Panel de Administración
+            Panel de administración
           </h1>
-          <p className="text-gray-600 text-sm">Gestión de Invitados</p>
+          <p className="text-gray-600 text-sm">Gestión de invitados</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -90,7 +90,7 @@ export function AdminLogin({ onLogin, error }: AdminLoginProps) {
             disabled={isSubmitting}
             className="w-full bg-burgundy text-white py-3 rounded-lg font-medium hover:bg-burgundy-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Verificando...' : 'Iniciar Sesión'}
+            {isSubmitting ? 'Verificando...' : 'Iniciar sesión'}
           </button>
         </form>
 

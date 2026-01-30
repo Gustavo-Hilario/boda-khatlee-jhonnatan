@@ -225,7 +225,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                       >
-                        {copiedId === guest.id ? '¡Copiado!' : 'Copiar Link'}
+                        {copiedId === guest.id ? '¡Copiado!' : 'Copiar link'}
                       </button>
                       <button
                         onClick={() => onEdit(guest)}
@@ -346,7 +346,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
                       : 'bg-gray-100 text-gray-700'
                   }`}
                 >
-                  {copiedId === guest.id ? '¡Copiado!' : 'Copiar Link'}
+                  {copiedId === guest.id ? '¡Copiado!' : 'Copiar link'}
                 </button>
                 <button
                   onClick={() => onEdit(guest)}

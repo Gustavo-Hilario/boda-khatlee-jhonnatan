@@ -30,7 +30,7 @@ export const weddingConfig: WeddingConfig = {
             image: 'images/cards/Iglesia Sagrado Corazon de Jesus.jpg',
         },
         civil: {
-            name: 'Ceremonia Civil',
+            name: 'Ceremonia civil',
             location: '----------',
             mapUrl: 'https://maps.app.goo.gl/Nun6z5gpkLXgA5c87?g_st=iw',
         },
@@ -62,17 +62,17 @@ export const weddingConfig: WeddingConfig = {
 export const timelineEvents: TimelineEvent[] = [
     {
         id: '1',
-        time: '12:00',
+        time: '11:30',
         title: 'Iglesia',
     },
     {
         id: '2',
-        time: '15:00',
+        time: '14:00',
         title: 'Recepción',
     },
     {
         id: '3',
-        time: '15:45',
+        time: '15:30',
         title: 'Almuerzo',
     },
     {

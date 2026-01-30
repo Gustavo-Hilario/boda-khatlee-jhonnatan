@@ -439,7 +439,7 @@ export function WelcomeSection() {
               initial="initial"
               animate="animate"
             >
-              ¡Nos Casamos!
+              ¡Nos casamos!
             </motion.span>
           </motion.span>
         </motion.p>

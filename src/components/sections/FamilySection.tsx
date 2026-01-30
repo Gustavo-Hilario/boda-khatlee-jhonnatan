@@ -427,7 +427,7 @@ export function FamilySection() {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            Con la Bendición de Dios
+            Con la bendición de Dios
           </motion.h2>
 
           <motion.p
@@ -464,14 +464,14 @@ export function FamilySection() {
         {/* Family cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8">
           <FamilyCard
-            title="Padres de la Novia"
+            title="Padres de la novia"
             icon={BrideIcon}
             names={parents.bride}
             delay={0.2}
           />
 
           <FamilyCard
-            title="Padres del Novio"
+            title="Padres del novio"
             icon={GroomIcon}
             names={parents.groom}
             delay={0.4}

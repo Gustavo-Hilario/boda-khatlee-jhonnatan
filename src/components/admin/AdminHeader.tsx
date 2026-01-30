@@ -47,13 +47,13 @@ export function AdminHeader({
         {/* Top row: Title and logout */}
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-serif text-burgundy">
-            Panel de Invitados
+            Panel de invitados
           </h1>
           <button
             onClick={onLogout}
             className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
-            Cerrar Sesión
+            Cerrar sesión
           </button>
         </div>
 
@@ -85,7 +85,7 @@ export function AdminHeader({
             onClick={onAddGuest}
             className="px-4 py-2 bg-olive text-white text-sm font-medium rounded-lg hover:bg-olive-light transition-colors"
           >
-            + Agregar Invitado
+            + Agregar invitado
           </button>
 
           <button

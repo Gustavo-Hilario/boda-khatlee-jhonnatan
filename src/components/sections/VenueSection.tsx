@@ -286,7 +286,7 @@ function VenueCard({
               transition={{ duration: 0.3 }}
             />
             <Button href={mapUrl} external size="sm" className="relative z-10">
-              Ver Ubicación
+              Ver ubicación
             </Button>
           </motion.div>
         </div>
@@ -489,7 +489,7 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
                   size="sm"
                   variant="outline-light"
                 >
-                  Pinterest Mujeres
+                  Pinterest mujeres
                 </Button>
               </motion.div>
             )}
@@ -501,7 +501,7 @@ function DressCodeCard({ dressCode }: DressCodeCardProps) {
                   size="sm"
                   variant="outline-light"
                 >
-                  Pinterest Hombres
+                  Pinterest hombres
                 </Button>
               </motion.div>
             )}
@@ -562,7 +562,7 @@ export function VenueSection() {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            Ceremonia & Recepción
+            Ceremonia & recepción
           </motion.h2>
 
           <motion.div
@@ -584,7 +584,7 @@ export function VenueSection() {
         >
           {/* Religious Ceremony */}
           <VenueCard
-            title="Ceremonia Religiosa"
+            title="Ceremonia religiosa"
             icon={<ChurchIcon size={64} color="white" />}
             headerIcon={<ChurchIcon size={28} color="white" />}
             name={venues.religious.name}

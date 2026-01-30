@@ -218,7 +218,7 @@ export function OurStorySection() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          Nuestra Historia
+          Nuestra historia
         </motion.h2>
 
         <motion.div

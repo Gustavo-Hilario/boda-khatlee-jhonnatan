@@ -53,7 +53,7 @@ function FormContent({ guest, onSubmit, onClose }: FormContentProps) {
   return (
     <>
       <h2 className="text-xl font-serif font-semibold text-burgundy mb-6">
-        {isEditing ? 'Editar Invitado' : 'Agregar Invitado'}
+        {isEditing ? 'Editar invitado' : 'Agregar invitado'}
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -85,7 +85,7 @@ function FormContent({ guest, onSubmit, onClose }: FormContentProps) {
             htmlFor="guestPasses"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Número de Pases
+            Número de pases
           </label>
           <input
             type="number"
@@ -115,7 +115,7 @@ function FormContent({ guest, onSubmit, onClose }: FormContentProps) {
             type="submit"
             className="px-4 py-2 text-sm font-medium text-white bg-olive rounded-lg hover:bg-olive-light transition-colors"
           >
-            {isEditing ? 'Guardar Cambios' : 'Agregar Invitado'}
+            {isEditing ? 'Guardar cambios' : 'Agregar invitado'}
           </button>
         </div>
       </form>

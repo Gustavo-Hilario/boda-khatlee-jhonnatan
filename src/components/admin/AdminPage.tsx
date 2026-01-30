@@ -176,7 +176,7 @@ export function AdminPage() {
       {/* Delete Confirmation */}
       <ConfirmDialog
         isOpen={deleteConfirm !== null}
-        title="Eliminar Invitado"
+        title="Eliminar invitado"
         message={`¿Estás seguro que deseas eliminar a "${deleteConfirm?.name}"? Esta acción no se puede deshacer.`}
         confirmText="Eliminar"
         cancelText="Cancelar"
@@ -188,7 +188,7 @@ export function AdminPage() {
       {/* Import Confirmation */}
       <ConfirmDialog
         isOpen={importConfirm !== null}
-        title="Importar Lista de Invitados"
+        title="Importar lista de invitados"
         message="Esto reemplazará toda la lista actual de invitados. ¿Deseas continuar?"
         confirmText="Importar"
         cancelText="Cancelar"

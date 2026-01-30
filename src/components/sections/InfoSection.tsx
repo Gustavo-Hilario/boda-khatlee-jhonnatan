@@ -209,7 +209,7 @@ function GiftSuggestionCard() {
 
         {/* Title */}
         <h3 className="font-cursive text-3xl md:text-4xl text-olive mb-6 relative z-10">
-          Sugerencia de Regalo
+          Sugerencia de regalo
         </h3>
 
         {/* Description paragraphs */}
@@ -249,7 +249,9 @@ function GiftSuggestionCard() {
           transition={{ delay: 0.5 }}
         >
           <p className="text-olive font-semibold text-xl">Depósito a Cuenta</p>
-          <p className="text-gray-600 font-elegant">Cuenta de Ahorro en Soles Scotiabank</p>
+          <p className="text-gray-600">Cuenta de Ahorro en Soles Scotiabank</p>
+          <p className="text-gray-500 text-sm">Jhonnatan Parraga / Khatlee Romero
+          </p>
 
           {/* Account Number */}
           <div className="flex items-center justify-center gap-2 mt-4">
@@ -300,6 +302,7 @@ function GiftSuggestionCard() {
               <img src="./images/yape.png" alt="Yape" className="h-8 w-auto object-contain" />
               <span className="text-olive/40 font-light">/</span>
               <img src="./images/plin.png" alt="Plin" className="h-8 w-auto object-contain" />
+              <span className="text-gray-500 text-sm">(Jhonnatan Parraga)</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-gray-700 font-medium text-lg">{phoneNumber}</span>
@@ -438,7 +441,7 @@ function RSVPCard() {
 
         {/* Title */}
         <h3 className="font-cursive text-3xl md:text-4xl text-olive mb-6 relative z-10">
-          Confirma tu Asistencia
+          Confirma tu asistencia
         </h3>
 
         {/* Description paragraphs */}
@@ -770,7 +773,7 @@ export function InfoSection() {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            Información Importante
+            Información importante
           </motion.h2>
 
           <motion.div
@@ -796,7 +799,7 @@ export function InfoSection() {
           {/* Adults only */}
           <InfoCard
             icon={<ChampagneIcon size={40} color="white" />}
-            title="Solo Adultos"
+            title="Solo adultos"
             description={
               <p>
                 Amamos a sus niños, pero queremos que ustedes puedan bailar y disfrutar
@@ -809,7 +812,7 @@ export function InfoSection() {
           {/* Photo sharing */}
           <InfoCard
             icon={<CameraIcon size={40} color="white" />}
-            title="Comparte tus Fotos"
+            title="Comparte tus fotos"
             description={
               <p>
                 Haz eterno este día compartiendo tus momentos especiales con nosotros.
@@ -817,7 +820,7 @@ export function InfoSection() {
             }
             bgColor="burgundy"
             action={{
-              label: 'Subir Fotos',
+              label: 'Subir fotos',
               href: photoUpload,
             }}
           />

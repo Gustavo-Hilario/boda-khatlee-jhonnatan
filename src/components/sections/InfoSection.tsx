@@ -1,9 +1,10 @@
 import { useState, useRef, type ReactNode } from 'react'
-import { motion, type Variants, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, AnimatePresence, type Variants, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
 import { useTiltConfig } from '../../hooks/useMobile'
+import { useGuest } from '../../hooks/useGuest'
 import {
   GiftBoxIcon,
   ChampagneIcon,
@@ -343,12 +344,48 @@ function GiftSuggestionCard() {
 function RSVPCard() {
   const ref = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
+  const [showNumberSelector, setShowNumberSelector] = useState(false)
   const tiltConfig = useTiltConfig()
   const { rsvp } = weddingConfig
+  const guest = useGuest()
 
-  const whatsappUrl = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(
-    'Hola! Confirmo mi asistencia a la boda.'
-  )}`
+  // Generate WhatsApp message based on guest and count
+  const getWhatsAppMessage = (count: number) => {
+    if (!guest) {
+      return 'Hola! Quisiera confirmar mi asistencia a la boda.'
+    }
+
+    const base = `Hola Khatlee y Jhonnatan! Soy ${guest.name}`
+
+    if (count === 1) {
+      return `${base} y confirmo mi asistencia a su boda el 7 de marzo. ¡Nos vemos!`
+    }
+
+    return `${base} y confirmo asistencia para ${count} personas a su boda el 7 de marzo. ¡Nos vemos!`
+  }
+
+  // Open WhatsApp with the appropriate message
+  const openWhatsApp = (count: number) => {
+    const message = getWhatsAppMessage(count)
+    const url = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(message)}`
+    window.open(url, '_blank')
+  }
+
+  // Handle confirm button click
+  const handleConfirmClick = () => {
+    if (!guest || guest.passes === 1) {
+      // Single pass or no guest - open WhatsApp directly
+      openWhatsApp(1)
+    } else {
+      // Multiple passes - show number selector
+      setShowNumberSelector(true)
+    }
+  }
+
+  // Handle number selection
+  const handleNumberClick = (count: number) => {
+    openWhatsApp(count)
+  }
 
   // Mouse position for 3D tilt
   const mouseX = useMotionValue(0)
@@ -475,17 +512,56 @@ function RSVPCard() {
           </motion.p>
         </div>
 
-        {/* WhatsApp button */}
+        {/* WhatsApp button / Number selector */}
         <motion.div
-          className="relative z-10"
+          className="relative z-10 min-h-[56px]"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          <Button href={whatsappUrl} variant="primary" size="lg">
-            Confirmar por WhatsApp
-          </Button>
+          <AnimatePresence mode="wait">
+            {!showNumberSelector ? (
+              <motion.div
+                key="confirm-button"
+                initial={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button onClick={handleConfirmClick} variant="primary" size="lg">
+                  Confirmar por WhatsApp
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="number-selector"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col items-center gap-4"
+              >
+                <p className="text-olive font-elegant text-lg">
+                  {guest ? `Hola, ${guest.name}! ` : ''}¿Cuántas personas asistirán?
+                </p>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  {Array.from({ length: guest?.passes || 1 }, (_, i) => i + 1).map((num) => (
+                    <motion.button
+                      key={num}
+                      onClick={() => handleNumberClick(num)}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: num * 0.05 }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-burgundy text-white font-semibold text-lg md:text-xl shadow-lg hover:bg-burgundy-light hover:shadow-xl transition-colors flex items-center justify-center"
+                    >
+                      {num}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         {/* Corner decorations */}

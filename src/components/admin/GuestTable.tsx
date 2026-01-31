@@ -154,7 +154,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
           </thead>
           <tbody className="divide-y divide-gray-100">
             {sortedGuests.map((guest, index) => {
-              const isConfirmed = guest.confirmed !== undefined
+              const isConfirmed = guest.confirmed != null
               return (
                 <motion.tr
                   key={guest.id}
@@ -276,7 +276,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
       {/* Mobile Cards */}
       <div className="md:hidden divide-y divide-gray-100">
         {sortedGuests.map((guest, index) => {
-          const isConfirmed = guest.confirmed !== undefined
+          const isConfirmed = guest.confirmed != null
           return (
             <motion.div
               key={guest.id}

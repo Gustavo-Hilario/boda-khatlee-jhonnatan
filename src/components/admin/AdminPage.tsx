@@ -93,17 +93,13 @@ export function AdminPage() {
     setIsFormOpen(true)
   }
 
-  const handleFormSubmit = async (data: GuestFormData) => {
-    try {
-      if (editingGuest) {
-        await updateGuest(editingGuest.id, data)
-      } else {
-        await addGuest(data)
-      }
-    } catch (err) {
-      console.error('Error saving guest:', err)
-      alert('Error al guardar. Por favor intenta de nuevo.')
+  const handleFormSubmit = async (data: GuestFormData): Promise<void> => {
+    if (editingGuest) {
+      await updateGuest(editingGuest.id, data)
+    } else {
+      await addGuest(data)
     }
+    // Errors will propagate to GuestForm which handles them with inline UI
   }
 
   const handleDeleteClick = (guest: Guest) => {

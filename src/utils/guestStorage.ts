@@ -1,45 +1,5 @@
 import type { Guest } from '../types'
 
-const STORAGE_KEY = 'wedding_guests'
-
-/**
- * Load guests from localStorage
- */
-export function loadGuests(): Guest[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      if (Array.isArray(parsed) && parsed.every(isValidGuest)) {
-        return parsed
-      }
-    }
-  } catch {
-    console.warn('Failed to load guests from localStorage')
-  }
-  return []
-}
-
-/**
- * Save guests to localStorage
- */
-export function saveGuests(guests: Guest[]): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(guests))
-  } catch (error) {
-    console.error('Failed to save guests to localStorage:', error)
-    throw new Error('No se pudo guardar los cambios')
-  }
-}
-
-/**
- * Clear guests from localStorage
- */
-export function resetGuests(): Guest[] {
-  localStorage.removeItem(STORAGE_KEY)
-  return []
-}
-
 /**
  * Export guests as JSON file download
  */
@@ -47,7 +7,7 @@ export function exportGuestsJson(guests: Guest[]): void {
   const dataStr = JSON.stringify(guests, null, 2)
   const blob = new Blob([dataStr], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
-  
+
   const link = document.createElement('a')
   link.href = url
   link.download = 'guests.json'
@@ -62,11 +22,11 @@ export function exportGuestsJson(guests: Guest[]): void {
  */
 export function validateGuestsJson(data: unknown): Guest[] | null {
   if (!Array.isArray(data)) return null
-  
+
   for (const item of data) {
     if (!isValidGuest(item)) return null
   }
-  
+
   return data as Guest[]
 }
 
@@ -75,7 +35,7 @@ export function validateGuestsJson(data: unknown): Guest[] | null {
  */
 function isValidGuest(obj: unknown): obj is Guest {
   if (typeof obj !== 'object' || obj === null) return false
-  
+
   const guest = obj as Record<string, unknown>
   const hasRequiredFields = (
     typeof guest.id === 'string' &&
@@ -85,12 +45,12 @@ function isValidGuest(obj: unknown): obj is Guest {
     guest.name.length > 0 &&
     guest.passes >= 1
   )
-  
+
   // confirmed is optional, but if present must be a valid number
   const hasValidConfirmed = (
     guest.confirmed === undefined ||
     (typeof guest.confirmed === 'number' && guest.confirmed >= 0)
   )
-  
+
   return hasRequiredFields && hasValidConfirmed
 }

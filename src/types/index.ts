@@ -68,4 +68,10 @@ export interface WeddingConfig {
   contact: {
     invitationCreator: string
   }
+  giftSuggestions?: {
+    bankName?: string
+    accountNumber: string
+    cci: string
+    phoneNumber: string
+  }
 }

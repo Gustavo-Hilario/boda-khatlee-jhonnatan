@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react'
 
 export function useMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(false)
+  // Safe default for SSR - assume mobile-first approach
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return true
+    return window.innerWidth < breakpoint
+  })
 
   useEffect(() => {
+    // Guard for SSR/test environments
+    if (typeof window === 'undefined') return
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth < breakpoint)
     }

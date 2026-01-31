@@ -57,6 +57,12 @@ export const weddingConfig: WeddingConfig = {
     contact: {
         invitationCreator: '920756997',
     },
+    giftSuggestions: {
+        bankName: 'BCP',
+        accountNumber: '2800225282',
+        cci: '00928020280022528292',
+        phoneNumber: '967754506',
+    },
 };
 
 export const timelineEvents: TimelineEvent[] = [

@@ -1,5 +1,5 @@
 import { useState, useRef, type ReactNode } from 'react'
-import { motion, AnimatePresence, type Variants, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { motion, type Variants, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { weddingConfig } from '../../config/wedding'
 import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
@@ -102,9 +102,10 @@ function GiftSuggestionCard() {
   const [copiedPhone, setCopiedPhone] = useState(false)
   const tiltConfig = useTiltConfig()
 
-  const accountNo = '2800225282'
-  const accountCci = '00928020280022528292'
-  const phoneNumber = '967754506'
+  const giftConfig = weddingConfig.giftSuggestions
+  const accountNo = giftConfig?.accountNumber ?? ''
+  const accountCci = giftConfig?.cci ?? ''
+  const phoneNumber = giftConfig?.phoneNumber ?? ''
 
   // Mouse position for 3D tilt
   const mouseX = useMotionValue(0)

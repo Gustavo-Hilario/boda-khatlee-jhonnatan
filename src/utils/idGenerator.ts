@@ -1,12 +1,19 @@
 /**
- * Generate a unique 6-character alphanumeric ID
- * Uses a mix of uppercase, lowercase, and numbers for readable IDs
+ * Generate a unique 12-character alphanumeric ID using cryptographic randomness
+ * Uses Web Crypto API for secure random generation
+ * Excludes ambiguous characters (0, O, l, 1, I) for readability
  */
 export function generateGuestId(): string {
   const chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  const length = 12
+
+  // Use crypto.getRandomValues for cryptographic randomness
+  const randomValues = new Uint32Array(length)
+  crypto.getRandomValues(randomValues)
+
   let id = ''
-  for (let i = 0; i < 6; i++) {
-    id += chars.charAt(Math.floor(Math.random() * chars.length))
+  for (let i = 0; i < length; i++) {
+    id += chars.charAt(randomValues[i] % chars.length)
   }
   return id
 }

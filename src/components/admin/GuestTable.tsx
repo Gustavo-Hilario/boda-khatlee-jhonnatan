@@ -13,12 +13,15 @@ interface GuestTableProps {
 type SortDirection = 'asc' | 'desc'
 type PrimarySort = 'name' | 'passes'
 
+const PAGE_SIZE = 25
+
 export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm }: GuestTableProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [confirmInputs, setConfirmInputs] = useState<Record<string, string>>({})
   const [nameSort, setNameSort] = useState<SortDirection>('asc')
   const [passesSort, setPassesSort] = useState<SortDirection>('desc')
   const [primarySort, setPrimarySort] = useState<PrimarySort>('name')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const handleNameSort = () => {
     setNameSort(nameSort === 'asc' ? 'desc' : 'asc')
@@ -51,6 +54,16 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
       return nameSort === 'asc' ? nameComparison : -nameComparison
     }
   })
+
+  // Pagination
+  const totalPages = Math.ceil(sortedGuests.length / PAGE_SIZE)
+  const startIndex = (currentPage - 1) * PAGE_SIZE
+  const paginatedGuests = sortedGuests.slice(startIndex, startIndex + PAGE_SIZE)
+
+  // Reset to page 1 when guest list changes significantly
+  const handlePageChange = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)))
+  }
 
   const SortIcon = ({ direction }: { direction: SortDirection }) => {
     return <span className="ml-1">{direction === 'asc' ? '↑' : '↓'}</span>
@@ -153,7 +166,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {sortedGuests.map((guest, index) => {
+            {paginatedGuests.map((guest, index) => {
               const isConfirmed = guest.confirmed != null
               return (
                 <motion.tr
@@ -275,7 +288,7 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
 
       {/* Mobile Cards */}
       <div className="md:hidden divide-y divide-gray-100">
-        {sortedGuests.map((guest, index) => {
+        {paginatedGuests.map((guest, index) => {
           const isConfirmed = guest.confirmed != null
           return (
             <motion.div
@@ -365,6 +378,58 @@ export function GuestTable({ guests, onEdit, onDelete, onConfirm, onClearConfirm
           )
         })}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-t">
+          <div className="text-sm text-gray-600">
+            Mostrando {startIndex + 1}-{Math.min(startIndex + PAGE_SIZE, sortedGuests.length)} de {sortedGuests.length}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 text-sm font-medium rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              ← Anterior
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum: number
+                if (totalPages <= 5) {
+                  pageNum = i + 1
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i
+                } else {
+                  pageNum = currentPage - 2 + i
+                }
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`w-8 h-8 text-sm font-medium rounded transition-colors ${
+                      currentPage === pageNum
+                        ? 'bg-olive text-white'
+                        : 'bg-white border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )
+              })}
+            </div>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 text-sm font-medium rounded border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Siguiente →
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

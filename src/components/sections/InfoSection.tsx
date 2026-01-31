@@ -5,6 +5,7 @@ import { Button } from '../ui/Button'
 import { Flourish } from '../ui/Flourish'
 import { useTiltConfig } from '../../hooks/useMobile'
 import { useGuest } from '../../hooks/useGuest'
+import { updateGuestInFirestore } from '../../utils/firebaseStorage'
 import {
   GiftBoxIcon,
   ChampagneIcon,
@@ -349,6 +350,9 @@ function RSVPCard() {
   const { rsvp } = weddingConfig
   const { guest } = useGuest()
 
+  // Check if guest is already confirmed
+  const isAlreadyConfirmed = guest?.confirmed != null
+
   // Generate WhatsApp message based on guest and count
   const getWhatsAppMessage = (count: number) => {
     if (!guest) {
@@ -365,17 +369,34 @@ function RSVPCard() {
   }
 
   // Open WhatsApp with the appropriate message
-  const openWhatsApp = (count: number) => {
-    const message = getWhatsAppMessage(count)
+  const openWhatsApp = async (count: number) => {
+    let confirmationFailed = false
+
+    // Update database first
+    if (guest) {
+      try {
+        await updateGuestInFirestore(guest.id, { confirmed: count })
+      } catch (error) {
+        console.error('Error confirming guest:', error)
+        confirmationFailed = true
+      }
+    }
+
+    // Generate WhatsApp message (with fallback if DB update failed)
+    let message = getWhatsAppMessage(count)
+    if (confirmationFailed) {
+      message += '\n\nPor favor confirma mi asistencia.'
+    }
+
     const url = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank')
   }
 
   // Handle confirm button click
-  const handleConfirmClick = () => {
+  const handleConfirmClick = async () => {
     if (!guest || guest.passes === 1) {
       // Single pass or no guest - open WhatsApp directly
-      openWhatsApp(1)
+      await openWhatsApp(1)
     } else {
       // Multiple passes - show number selector
       setShowNumberSelector(true)
@@ -383,8 +404,8 @@ function RSVPCard() {
   }
 
   // Handle number selection
-  const handleNumberClick = (count: number) => {
-    openWhatsApp(count)
+  const handleNumberClick = async (count: number) => {
+    await openWhatsApp(count)
   }
 
   // Mouse position for 3D tilt
@@ -512,7 +533,7 @@ function RSVPCard() {
           </motion.p>
         </div>
 
-        {/* WhatsApp button / Number selector */}
+        {/* WhatsApp button / Number selector / Already confirmed */}
         <motion.div
           className="relative z-10 min-h-[56px]"
           initial={{ opacity: 0, y: 10 }}
@@ -521,7 +542,39 @@ function RSVPCard() {
           transition={{ delay: 0.5 }}
         >
           <AnimatePresence mode="wait">
-            {!showNumberSelector ? (
+            {isAlreadyConfirmed ? (
+              <motion.div
+                key="already-confirmed"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-col items-center gap-4"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex items-center gap-2 text-olive">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="font-elegant text-lg font-semibold">
+                      ¡Ya confirmaste tu asistencia!
+                    </span>
+                  </div>
+                  <p className="text-gray-600 font-elegant">
+                    {guest!.confirmed === 1 
+                      ? 'Confirmado: 1 persona' 
+                      : `Confirmados: ${guest!.confirmed} personas`}
+                  </p>
+                </div>
+                <Button 
+                  href={`https://wa.me/${rsvp.whatsappNumber}`} 
+                  external 
+                  variant="primary" 
+                  size="lg"
+                >
+                  Contactar por WhatsApp
+                </Button>
+              </motion.div>
+            ) : !showNumberSelector ? (
               <motion.div
                 key="confirm-button"
                 initial={{ opacity: 1, scale: 1 }}

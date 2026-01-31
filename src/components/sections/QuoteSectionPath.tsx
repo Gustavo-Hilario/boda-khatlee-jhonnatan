@@ -414,8 +414,6 @@ function ConnectingPath() {
 // Guest pass information component
 function GuestPassInfo() {
   const { guest } = useGuest()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, margin: '-10% 0px -10% 0px' })
 
   if (!guest) return null
 
@@ -423,10 +421,10 @@ function GuestPassInfo() {
 
   return (
     <motion.div
-      ref={ref}
       className="mt-16 text-center"
       initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      whileInView="visible"
+      viewport={{ once: true, margin: '-50px' }}
       variants={{
         hidden: { opacity: 0 },
         visible: {

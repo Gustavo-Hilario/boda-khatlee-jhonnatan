@@ -49,11 +49,11 @@ export const weddingConfig: WeddingConfig = {
         pinterestMen: 'https://pin.it/210NZNEKg',
     },
     rsvp: {
-        whatsappNumber: '51924161790',
+        whatsappNumber: '51992684929',
         deadline: 'antes del inicio del mes',
     },
     photoUpload:
-        'https://photos.google.com/share/AF1QipPMhkVNspAjYt_r4wEugE7dF4WF7dEZDFqC1yXAA4_qm7A2Jdt_MoFepDXwbSD7SQ?key=S19PaTNGZmpwd2tGVGUwRlhZV1Q4R3pmanRPakJR',
+        'https://drive.google.com/drive/folders/14FXRk7gEAx2mKtKzT7SmrybqSdTZ2j_w',
     contact: {
         invitationCreator: '920756997',
     },

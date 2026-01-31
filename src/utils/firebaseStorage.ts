@@ -24,7 +24,8 @@ function docToGuest(id: string, data: Record<string, unknown>): Guest {
     id,
     name: data.name as string,
     passes: data.passes as number,
-    confirmed: data.confirmed as number | undefined,
+    // Firestore stores null, but our type uses undefined for unconfirmed
+    confirmed: data.confirmed != null ? (data.confirmed as number) : undefined,
   }
 }
 

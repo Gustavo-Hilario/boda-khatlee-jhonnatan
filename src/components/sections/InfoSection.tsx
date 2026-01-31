@@ -379,6 +379,9 @@ function RSVPCard() {
     if (guest) {
       try {
         await updateGuestInFirestore(guest.id, { confirmed: count })
+        // Update UI state immediately after successful DB update
+        setLocalConfirmedCount(count)
+        setShowNumberSelector(false)
       } catch (error) {
         console.error('Error confirming guest:', error)
         confirmationFailed = true
@@ -394,14 +397,6 @@ function RSVPCard() {
     // Open WhatsApp
     const url = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank')
-
-    // Update UI after 5 seconds (gives user time to send WhatsApp message)
-    if (!confirmationFailed) {
-      setTimeout(() => {
-        setLocalConfirmedCount(count)
-        setShowNumberSelector(false)
-      }, 5000)
-    }
   }
 
   // Handle confirm button click

@@ -40,6 +40,9 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Firebase service account (contains private keys)
+service-account.json
 # Git-related temporary files
 .git-rewrite-backup
 *.orig

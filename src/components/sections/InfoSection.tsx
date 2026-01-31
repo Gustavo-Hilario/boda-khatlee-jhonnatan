@@ -346,12 +346,14 @@ function RSVPCard() {
   const ref = useRef<HTMLDivElement>(null)
   const [isHovered, setIsHovered] = useState(false)
   const [showNumberSelector, setShowNumberSelector] = useState(false)
+  const [localConfirmedCount, setLocalConfirmedCount] = useState<number | null>(null)
   const tiltConfig = useTiltConfig()
   const { rsvp } = weddingConfig
   const { guest } = useGuest()
 
-  // Check if guest is already confirmed
-  const isAlreadyConfirmed = guest?.confirmed != null
+  // Check if guest is already confirmed (from DB or local state)
+  const confirmedCount = localConfirmedCount ?? guest?.confirmed
+  const isAlreadyConfirmed = confirmedCount != null
 
   // Generate WhatsApp message based on guest and count
   const getWhatsAppMessage = (count: number) => {
@@ -388,8 +390,17 @@ function RSVPCard() {
       message += '\n\nPor favor confirma mi asistencia.'
     }
 
+    // Open WhatsApp
     const url = `https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank')
+
+    // Update UI after 5 seconds (gives user time to send WhatsApp message)
+    if (!confirmationFailed) {
+      setTimeout(() => {
+        setLocalConfirmedCount(count)
+        setShowNumberSelector(false)
+      }, 5000)
+    }
   }
 
   // Handle confirm button click
@@ -541,80 +552,60 @@ function RSVPCard() {
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          <AnimatePresence mode="wait">
-            {isAlreadyConfirmed ? (
-              <motion.div
-                key="already-confirmed"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="flex flex-col items-center gap-4"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-2 text-olive">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="font-elegant text-lg font-semibold">
-                      ¡Ya confirmaste tu asistencia!
-                    </span>
-                  </div>
-                  <p className="text-gray-600 font-elegant">
-                    {guest!.confirmed === 1 
-                      ? 'Confirmado: 1 persona' 
-                      : `Confirmados: ${guest!.confirmed} personas`}
-                  </p>
+          {isAlreadyConfirmed ? (
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2 text-olive">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-elegant text-lg font-semibold">
+                    ¡Ya confirmaste tu asistencia!
+                  </span>
                 </div>
-                <Button 
-                  href={`https://wa.me/${rsvp.whatsappNumber}`} 
-                  external 
-                  variant="primary" 
-                  size="lg"
-                >
-                  Contactar por WhatsApp
-                </Button>
-              </motion.div>
-            ) : !showNumberSelector ? (
-              <motion.div
-                key="confirm-button"
-                initial={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Button onClick={handleConfirmClick} variant="primary" size="lg">
-                  Confirmar por WhatsApp
-                </Button>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="number-selector"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="flex flex-col items-center gap-4"
-              >
-                <p className="text-olive font-elegant text-lg">
-                  {guest ? `Hola, ${guest.name}! ` : ''}¿Cuántas personas asistirán?
+                <p className="text-gray-600 font-elegant">
+                  {confirmedCount === 1 
+                    ? 'Confirmado: 1 persona' 
+                    : `Confirmados: ${confirmedCount} personas`}
                 </p>
-                <div className="flex gap-3 justify-center flex-wrap">
-                  {Array.from({ length: guest?.passes || 1 }, (_, i) => i + 1).map((num) => (
-                    <motion.button
-                      key={num}
-                      onClick={() => handleNumberClick(num)}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: num * 0.05 }}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-burgundy text-white font-semibold text-lg md:text-xl shadow-lg hover:bg-burgundy-light hover:shadow-xl transition-colors flex items-center justify-center"
-                    >
-                      {num}
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+              <Button 
+                href={`https://wa.me/${rsvp.whatsappNumber}?text=${encodeURIComponent(
+                  guest 
+                    ? `Hola! Soy ${guest.name} de la boda de Khatlee y Jhonnatan.` 
+                    : 'Hola! Soy un invitado de la boda de Khatlee y Jhonnatan.'
+                )}`} 
+                external 
+                variant="primary" 
+                size="lg"
+              >
+                Contactar por WhatsApp
+              </Button>
+            </div>
+          ) : !showNumberSelector ? (
+            <div>
+              <Button onClick={handleConfirmClick} variant="primary" size="lg">
+                Confirmar por WhatsApp
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-olive font-elegant text-lg">
+                {guest ? `Hola, ${guest.name}! ` : ''}¿Cuántas personas asistirán?
+              </p>
+              <div className="flex gap-3 justify-center flex-wrap">
+                {Array.from({ length: guest?.passes || 1 }, (_, i) => i + 1).map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => handleNumberClick(num)}
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-burgundy text-white font-semibold text-lg md:text-xl shadow-lg hover:bg-burgundy-light hover:shadow-xl transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
 
         {/* Corner decorations */}

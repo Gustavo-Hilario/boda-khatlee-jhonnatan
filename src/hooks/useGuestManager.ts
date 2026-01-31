@@ -59,53 +59,108 @@ export function useGuestManager(): UseGuestManagerReturn {
       passes: data.passes,
     }
 
-    try {
-      await addGuestToFirestore(newGuest)
-      return newGuest
-    } catch (err) {
+    // Optimistic update - add to local state immediately
+    setGuests((prev) => [...prev, newGuest])
+
+    // Fire Firestore operation in background (don't await)
+    addGuestToFirestore(newGuest).catch((err) => {
+      // Revert on error
+      setGuests((prev) => prev.filter((g) => g.id !== newGuest.id))
       console.error('Error adding guest:', err)
-      throw new Error('Error al agregar invitado')
-    }
+      setError('Error al agregar invitado')
+    })
+
+    return newGuest
   }, [guests])
 
   const updateGuest = useCallback(async (id: string, data: GuestFormData): Promise<void> => {
-    try {
-      await updateGuestInFirestore(id, {
-        name: data.name.trim(),
-        passes: data.passes,
-      })
-    } catch (err) {
+    // Store previous guest for rollback
+    const previousGuest = guests.find((g) => g.id === id)
+
+    // Optimistic update
+    setGuests((prev) =>
+      prev.map((g) =>
+        g.id === id ? { ...g, name: data.name.trim(), passes: data.passes } : g
+      )
+    )
+
+    // Fire Firestore operation in background (don't await)
+    updateGuestInFirestore(id, {
+      name: data.name.trim(),
+      passes: data.passes,
+    }).catch((err) => {
+      // Revert on error
+      if (previousGuest) {
+        setGuests((prev) =>
+          prev.map((g) => (g.id === id ? previousGuest : g))
+        )
+      }
       console.error('Error updating guest:', err)
-      throw new Error('Error al actualizar invitado')
-    }
-  }, [])
+      setError('Error al actualizar invitado')
+    })
+  }, [guests])
 
   const deleteGuest = useCallback(async (id: string): Promise<void> => {
-    try {
-      await deleteGuestFromFirestore(id)
-    } catch (err) {
+    // Store deleted guest for rollback
+    const deletedGuest = guests.find((g) => g.id === id)
+
+    // Optimistic update - remove from local state immediately
+    setGuests((prev) => prev.filter((g) => g.id !== id))
+
+    // Fire Firestore operation in background (don't await)
+    deleteGuestFromFirestore(id).catch((err) => {
+      // Revert on error
+      if (deletedGuest) {
+        setGuests((prev) => [...prev, deletedGuest])
+      }
       console.error('Error deleting guest:', err)
-      throw new Error('Error al eliminar invitado')
-    }
-  }, [])
+      setError('Error al eliminar invitado')
+    })
+  }, [guests])
 
   const confirmGuest = useCallback(async (id: string, confirmed: number): Promise<void> => {
-    try {
-      await updateGuestInFirestore(id, { confirmed })
-    } catch (err) {
+    // Store previous guest for rollback
+    const previousGuest = guests.find((g) => g.id === id)
+
+    // Optimistic update
+    setGuests((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, confirmed } : g))
+    )
+
+    // Fire Firestore operation in background (don't await)
+    updateGuestInFirestore(id, { confirmed }).catch((err) => {
+      // Revert on error
+      if (previousGuest) {
+        setGuests((prev) =>
+          prev.map((g) => (g.id === id ? previousGuest : g))
+        )
+      }
       console.error('Error confirming guest:', err)
-      throw new Error('Error al confirmar invitado')
-    }
-  }, [])
+      setError('Error al confirmar invitado')
+    })
+  }, [guests])
 
   const clearConfirmation = useCallback(async (id: string): Promise<void> => {
-    try {
-      await clearGuestConfirmation(id)
-    } catch (err) {
+    // Store previous guest for rollback
+    const previousGuest = guests.find((g) => g.id === id)
+
+    // Optimistic update
+    setGuests((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, confirmed: undefined } : g))
+    )
+
+    // Fire Firestore operation in background (don't await)
+    clearGuestConfirmation(id).catch((err) => {
+      // Revert on error
+      if (previousGuest) {
+        setGuests((prev) =>
+          prev.map((g) => (g.id === id ? previousGuest : g))
+        )
+      }
       console.error('Error clearing confirmation:', err)
-      throw new Error('Error al limpiar confirmación')
-    }
-  }, [])
+      setError('Error al limpiar confirmación')
+    })
+  }, [guests])
 
   const exportJson = useCallback((): void => {
     exportGuestsJson(guests)

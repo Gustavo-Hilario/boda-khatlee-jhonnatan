@@ -347,7 +347,7 @@ function RSVPCard() {
   const [showNumberSelector, setShowNumberSelector] = useState(false)
   const tiltConfig = useTiltConfig()
   const { rsvp } = weddingConfig
-  const guest = useGuest()
+  const { guest } = useGuest()
 
   // Generate WhatsApp message based on guest and count
   const getWhatsAppMessage = (count: number) => {

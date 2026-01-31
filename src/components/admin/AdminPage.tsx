@@ -9,10 +9,11 @@ import { ConfirmDialog } from './ConfirmDialog'
 import type { Guest, GuestFormData } from '../../types'
 
 export function AdminPage() {
-  const { isAuthenticated, login, logout, error } = useAdminAuth()
+  const { isAuthenticated, loading: authLoading, login, logout, error } = useAdminAuth()
   const {
     guests,
-    loading,
+    loading: guestsLoading,
+    error: guestsError,
     addGuest,
     updateGuest,
     deleteGuest,
@@ -42,16 +43,42 @@ export function AdminPage() {
     )
   })
 
+  // Show loading while checking auth state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <div className="text-olive text-lg">Verificando sesión...</div>
+      </div>
+    )
+  }
+
   // Show login if not authenticated
   if (!isAuthenticated) {
     return <AdminLogin onLogin={login} error={error} />
   }
 
-  // Loading state
-  if (loading) {
+  // Loading state for guests
+  if (guestsLoading) {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center">
-        <div className="text-olive text-lg">Cargando...</div>
+        <div className="text-olive text-lg">Cargando invitados...</div>
+      </div>
+    )
+  }
+
+  // Error state for guests
+  if (guestsError) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-lg mb-4">{guestsError}</div>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-olive text-white px-4 py-2 rounded-lg hover:bg-olive/90 transition-colors"
+          >
+            Reintentar
+          </button>
+        </div>
       </div>
     )
   }
@@ -66,11 +93,16 @@ export function AdminPage() {
     setIsFormOpen(true)
   }
 
-  const handleFormSubmit = (data: GuestFormData) => {
-    if (editingGuest) {
-      updateGuest(editingGuest.id, data)
-    } else {
-      addGuest(data)
+  const handleFormSubmit = async (data: GuestFormData) => {
+    try {
+      if (editingGuest) {
+        await updateGuest(editingGuest.id, data)
+      } else {
+        await addGuest(data)
+      }
+    } catch (err) {
+      console.error('Error saving guest:', err)
+      alert('Error al guardar. Por favor intenta de nuevo.')
     }
   }
 
@@ -78,10 +110,33 @@ export function AdminPage() {
     setDeleteConfirm(guest)
   }
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (deleteConfirm) {
-      deleteGuest(deleteConfirm.id)
-      setDeleteConfirm(null)
+      try {
+        await deleteGuest(deleteConfirm.id)
+        setDeleteConfirm(null)
+      } catch (err) {
+        console.error('Error deleting guest:', err)
+        alert('Error al eliminar. Por favor intenta de nuevo.')
+      }
+    }
+  }
+
+  const handleConfirmGuest = async (id: string, confirmed: number) => {
+    try {
+      await confirmGuest(id, confirmed)
+    } catch (err) {
+      console.error('Error confirming guest:', err)
+      alert('Error al confirmar. Por favor intenta de nuevo.')
+    }
+  }
+
+  const handleClearConfirmation = async (id: string) => {
+    try {
+      await clearConfirmation(id)
+    } catch (err) {
+      console.error('Error clearing confirmation:', err)
+      alert('Error al limpiar confirmación. Por favor intenta de nuevo.')
     }
   }
 
@@ -160,8 +215,8 @@ export function AdminPage() {
           guests={filteredGuests}
           onEdit={handleEditGuest}
           onDelete={handleDeleteClick}
-          onConfirm={confirmGuest}
-          onClearConfirm={clearConfirmation}
+          onConfirm={handleConfirmGuest}
+          onClearConfirm={handleClearConfirmation}
         />
       </main>
 

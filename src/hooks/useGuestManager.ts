@@ -1,16 +1,24 @@
 import { useState, useCallback, useEffect } from 'react'
 import type { Guest, GuestFormData } from '../types'
-import { loadGuests, saveGuests, exportGuestsJson, validateGuestsJson } from '../utils/guestStorage'
+import {
+  addGuestToFirestore,
+  updateGuestInFirestore,
+  deleteGuestFromFirestore,
+  clearGuestConfirmation,
+  subscribeToGuests,
+} from '../utils/firebaseStorage'
+import { exportGuestsJson, validateGuestsJson } from '../utils/guestStorage'
 import { generateUniqueGuestId } from '../utils/idGenerator'
 
 interface UseGuestManagerReturn {
   guests: Guest[]
   loading: boolean
-  addGuest: (data: GuestFormData) => Guest
-  updateGuest: (id: string, data: GuestFormData) => void
-  deleteGuest: (id: string) => void
-  confirmGuest: (id: string, confirmed: number) => void
-  clearConfirmation: (id: string) => void
+  error: string | null
+  addGuest: (data: GuestFormData) => Promise<Guest>
+  updateGuest: (id: string, data: GuestFormData) => Promise<void>
+  deleteGuest: (id: string) => Promise<void>
+  confirmGuest: (id: string, confirmed: number) => Promise<void>
+  clearConfirmation: (id: string) => Promise<void>
   exportJson: () => void
   importJson: (file: File) => Promise<boolean>
   totalPasses: number
@@ -19,64 +27,84 @@ interface UseGuestManagerReturn {
 }
 
 /**
- * Hook for managing guest CRUD operations with localStorage persistence
+ * Hook for managing guest CRUD operations with Firestore persistence
  */
 export function useGuestManager(): UseGuestManagerReturn {
   const [guests, setGuests] = useState<Guest[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Load guests on mount
+  // Subscribe to real-time updates on mount
   useEffect(() => {
-    const loadedGuests = loadGuests()
-    setGuests(loadedGuests)
-    setLoading(false)
+    const unsubscribe = subscribeToGuests(
+      (updatedGuests) => {
+        setGuests(updatedGuests)
+        setLoading(false)
+        setError(null)
+      },
+      (err) => {
+        console.error('Error loading guests:', err)
+        setError('Error al cargar invitados')
+        setLoading(false)
+      }
+    )
+
+    return () => unsubscribe()
   }, [])
 
-  // Save to localStorage whenever guests change (after initial load)
-  useEffect(() => {
-    if (!loading) {
-      saveGuests(guests)
-    }
-  }, [guests, loading])
-
-  const addGuest = useCallback((data: GuestFormData): Guest => {
+  const addGuest = useCallback(async (data: GuestFormData): Promise<Guest> => {
     const newGuest: Guest = {
       id: generateUniqueGuestId(guests.map((g) => g.id)),
       name: data.name.trim(),
       passes: data.passes,
     }
-    setGuests((prev) => [...prev, newGuest])
-    return newGuest
+
+    try {
+      await addGuestToFirestore(newGuest)
+      return newGuest
+    } catch (err) {
+      console.error('Error adding guest:', err)
+      throw new Error('Error al agregar invitado')
+    }
   }, [guests])
 
-  const updateGuest = useCallback((id: string, data: GuestFormData): void => {
-    setGuests((prev) =>
-      prev.map((guest) =>
-        guest.id === id
-          ? { ...guest, name: data.name.trim(), passes: data.passes }
-          : guest
-      )
-    )
+  const updateGuest = useCallback(async (id: string, data: GuestFormData): Promise<void> => {
+    try {
+      await updateGuestInFirestore(id, {
+        name: data.name.trim(),
+        passes: data.passes,
+      })
+    } catch (err) {
+      console.error('Error updating guest:', err)
+      throw new Error('Error al actualizar invitado')
+    }
   }, [])
 
-  const deleteGuest = useCallback((id: string): void => {
-    setGuests((prev) => prev.filter((guest) => guest.id !== id))
+  const deleteGuest = useCallback(async (id: string): Promise<void> => {
+    try {
+      await deleteGuestFromFirestore(id)
+    } catch (err) {
+      console.error('Error deleting guest:', err)
+      throw new Error('Error al eliminar invitado')
+    }
   }, [])
 
-  const confirmGuest = useCallback((id: string, confirmed: number): void => {
-    setGuests((prev) =>
-      prev.map((guest) =>
-        guest.id === id ? { ...guest, confirmed } : guest
-      )
-    )
+  const confirmGuest = useCallback(async (id: string, confirmed: number): Promise<void> => {
+    try {
+      await updateGuestInFirestore(id, { confirmed })
+    } catch (err) {
+      console.error('Error confirming guest:', err)
+      throw new Error('Error al confirmar invitado')
+    }
   }, [])
 
-  const clearConfirmation = useCallback((id: string): void => {
-    setGuests((prev) =>
-      prev.map((guest) =>
-        guest.id === id ? { ...guest, confirmed: undefined } : guest
-      )
-    )
+  const clearConfirmation = useCallback(async (id: string): Promise<void> => {
+    try {
+      await clearGuestConfirmation(id)
+    } catch (err) {
+      console.error('Error clearing confirmation:', err)
+      throw new Error('Error al limpiar confirmación')
+    }
   }, [])
 
   const exportJson = useCallback((): void => {
@@ -93,7 +121,9 @@ export function useGuestManager(): UseGuestManagerReturn {
         throw new Error('Formato de JSON inválido')
       }
 
-      setGuests(validatedGuests)
+      // Import all guests to Firestore
+      const { importGuestsToFirestore } = await import('../utils/firebaseStorage')
+      await importGuestsToFirestore(validatedGuests)
       return true
     } catch (error) {
       console.error('Error importing JSON:', error)
@@ -108,6 +138,7 @@ export function useGuestManager(): UseGuestManagerReturn {
   return {
     guests,
     loading,
+    error,
     addGuest,
     updateGuest,
     deleteGuest,

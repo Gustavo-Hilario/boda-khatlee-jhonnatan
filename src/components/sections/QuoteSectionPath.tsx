@@ -413,7 +413,7 @@ function ConnectingPath() {
 
 // Guest pass information component
 function GuestPassInfo() {
-  const guest = useGuest()
+  const { guest } = useGuest()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: false, margin: '-10% 0px -10% 0px' })
 

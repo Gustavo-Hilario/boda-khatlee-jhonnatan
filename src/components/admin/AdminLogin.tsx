@@ -2,12 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { motion } from 'framer-motion'
 
 interface AdminLoginProps {
-  onLogin: (username: string, password: string) => boolean
+  onLogin: (email: string, password: string) => Promise<boolean>
   error: string | null
 }
 
 export function AdminLogin({ onLogin, error }: AdminLoginProps) {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -15,9 +15,7 @@ export function AdminLogin({ onLogin, error }: AdminLoginProps) {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Small delay for UX
-    await new Promise((resolve) => setTimeout(resolve, 300))
-    onLogin(username, password)
+    await onLogin(email, password)
 
     setIsSubmitting(false)
   }
@@ -40,18 +38,18 @@ export function AdminLogin({ onLogin, error }: AdminLoginProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Usuario
+              Email
             </label>
             <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive focus:border-transparent transition-all"
-              placeholder="Ingresa tu usuario"
+              placeholder="Ingresa tu email"
               required
               autoFocus
             />
